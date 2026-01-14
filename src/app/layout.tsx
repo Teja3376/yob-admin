@@ -14,8 +14,30 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Nexa Admin - SaaS Console",
-  description: "Enterprise SaaS Administration Console",
+  title: "YOB Assets Admin Portal",
+  description:
+    "YOB Assets admin portal for managing asset records, internal users, approvals, and operational configurations securely.",
+
+  keywords: [
+    "YOB Assets",
+    "YOB admin portal",
+    "asset management admin",
+    "internal asset dashboard",
+    "admin login",
+    "asset approvals",
+  ],
+
+  robots: {
+    index: true,
+    follow: true,
+  },
+
+  openGraph: {
+    title: "YOB Assets Admin Portal",
+    description:
+      "Secure administration portal for YOB Assets to manage assets, users, and internal operations.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -27,7 +49,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={poppins.variable}>
         <Providers>{children}</Providers>
-        <Toaster theme="light" richColors  position="top-right"  />
+        <Toaster theme="light" richColors position="top-right" />
       </body>
     </html>
   );

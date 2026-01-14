@@ -1,6 +1,36 @@
 import Header from "@/components/common/header";
 import Sidebar from "./sidebar";
 import AuthenticationWrapper from "./AuthenticationWrapper";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Admin Dashboard - YOB Assets",
+  description:
+    "Admin dashboard for YOB Assets to monitor asset data, manage internal users, review approvals, and oversee daily operations securely.",
+
+  keywords: [
+    "YOB Assets",
+    "YOB admin dashboard",
+    "asset management dashboard",
+    "internal asset administration",
+    "admin panel",
+    "asset approvals",
+  ],
+
+  robots: {
+    index: false,
+    follow: false,
+  },
+
+  openGraph: {
+    title: "Admin Dashboard - YOB Assets",
+    description:
+      "YOB Assets admin dashboard for managing assets, users, approvals, and internal operational workflows.",
+    type: "website",
+  },
+};
+
+
 
 export default function DashBoardLayout({
   children,
