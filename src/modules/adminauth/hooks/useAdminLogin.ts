@@ -14,5 +14,6 @@ export const useAdminLogin = () => {
     onError: (error: any) => {
       console.error("Login error:", error);
     },
+    throwOnError: false,
   });
 };

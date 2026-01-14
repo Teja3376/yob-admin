@@ -10,6 +10,7 @@ const api = axios.create({
   withCredentials: true,
   timeout: 120000, // 2 minutes timeout
 });
+axios.defaults.withCredentials = true;
 
 // Request Interceptor: Attach token from sessionStorage
 // api.interceptors.request.use(
@@ -28,17 +29,35 @@ const api = axios.create({
 //   (error) => Promise.reject(error)
 // );
 
+api.interceptors.request.use(
+  (config) => {
+    const token = sessionStorage.getItem("access_token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 // Basic Response Error Handling
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (!error.response) {
-      console.error("Network error: No response received.");
-      return Promise.reject({ message: "Network Error" });
+      return Promise.reject({
+        message: "Network error. Please try again.",
+      });
     }
 
-    return Promise.reject(error);
+    return Promise.reject({
+      message:
+        error.response?.data?.message ||
+        "Something went wrong. Please try again.",
+      status: error.response.status,
+    });
   }
 );
+
 
 export default api;

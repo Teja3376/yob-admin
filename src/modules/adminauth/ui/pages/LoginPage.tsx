@@ -27,6 +27,7 @@ const LoginPage = () => {
       {
         onSuccess: (data) => {
           toast.success("Login successful");
+          sessionStorage.setItem("access_token", data.accessToken);
           router.push("/assets");
           setUser(data.user);
         },
