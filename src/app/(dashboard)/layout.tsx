@@ -4,16 +4,16 @@ import AuthenticationWrapper from "./AuthenticationWrapper";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Admin Dashboard - YOB Assets",
+  title: "Super Admin Dashboard - YOB Assets",
   description:
-    "Admin dashboard for YOB Assets to monitor asset data, manage internal users, review approvals, and oversee daily operations securely.",
+    "Super Admin dashboard for YOB Assets to monitor asset data, manage internal users, review approvals, and oversee daily operations securely.",
 
   keywords: [
     "YOB Assets",
-    "YOB admin dashboard",
+    "YOB super admin dashboard",
     "asset management dashboard",
     "internal asset administration",
-    "admin panel",
+    "super admin panel",
     "asset approvals",
   ],
 

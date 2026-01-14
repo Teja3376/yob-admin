@@ -16,14 +16,14 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "YOB Assets Super Admin Panel",
   description:
-    "YOB Assets admin portal for managing asset records, internal users, approvals, and operational configurations securely.",
+    "YOB Assets Super admin portal for managing asset records, internal users, approvals, and operational configurations securely.",
 
   keywords: [
     "YOB Assets",
-    "YOB admin portal",
-    "asset management admin",
+    "YOB super admin portal",
+    "asset management super admin",
     "internal asset dashboard",
-    "admin login",
+    "super admin login",
     "asset approvals",
   ],
 
