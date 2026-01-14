@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   },
 
   openGraph: {
-    title: "Admin Dashboard - YOB Assets",
+    title: "Super Admin Dashboard - YOB Assets",
     description:
       "YOB Assets admin dashboard for managing assets, users, approvals, and internal operational workflows.",
     type: "website",

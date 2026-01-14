@@ -50,7 +50,16 @@ const Header = () => {
           fill
         />
       </div>
-      <ProfilePopover />
+      <div className="flex gap-2 items-center">
+        <div className=" border-t bg-white shadow-xs">
+          <div className="px-4 py-4 space-y-3">
+            <div className="text-xs font-semibold text-gray-500 uppercase">
+              Super Admin Panel
+            </div>
+          </div>
+        </div>
+        <ProfilePopover />
+      </div>
     </div>
   );
 };

@@ -52,7 +52,7 @@ const LoginPage = () => {
               fill
             />
           </div>
-          <h1 className="text-2xl font-semibold text-gray-900">Admin Portal</h1>
+          <h1 className="text-2xl font-semibold text-gray-900">Super Admin Panel</h1>
           <p className="text-gray-600 mt-2">Sign in to your account</p>
         </div>
 
