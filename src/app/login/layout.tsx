@@ -5,6 +5,6 @@ export const metadata: Metadata = {
   description:
     "YOB Assets admin portal login for managing assets, internal users, approvals, and operational settings.",
 };
-export function LoginLayout({ children }: { children: React.ReactNode }) {
+export default function LoginLayout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
