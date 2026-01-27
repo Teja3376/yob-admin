@@ -72,16 +72,7 @@ export const issuerTableCols = (): ColumnDef<IssuerRow>[] => {
       header: "Asset Category",
       size: 160,
     },
-    {
-      accessorKey: "shortAssetDescription",
-      header: "Asset Description",
-      size: 280,
-      cell: ({ getValue }) => (
-        <div className="whitespace-normal wrap-break-word leading-relaxed">
-          {getValue<string>()}
-        </div>
-      ),
-    },
+    
     {
       accessorKey: "status",
       header: "Status",

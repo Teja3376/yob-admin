@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button";
 
 export const navLinks = [
   { label: "Issuers", href: "/issuers" },
-  { label: "Assets", href: "/assets" },
   { label: "Spv's", href: "/spv-list" },
+  { label: "Assets", href: "/assets" },
 ];
 
 const Sidebar = () => {
