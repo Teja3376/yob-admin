@@ -35,17 +35,19 @@ const SpvListPage = () => {
   // Map UI tabs to API status values
   const getApiStatus = (tab: StatusTab): string => {
     const statusMap: Record<StatusTab, string> = {
-      Active: "Approval",
+      Active: "Active",
       Rejected: "Rejected",
       Pending: "Pending",
     };
     return statusMap[tab];
   };
 
+  console.log(status, "status");
   const { data, isLoading, isError, error } = useGetAllSpv({
     page,
     limit,
     status: getApiStatus(status),
+    search: searchQuery,
   });
 
   const handleTabChange = (value: string) => {
@@ -92,11 +94,6 @@ const SpvListPage = () => {
       
       </div>
 
-      {/* Search Bar */}
- 
-      
-      
-
       {/* Tabs */}
       <Tabs value={status} onValueChange={handleTabChange}>
         <TabsList className="bg-transparent border-b border-gray-200 rounded-none p-0 h-auto">
@@ -114,7 +111,7 @@ const SpvListPage = () => {
           </TabsTrigger>
          
           <TabsTrigger
-            value="Approval"
+            value="Active"
             className="data-[state=active]:border-b-2 text-black data-[state=active]:border-b-black data-[state=active]:text-black data-[state=active]:bg-transparent rounded-none border-b-2 border-transparent"
           >
             Approved

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, LoaderCircle } from "lucide-react";
 import SpvBasicInfo from "@/modules/spv/ui/components/SpvBasicInfo";
@@ -10,13 +11,20 @@ import SpvBoardMembers from "@/modules/spv/ui/components/SpvBoardMembers";
 import SpvDaoDetails from "@/modules/spv/ui/components/SpvDaoDetails";
 import SpvActionButtons from "@/modules/spv/ui/components/SpvActionButtons";
 import useGetSpvById from "../../hooks/useGetSpvWithId";
+import ApprovalDialog from "../components/ApprovalDialog";
+import useApproveSpvApi from "../../hooks/useApproveSpvApi";
+import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
+
 
 const SpvPage = () => {
   const router = useRouter();
   const { spvId } = useParams();
-  const { data: spvData, isLoading, isError, error } = useGetSpvById(
+  const { data: spvData, isLoading, isError, error, refetch } = useGetSpvById(
     spvId as string
   );
+  const { mutate: approveSpv } = useApproveSpvApi();
+  const [isApproveDialogOpen, setIsApproveDialogOpen] = useState(false);
 
   const handleRequestUpdate = () => {
     // Handle request update logic
@@ -24,8 +32,46 @@ const SpvPage = () => {
   };
 
   const handleApprove = () => {
-    // Handle approve logic
-    console.log("Approve");
+    setIsApproveDialogOpen(true);
+  };
+
+  const handleConfirmApprove = () => {
+    approveSpv({ spvId: spvId as string, status: "Active" }, {
+      onSuccess: () => {
+        toast.success("SPV approved successfully");
+        setIsApproveDialogOpen(false);
+        refetch();
+      },
+      onError: () => {
+        toast.error("Failed to approve SPV");
+      },
+    });
+  };
+
+  const getStatusBadge = (status: string) => {
+    const statusLower = status?.toLowerCase() || "";
+    
+    if (statusLower === "active") {
+      return (
+        <Badge className="bg-green-500 text-white hover:bg-green-600">
+          Approved
+        </Badge>
+      );
+    }
+    
+    if (statusLower === "rejected") {
+      return (
+        <Badge className="bg-red-500 text-white hover:bg-red-600">
+          Rejected
+        </Badge>
+      );
+    }
+    
+    return (
+      <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">
+        Pending
+      </Badge>
+    );
   };
 
   if (isLoading) {
@@ -49,14 +95,15 @@ const SpvPage = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-2">
+   <div className="flex items-center gap-2">
         <ArrowLeft
           onClick={() => router.back()}
           className="cursor-pointer"
           size={20}
         />
-        <h1 className="text-xl font-medium">SPV Details</h1>
-      </div>
+        <h1 className="text-xl font-medium">{spvData.name}</h1>
+        {getStatusBadge(spvData.status)}
+      </div>   
 
       {/* Basic Information */}
       <SpvBasicInfo
@@ -86,7 +133,11 @@ const SpvPage = () => {
       <SpvActionButtons
         onRequestUpdate={handleRequestUpdate}
         onApprove={handleApprove}
+        isApproved={spvData.status === "Active"}
       />
+
+      {/* Approve Dialog */}
+     <ApprovalDialog open={isApproveDialogOpen} onOpenChange={setIsApproveDialogOpen} onConfirmApprove={handleConfirmApprove} />
     </div>
   );
 };

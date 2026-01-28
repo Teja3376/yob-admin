@@ -35,11 +35,11 @@ type UseGetAllSpvParams = {
   page?: number;
   limit?: number;
   status?: SpvStatus;
+  search?: string;
 };
 
 export const useGetAllSpv = (params: UseGetAllSpvParams = {}) => {
-  const { page = 1, limit = 10, status = "Pending" } = params;
-
+  const { page = 1, limit = 10, status = "Pending", search = "" } = params;
   return useQuery({
     queryKey: ["spv-list", page, limit, status],
     queryFn: async () => {
