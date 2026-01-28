@@ -1,13 +1,8 @@
-import Building from "@/components/common/building";
+"use client";
+import SpvListPage from "@/modules/spv/ui/pages/SpvListPage";
 
 type Props = {};
 
-function SpvListPage({}: Props) {
-  return (
-    <div>
-      <Building />
-    </div>
-  );
+export default function SpvListRoute({}: Props) {
+  return <SpvListPage />;
 }
-
-export default SpvListPage;

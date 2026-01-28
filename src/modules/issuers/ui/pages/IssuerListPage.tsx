@@ -14,7 +14,7 @@ const IssuerListPage = () => {
           cols={issuerTableCols() as unknown as IssuerRow}
           data={issuerList ?? []}
           isLoading={isFetching}
-          emptyStateMessage="No issuers found."
+   
         />
       </div>
     </div>

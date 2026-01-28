@@ -14,6 +14,9 @@ import TimeLine from "../components/TimeLine";
 import KybVerificationStatus from "../components/KybVerificationStatus";
 import SubmitDecision from "../components/SubmitDecision";
 import { toast } from "sonner";
+import TableComponent from "@/components/common/TableComponent";
+import { spvTableCols } from "../../schemas/spvTableSchema";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 const IssuerProfilePage = () => {
   const { issuerId } = useParams();
@@ -87,6 +90,37 @@ const IssuerProfilePage = () => {
               isEmailVerified={issuer?.issuer.isEmailVerified || false}
               email={issuer?.issuer.email || ""}
             />
+          </>
+          <>
+          <Tabs defaultValue="spvs">
+             <TabsList className="bg-transparent border-b border-gray-200 rounded-none p-0 h-auto">
+        <TabsTrigger
+            value="spvs"
+            className="data-[state=active]:border-b-2 text-black data-[state=active]:border-b-black data-[state=active]:text-black data-[state=active]:bg-transparent rounded-none border-b-2 border-transparent"
+          >
+            SPVs
+          </TabsTrigger>
+          <TabsTrigger
+            value="Assets"
+            className="data-[state=active]:border-b-2 text-black data-[state=active]:border-b-black data-[state=active]:text-black data-[state=active]:bg-transparent rounded-none border-b-2 border-transparent"
+          >
+            Assets 
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="spvs">
+          <TableComponent
+            data={issuer?.spvs || []}
+            columns={spvTableCols()}
+            model="spv" />
+          </TabsContent>
+          <TabsContent value="assets">
+            <TableComponent
+              data={issuer?.assets || []}
+              columns={[]}
+              model="asset"
+            />
+          </TabsContent>
+          </Tabs>
           </>
         </div>
         <div className="w-[30%] space-y-5">
