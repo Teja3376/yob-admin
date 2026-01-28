@@ -1,11 +1,5 @@
 'use client';
 
-// import { AssetDetailHeader } from '@/components/asset-detail-header';
-// import { PropertyOverview } from '@/components/property-overview';
-// import { FinancialDetails } from '@/components/financial-details';
-// import { AmenitiesAndFeatures } from '@/components/amenities-features';
-// import { DocumentsAndTenants } from '@/components/documents-tenants';
-// import { RiskAndAdditionalInfo } from '@/components/risk-additional-info';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AssetDetailHeader } from '../components/AssetDetail/AssetdetailHeader';
 import { PropertyOverview } from '../components/AssetDetail/Propertyoverview';
@@ -13,6 +7,7 @@ import { FinancialDetails } from '../components/AssetDetail/FinancialDetails';
 // import { AmenitiesAndFeatures } from '../components/AssetDetail/AmenitiesAndFeatures';
 import { DocumentsAndTenants } from '../components/AssetDetail/DocumentsAndTenants';
 import { RiskAndAdditionalInfo } from '../components/AssetDetail/RiskAndAdditionalInfo';
+import { AmenitiesAndFeatures } from '../components/AssetDetail/AmenitiesAndFeatures';
 
 // // Mock data - replace with your actual data source
 const assetData = {
@@ -211,10 +206,10 @@ export default function AssetDetailPage() {
 
           {/* Assets Tab */}
           <TabsContent value="assets" className="mt-6 space-y-8">
-            {/* <AmenitiesAndFeatures
+            <AmenitiesAndFeatures
               amenities={assetData.amenities}
               features={assetData.features}
-            /> */}
+            />
             <DocumentsAndTenants
               documents={assetData.documents}
               tenants={assetData.tenants}
