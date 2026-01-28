@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AssetDetailHeader } from '../components/AssetDetail/AssetdetailHeader';
 import { PropertyOverview } from '../components/AssetDetail/Propertyoverview';
 import { FinancialDetails } from '../components/AssetDetail/FinancialDetails';
-import { AmenitiesAndFeatures } from '../components/AssetDetail/AmenitiesAndFeatures';
+// import { AmenitiesAndFeatures } from '../components/AssetDetail/AmenitiesAndFeatures';
 import { DocumentsAndTenants } from '../components/AssetDetail/DocumentsAndTenants';
 import { RiskAndAdditionalInfo } from '../components/AssetDetail/RiskAndAdditionalInfo';
 
@@ -160,20 +160,20 @@ const assetData = {
 };
 
 export default function AssetDetailPage() {
-//   const location = `${assetData.city}, ${assetData.state} • ${assetData.landmark}`;
+  const location = `${assetData.city}, ${assetData.state} • ${assetData.landmark}`;
 
   return (
     <main className="min-h-screen ">
       <div className="mx-auto">
         {/* Header Section */}
         <AssetDetailHeader
+          name={assetData.name}
+          location={location}
+          status={assetData.status as 'pending' | 'approved' | 'active'}
+        //   imageUrl={assetData.media.imageURL}
+          stage={assetData.stage}
         />
 
-        {/* About Section */}
-        {/* <div className="mt-8 rounded-lg bg-white p-6 shadow-sm">
-          <h2 className="text-xl font-bold text-gray-900">About This Property</h2>
-          <p className="mt-3 text-gray-600 leading-relaxed">{assetData.about}</p>
-        </div> */}
 
         {/* Tabs for Different Sections */}
         <Tabs defaultValue="overview" className="mt-8">

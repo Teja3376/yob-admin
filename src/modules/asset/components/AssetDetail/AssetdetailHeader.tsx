@@ -53,7 +53,7 @@ export function AssetDetailHeader(props: AssetDetailHeaderProps) {
         </div>
       </div>
       {/* Pending Notice */}
-      {status === 'pending' && (
+      {/* {status === 'pending' && (
         <div className="mt-4 rounded-lg border border-yellow-200 bg-yellow-50 p-4 flex gap-3">
           <AlertCircle className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
           <div>
@@ -64,7 +64,7 @@ export function AssetDetailHeader(props: AssetDetailHeaderProps) {
             </p>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }
