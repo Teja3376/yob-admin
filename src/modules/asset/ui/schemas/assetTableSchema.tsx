@@ -4,7 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { handleCopy } from "@/utils/globalFunctions";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Copy } from "lucide-react";
+import { Copy, Eye } from "lucide-react";
+import { useRouter } from "next/navigation";
 import type { AssetApprovalListItem } from "@/modules/asset/hooks/useGetAllAsset";
 
 const StatusBadge = ({ status }: { status: string }) => {
@@ -24,6 +25,7 @@ const StatusBadge = ({ status }: { status: string }) => {
 };
 
 export const assetTableCols = (): ColumnDef<AssetApprovalListItem>[] => {
+  const router = useRouter();
   return [
     {
       header: "Asset Id",
@@ -67,28 +69,16 @@ export const assetTableCols = (): ColumnDef<AssetApprovalListItem>[] => {
       accessorKey: "status",
       cell: ({ row }) => <StatusBadge status={row.original.status} />,
     },
+  
+    
     {
-      header: "Issuer Comments",
-      accessorKey: "issuerComments",
+      header: "Action",
+      accessorKey: "action",
       cell: ({ row }) => (
-        <span className="text-sm text-gray-700">
-          {row.original.issuerComments || "—"}
-        </span>
+        <Button variant="ghost" size="icon" onClick={() => router.push(`/asset-list/${row.original.assetId}`)}  >
+          <Eye size={14} />
+        </Button>
       ),
-    },
-    {
-      header: "Last Activity",
-      accessorKey: "updatedAt",
-      cell: ({ row }) => {
-        const date = row.original.updatedAt || row.original.createdAt;
-        const d = new Date(date);
-        const formatted = d.toLocaleDateString("en-US", {
-          month: "numeric",
-          day: "numeric",
-          year: "numeric",
-        });
-        return <span className="text-sm text-gray-700">{formatted}</span>;
-      },
     },
   ];
 };

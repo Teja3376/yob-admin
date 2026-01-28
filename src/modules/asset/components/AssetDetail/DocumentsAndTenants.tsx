@@ -53,7 +53,7 @@ export function DocumentsAndTenants({
       {/* Tenants */}
       {tenants && tenants.length > 0 && (
         <div>
-          <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold">
+          <h2 className="mb-4 flex items-center gap-2 text-md font-medium">
             <Users className="h-6 w-6" />
             Tenants
           </h2>
@@ -120,7 +120,7 @@ export function DocumentsAndTenants({
       {/* Documents */}
       {documents && documents.length > 0 && (
         <div>
-          <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold">
+            <h2 className="mb-6 flex items-center gap-2 text-md font-medium">
             <FileText className="h-6 w-6" />
             Documents
           </h2>

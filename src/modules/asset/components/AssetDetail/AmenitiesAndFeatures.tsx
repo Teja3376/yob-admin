@@ -33,7 +33,7 @@ export function AmenitiesAndFeatures({
       {/* Amenities */}
       {amenities && amenities.length > 0 && (
         <div>
-          <h2 className="mb-6 text-2xl font-bold">Amenities</h2>
+          <h2 className="mb-6 text-xl font-semibold">Amenities</h2>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {amenities.map((amenity) => (
               <Card key={amenity._id} className="overflow-hidden">
@@ -66,7 +66,7 @@ export function AmenitiesAndFeatures({
       {/* Features */}
       {features && features.length > 0 && (
         <div>
-          <h2 className="mb-6 text-2xl font-bold">Key Features</h2>
+          <h2 className="mb-6 text-xl font-semibold">Key Features</h2>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {features.map((feature) => (
               <Card key={feature._id} className="overflow-hidden">
@@ -84,7 +84,7 @@ export function AmenitiesAndFeatures({
                   <p className="mt-2 text-sm text-gray-600">{feature.description}</p>
                   {feature.status && (
                     <div className="mt-3">
-                      <span className="inline-block bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-800 rounded">
+                      <span className="inline-block bg-green-100 px-3 py-1 text-xs font-semibold text-green-800 rounded">
                         Active
                       </span>
                     </div>

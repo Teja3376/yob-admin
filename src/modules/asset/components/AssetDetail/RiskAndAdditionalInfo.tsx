@@ -44,7 +44,7 @@ export function RiskAndAdditionalInfo({
       {/* Risk Factors */}
       {riskFactors && riskFactors.length > 0 && (
         <div>
-          <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold">
+          <h2 className="mb-4 flex items-center gap-2 text-md font-medium">
             <AlertTriangle className="h-6 w-6 text-red-600" />
             Risk Factors
           </h2>
@@ -64,7 +64,10 @@ export function RiskAndAdditionalInfo({
       {/* Risk Disclosures */}
       {riskDisclosures && riskDisclosures.length > 0 && (
         <div>
-          <h2 className="mb-6 text-2xl font-bold">Risk Disclosures</h2>
+          <h2 className="mb-4 flex items-center gap-2 text-md font-medium">
+            <AlertTriangle className="h-6 w-6 text-red-600" />
+            Risk Disclosures
+          </h2>
           <div className="rounded-lg border border-red-200 bg-red-50 p-6">
             <div className="space-y-4">
               {riskDisclosures.map((disclosure) => (
@@ -103,7 +106,7 @@ export function RiskAndAdditionalInfo({
       {/* FAQs */}
       {faqs && faqs.length > 0 && (
         <div>
-          <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold">
+          <h2 className="mb-4 flex items-center gap-2 text-md font-medium">
             <HelpCircle className="h-6 w-6" />
             Frequently Asked Questions
           </h2>
