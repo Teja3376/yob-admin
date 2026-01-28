@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 export const navLinks = [
   { label: "Issuers", href: "/issuers" },
   { label: "Spv's", href: "/spv-list" },
-  { label: "Assets", href: "/assets" },
+  { label: "Assets", href: "/asset-list" },
 ];
 
 const Sidebar = () => {
