@@ -1,6 +1,6 @@
 'use client';
 
-import { AlertCircle, Edit2, Share2 } from 'lucide-react';
+import { AlertCircle, Edit2, MoveUpRightIcon, Send, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
@@ -11,10 +11,13 @@ interface AssetDetailHeaderProps {
   status?: 'pending' | 'approved' | 'active';
   stage?: string;
   imageUrl?: string;
+  onRequestUpdate?: () => void;
+  onApprove?: () => void;
+  approveDisabled?: boolean;
 }
 
 export function AssetDetailHeader(props: AssetDetailHeaderProps) {
-  const { name, location, status, imageUrl } = props;
+  const { name, location, status, imageUrl, onRequestUpdate, onApprove, approveDisabled } = props;
   const statusConfig = {
     pending: { label: 'Approval Pending', color: 'bg-yellow-100 text-yellow-800' },
     approved: { label: 'Approved', color: 'bg-green-100 text-green-800' },
@@ -53,18 +56,23 @@ export function AssetDetailHeader(props: AssetDetailHeaderProps) {
         </div>
       </div>
       {/* Pending Notice */}
-      {/* {status === 'pending' && (
-        <div className="mt-4 rounded-lg border border-yellow-200 bg-yellow-50 p-4 flex gap-3">
-          <AlertCircle className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-          <div>
-            <p className="font-semibold text-yellow-900">Awaiting Approval</p>
-            <p className="text-sm text-yellow-800 mt-1">
-              This asset is currently pending approval from the administrative team.
-              You can request updates or modifications before final approval.
-            </p>
-          </div>
-        </div>
-      )} */}
+      <>
+      <div className="flex gap-2 mt-4">
+        <Button variant="primary" className="text-white gap-2" onClick={onRequestUpdate}>
+          <Edit2 className="h-4 w-4" />
+          Request to update
+        </Button>
+        <Button
+          variant="outline"
+          className="text-black gap-2"
+          onClick={onApprove}
+          disabled={approveDisabled}
+        >
+          Approve
+          <Send className="h-4 w-4" />
+        </Button>
+      </div>
+      </>
     </div>
   );
 }

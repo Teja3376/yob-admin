@@ -65,7 +65,7 @@ export function PropertyOverview({
                   </div>
                   <div>
                     <p className="text-sm text-gray-600">{metric.label}</p>
-                    <p className="mt-1 font-semibold text-gray-900">{metric.value}</p>
+                    <p className="mt-1 text-md font-medium text-gray-900">{metric.value}</p>
                   </div>
                 </div>
               </CardContent>
