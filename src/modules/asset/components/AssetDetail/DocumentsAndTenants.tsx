@@ -62,7 +62,7 @@ export function DocumentsAndTenants({
               <Accordion type="single" collapsible={true} key={tenant._id} className="border rounded-lg p-4">
                 <AccordionItem value={tenant._id}>
                   <AccordionTrigger>
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <div className="flex justify-between w-full">
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
                           {tenant.name}
@@ -71,6 +71,15 @@ export function DocumentsAndTenants({
                           {tenant.type.charAt(0).toUpperCase() + tenant.type.slice(1)}
                         </p>
                       </div>
+                      <div className="flex items-center justify-end">
+                      <span
+                            className={`inline-block px-3 py-1 text-xs font-semibold rounded ${getStatusColor(
+                              tenant.status,
+                            )}`}
+                          >
+                            {tenant.status.charAt(0).toUpperCase() + tenant.status.slice(1)}
+                          </span>
+                      </div>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent>
@@ -78,13 +87,7 @@ export function DocumentsAndTenants({
                       <div>
                         <p className="text-sm text-gray-600">Status</p>
                         <div className="mt-1">
-                          <span
-                            className={`inline-block px-3 py-1 text-xs font-semibold rounded ${getStatusColor(
-                              tenant.status,
-                            )}`}
-                          >
-                            {tenant.status.charAt(0).toUpperCase() + tenant.status.slice(1)}
-                          </span>
+                         
                         </div>
                       </div>
                     </div>

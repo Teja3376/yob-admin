@@ -37,12 +37,12 @@ export function AmenitiesAndFeatures({
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {amenities.map((amenity) => (
               <Card key={amenity._id} className="overflow-hidden">
-                <div className="h-40 overflow-hidden bg-gray-200">
+                <div className="h-56 overflow-hidden bg-gray-200">
                   <Image
-                    src={ "https://placehold.co/600x400"}
+                    src={ amenity.image || "https://placehold.co/600x400"}
                     alt={amenity.name}
-                    width={100}
-                    height={100}
+                    width={1000}
+                    height={1000}
                     className="object-cover"
                   />
                 </div>
@@ -70,12 +70,12 @@ export function AmenitiesAndFeatures({
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {features.map((feature) => (
               <Card key={feature._id} className="overflow-hidden">
-                <div className="h-40 overflow-hidden bg-gray-200">
+                <div className="h-56 overflow-hidden bg-gray-200">
                   <Image
-                    src={ "https://placehold.co/600x400"}
+                    src={ feature.image}
                     alt={feature.name}
-                    width={100}
-                    height={100}
+                    width={1000}
+                    height={1000}
                     className="object-cover"
                   />
                 </div>

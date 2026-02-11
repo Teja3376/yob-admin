@@ -165,7 +165,7 @@ export default function AssetDetailPage() {
           name={assetData.name}
           location={location}
           status={assetData.status as 'pending' | 'approved' | 'active'}
-        //   imageUrl={assetData.media.imageURL}
+          imageUrl={assetData.media.imageURL}
           stage={assetData.stage}
         />
 
