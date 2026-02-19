@@ -42,7 +42,6 @@ const SpvListPage = () => {
     return statusMap[tab];
   };
 
-  console.log(status, "status");
   const { data, isLoading, isError, error } = useGetAllSpv({
     page,
     limit,

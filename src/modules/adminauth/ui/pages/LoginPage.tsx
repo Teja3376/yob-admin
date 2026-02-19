@@ -33,9 +33,8 @@ const LoginPage = () => {
         },
         onError: (error: any) => {
           toast.error(error?.message || "Login failed");
-          console.log("Login error:", error);
         },
-      }
+      },
     );
   };
 
@@ -52,17 +51,13 @@ const LoginPage = () => {
               fill
             />
           </div>
-          <h1 className="text-2xl font-semibold text-gray-900">Super Admin Panel</h1>
+          <h1 className="text-2xl font-semibold text-gray-900">
+            Super Admin Panel
+          </h1>
           <p className="text-gray-600 mt-2">Sign in to your account</p>
         </div>
 
-        {loginError && (
-          <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-md">
-            {loginError}
-          </div>
-        )}
-
-        <LoginForm onSubmit={handleLogin} isLoading={isPending} />
+        <LoginForm onSubmit={handleLogin} isLoading={isPending} loginError={loginError} />
 
         <div className="mt-6 text-center text-sm text-gray-600" />
       </div>

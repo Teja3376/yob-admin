@@ -79,7 +79,6 @@ export const spvTableCols = (): ColumnDef<SpvRow>[] => {
             size="icon"
             onClick={() => {
               // Handle edit action
-              console.log("Edit", row.original.spvId);
             }}
           >
             <Pencil size={16} />
