@@ -28,7 +28,6 @@ const SpvPage = () => {
 
   const handleRequestUpdate = () => {
     // Handle request update logic
-    console.log("Request to update");
   };
 
   const handleApprove = () => {

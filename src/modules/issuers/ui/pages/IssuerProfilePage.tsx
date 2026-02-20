@@ -31,7 +31,6 @@ const IssuerProfilePage = () => {
     isPending,
     error: updateStatusError,
   } = useUpdateIssuerStatus(issuerId as string);
-  console.log({ issuer });
   const handleUpdateStatus = (status: "approved" | "rejected") => {
     updateIssuerStatus(status, {
       onSuccess: () => {
