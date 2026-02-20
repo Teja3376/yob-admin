@@ -17,8 +17,7 @@ type SpvRow = {
   updatedAt?: string;
 };
 
-export const spvTableCols = (): ColumnDef<SpvRow>[] => {
-  const router = useRouter();
+export const spvTableCols = (router: ReturnType<typeof useRouter>): ColumnDef<SpvRow>[] => {
   return [
     {
       header: "Spv Id",

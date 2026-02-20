@@ -15,6 +15,7 @@ import ApprovalDialog from "../components/ApprovalDialog";
 import useApproveSpvApi from "../../hooks/useApproveSpvApi";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
+import { useDeploySpv } from "../../hooks/useDeploySpv";
 
 
 const SpvPage = () => {
@@ -25,6 +26,7 @@ const SpvPage = () => {
   );
   const { mutate: approveSpv } = useApproveSpvApi();
   const [isApproveDialogOpen, setIsApproveDialogOpen] = useState(false);
+  const { handleDeploySpv } = useDeploySpv();
 
   const handleRequestUpdate = () => {
     // Handle request update logic
@@ -36,16 +38,17 @@ const SpvPage = () => {
   };
 
   const handleConfirmApprove = () => {
-    approveSpv({ spvId: spvId as string, status: "Active" }, {
-      onSuccess: () => {
-        toast.success("SPV approved successfully");
-        setIsApproveDialogOpen(false);
-        refetch();
-      },
-      onError: () => {
-        toast.error("Failed to approve SPV");
-      },
-    });
+    // approveSpv({ spvId: spvId as string, status: "Active" }, {
+    //   onSuccess: () => {
+    //     toast.success("SPV approved successfully");
+    //     setIsApproveDialogOpen(false);
+    //     refetch();
+    //   },
+    //   onError: () => {
+    //     toast.error("Failed to approve SPV");
+    //   },
+    // });
+    handleDeploySpv(spvData);
   };
 
   const getStatusBadge = (status: string) => {

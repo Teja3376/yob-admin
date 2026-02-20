@@ -23,10 +23,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useRouter } from "next/navigation";
 
 type StatusTab = "Active" | "Rejected" | "Pending";
 
 const SpvListPage = () => {
+  const router = useRouter();
   const [status, setStatus] = useState<StatusTab>("Pending");
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
@@ -43,6 +45,7 @@ const SpvListPage = () => {
   };
 
   console.log(status, "status");
+  const cols= spvTableCols(router);
   const { data, isLoading, isError, error } = useGetAllSpv({
     page,
     limit,
@@ -121,7 +124,7 @@ const SpvListPage = () => {
         <TabsContent value={status} className="mt-6 space-y-4">
           <TableComponent
             data={data?.data || []}
-            columns={spvTableCols()}
+            columns={cols}
             model="spv"
           />
 
