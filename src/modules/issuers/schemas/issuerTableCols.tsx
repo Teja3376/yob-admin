@@ -58,7 +58,6 @@ export const issuerTableCols = (): ColumnDef<IssuerRow>[] => {
       size: 240,
       cell: ({ row }) => {
         const { email, phone } = row.original || {};
-        console.log(row.original);
         return (
           <div className="flex flex-col text-xs justify-center">
             {email && <p>{email}</p>}

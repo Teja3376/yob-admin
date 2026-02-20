@@ -24,8 +24,8 @@ const StatusBadge = ({ status }: { status: string }) => {
   return <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">Pending</Badge>;
 };
 
-export const assetTableCols = (): ColumnDef<AssetApprovalListItem>[] => {
-  const router = useRouter();
+export const assetTableCols = (  router: ReturnType<typeof useRouter>,
+): ColumnDef<AssetApprovalListItem>[] => {
   return [
     {
       header: "Asset Id",

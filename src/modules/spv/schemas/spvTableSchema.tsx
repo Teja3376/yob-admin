@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { handleCopy } from "@/utils/globalFunctions";
 import { ColumnDef } from "@tanstack/react-table";
-import { Copy, Eye, Pencil } from "lucide-react";
+import { Copy, Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 type SpvRow = {
@@ -17,8 +17,9 @@ type SpvRow = {
   updatedAt?: string;
 };
 
-export const spvTableCols = (): ColumnDef<SpvRow>[] => {
-  const router = useRouter();
+export const spvTableCols = (
+  router: ReturnType<typeof useRouter>,
+): ColumnDef<SpvRow>[] => {
   return [
     {
       header: "Spv Id",
@@ -45,14 +46,18 @@ export const spvTableCols = (): ColumnDef<SpvRow>[] => {
       header: "SPV Name",
       accessorKey: "spvname",
       cell: ({ row }) => (
-        <span className="font-medium text-gray-900">{row.original.spvname}</span>
+        <span className="font-medium text-gray-900">
+          {row.original.spvname}
+        </span>
       ),
     },
     {
       header: "Issuer Name",
       accessorKey: "type",
       cell: ({ row }) => (
-        <span className="text-sm text-gray-700">{row.original.issuername || "N/A"}</span>
+        <span className="text-sm text-gray-700">
+          {row.original.issuername || "N/A"}
+        </span>
       ),
     },
     {
@@ -74,16 +79,6 @@ export const spvTableCols = (): ColumnDef<SpvRow>[] => {
       accessorKey: "actions",
       cell: ({ row }) => (
         <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => {
-              // Handle edit action
-              console.log("Edit", row.original.spvId);
-            }}
-          >
-            <Pencil size={16} />
-          </Button>
           <Button
             variant="ghost"
             size="icon"
