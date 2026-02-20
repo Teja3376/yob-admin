@@ -52,14 +52,6 @@ interface AssetMetadata {
     availableTokensToBuy: number;
     tokenPrice?: number;
   };
-  // documents:[
-  //   document:{
-  //     document_name:string,
-  //     document_url:string,
-  //   }
-  // ]
-
-
 
 }
 

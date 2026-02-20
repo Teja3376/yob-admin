@@ -64,10 +64,6 @@ export const useDeploySpv = () => {
         catch(error) {
             console.error("Error deploying SPV:", error);
         }
-    
-
-    
-  
 }
     return { handleDeploySpv };
 }
