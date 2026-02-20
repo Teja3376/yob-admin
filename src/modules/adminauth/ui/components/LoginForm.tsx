@@ -19,9 +19,10 @@ import { LoaderCircle } from "lucide-react";
 interface LoginFormProps {
   onSubmit: (values: LoginFormValues) => Promise<void>;
   isLoading?: boolean;
+  loginError?: any;
 }
 
-function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
+function LoginForm({ onSubmit, isLoading = false, loginError }: LoginFormProps) {
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -71,6 +72,12 @@ function LoginForm({ onSubmit, isLoading = false }: LoginFormProps) {
             </FormItem>
           )}
         />
+
+        {(loginError && (
+            <div className="text-red-700">
+              {loginError.message}
+            </div>
+          ))}
 
         <Button type="submit" className="w-full" disabled={isLoading}>
           {isLoading && <LoaderCircle className="animate-spin mr-2" />}{" "}

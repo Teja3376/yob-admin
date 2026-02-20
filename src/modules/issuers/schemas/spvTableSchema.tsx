@@ -22,7 +22,6 @@ export const spvTableCols = (): ColumnDef<SpvRow>[] => {
       header: "Spv Id",
       accessorKey: "id",
       cell: ({ row }) => {
-        console.log(row.original,"row.original");
         // const shortId = row.original.id.slice(-4).toUpperCase();
         return (
           <div className="flex items-center gap-2">
@@ -84,7 +83,6 @@ export const spvTableCols = (): ColumnDef<SpvRow>[] => {
             size="icon"
             onClick={() => {
               // Handle edit action
-              console.log("Edit", row.original.id);
             }}
           >
             <Pencil size={16} />
