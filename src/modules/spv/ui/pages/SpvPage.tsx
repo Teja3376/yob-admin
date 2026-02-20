@@ -42,18 +42,31 @@ const SpvPage = () => {
   const handleConfirmApprove = async () => {
     const result = await handleDeploySpv(spvData);
     console.log("SPV deployed result:", result);
-    
 
-    approveSpv({ spvId: spvId as string, status: "Active", }, {
-      onSuccess: () => {
-        toast.success("SPV approved successfully");
-        setIsApproveDialogOpen(false);
-        refetch();
+    const blockChain = {
+      txHash: result?.txHash || "",
+      spvAddress: result?.spvAddress || "",
+      daoAddress: "",
+    };
+
+    if (!result?.txHash || !result?.spvAddress) {
+      toast.error("Failed to deploy SPV on blockchain. Approval aborted.");
+      return;
+    }
+
+    approveSpv(
+      { spvId: spvId as string, status: "Active", blockchain: blockChain },
+      {
+        onSuccess: () => {
+          toast.success("SPV approved successfully");
+          setIsApproveDialogOpen(false);
+          refetch();
+        },
+        onError: () => {
+          toast.error("Failed to approve SPV");
+        },
       },
-      onError: () => {
-        toast.error("Failed to approve SPV");
-      },
-    });
+    );
   };
 
   const getStatusBadge = (status: string) => {
