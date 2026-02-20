@@ -17,13 +17,16 @@ import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { useDeploySpv } from "../../hooks/useDeploySpv";
 
-
 const SpvPage = () => {
   const router = useRouter();
   const { spvId } = useParams();
-  const { data: spvData, isLoading, isError, error, refetch } = useGetSpvById(
-    spvId as string
-  );
+  const {
+    data: spvData,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useGetSpvById(spvId as string);
   const { mutate: approveSpv } = useApproveSpvApi();
   const [isApproveDialogOpen, setIsApproveDialogOpen] = useState(false);
   const { handleDeploySpv } = useDeploySpv();
@@ -36,23 +39,26 @@ const SpvPage = () => {
     setIsApproveDialogOpen(true);
   };
 
-  const handleConfirmApprove = () => {
-    // approveSpv({ spvId: spvId as string, status: "Active" }, {
-    //   onSuccess: () => {
-    //     toast.success("SPV approved successfully");
-    //     setIsApproveDialogOpen(false);
-    //     refetch();
-    //   },
-    //   onError: () => {
-    //     toast.error("Failed to approve SPV");
-    //   },
-    // });
-    handleDeploySpv(spvData);
+  const handleConfirmApprove = async () => {
+    const result = await handleDeploySpv(spvData);
+    console.log("SPV deployed result:", result);
+    
+
+    approveSpv({ spvId: spvId as string, status: "Active", }, {
+      onSuccess: () => {
+        toast.success("SPV approved successfully");
+        setIsApproveDialogOpen(false);
+        refetch();
+      },
+      onError: () => {
+        toast.error("Failed to approve SPV");
+      },
+    });
   };
 
   const getStatusBadge = (status: string) => {
     const statusLower = status?.toLowerCase() || "";
-    
+
     if (statusLower === "active") {
       return (
         <Badge className="bg-green-500 text-white hover:bg-green-600">
@@ -60,7 +66,7 @@ const SpvPage = () => {
         </Badge>
       );
     }
-    
+
     if (statusLower === "rejected") {
       return (
         <Badge className="bg-red-500 text-white hover:bg-red-600">
@@ -68,7 +74,7 @@ const SpvPage = () => {
         </Badge>
       );
     }
-    
+
     return (
       <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">
         Pending
@@ -97,7 +103,7 @@ const SpvPage = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-   <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2">
         <ArrowLeft
           onClick={() => router.back()}
           className="cursor-pointer"
@@ -105,7 +111,7 @@ const SpvPage = () => {
         />
         <h1 className="text-xl font-medium">{spvData.name}</h1>
         {getStatusBadge(spvData.status)}
-      </div>   
+      </div>
 
       {/* Basic Information */}
       <SpvBasicInfo
@@ -139,7 +145,11 @@ const SpvPage = () => {
       />
 
       {/* Approve Dialog */}
-     <ApprovalDialog open={isApproveDialogOpen} onOpenChange={setIsApproveDialogOpen} onConfirmApprove={handleConfirmApprove} />
+      <ApprovalDialog
+        open={isApproveDialogOpen}
+        onOpenChange={setIsApproveDialogOpen}
+        onConfirmApprove={handleConfirmApprove}
+      />
     </div>
   );
 };
