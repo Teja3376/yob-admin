@@ -13,20 +13,31 @@ const StatusBadge = ({ status }: { status: string }) => {
 
   if (s === "approved" || s === "active") {
     return (
-      <Badge className="bg-green-500 text-white hover:bg-green-600">Approved</Badge>
+      <Badge className="bg-green-500 text-white hover:bg-green-600">
+        Approved
+      </Badge>
     );
   }
 
   if (s === "rejected") {
-    return <Badge className="bg-red-500 text-white hover:bg-red-600">Rejected</Badge>;
+    return (
+      <Badge className="bg-red-500 text-white hover:bg-red-600">Rejected</Badge>
+    );
   }
 
-  return <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">Pending</Badge>;
+  return (
+    <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">
+      Pending
+    </Badge>
+  );
 };
 
-export const assetTableCols = (  router: ReturnType<typeof useRouter>,
+export const assetTableCols = (
+  router: ReturnType<typeof useRouter>,
+  status: string,
 ): ColumnDef<AssetApprovalListItem>[] => {
-  return [
+  // Step 1: base columns
+  const columns: ColumnDef<AssetApprovalListItem>[] = [
     {
       header: "Asset Id",
       accessorKey: "assetId",
@@ -37,7 +48,10 @@ export const assetTableCols = (  router: ReturnType<typeof useRouter>,
 
         return (
           <div className="flex items-center gap-2">
-            <span className="font-medium text-gray-900">{assetIdFormatted}</span>
+            <span className="font-medium text-gray-900">
+              {assetIdFormatted}
+            </span>
+
             <Button
               variant="ghost"
               size="icon"
@@ -54,32 +68,78 @@ export const assetTableCols = (  router: ReturnType<typeof useRouter>,
       header: "Asset Name",
       accessorKey: "assetName",
       cell: ({ row }) => (
-        <span className="font-medium text-gray-900">{row.original.assetName}</span>
+        <span className="font-medium text-gray-900">
+          {row.original.assetName}
+        </span>
       ),
     },
     {
       header: "Issuer Name",
       accessorKey: "issuername",
       cell: ({ row }) => (
-        <span className="text-sm text-gray-700">{row.original.issuername || "N/A"}</span>
+        <span className="text-sm text-gray-700">
+          {row.original.issuername || "N/A"}
+        </span>
       ),
     },
+  ];
+
+  // Step 2: Add Onchain column ONLY for Approved (Active)
+  // if (status === "Active") {
+  //   columns.push({
+  //     header: "Onchain Address",
+  //     accessorKey: "blockchain",
+  //     cell: ({ row }) => {
+  //       const onChainAddress =
+  //         row.original.spvId?.blockchain?.spvAddress;
+
+  //       const formattedAddress = onChainAddress
+  //         ? `${onChainAddress.slice(0, 6)}...${onChainAddress.slice(-4)}`
+  //         : "-";
+
+  //       return (
+  //         <div className="flex items-center gap-2">
+  //           <span className="font-medium text-gray-900">
+  //             {formattedAddress}
+  //           </span>
+
+  //           {onChainAddress && (
+  //             <Button
+  //               variant="ghost"
+  //               size="icon"
+  //               className="h-6 w-6"
+  //               onClick={() => handleCopy(onChainAddress)}
+  //             >
+  //               <Copy size={14} />
+  //             </Button>
+  //           )}
+  //         </div>
+  //       );
+  //     },
+  //   });
+  // }
+
+  // Step 3: remaining columns
+  columns.push(
     {
       header: "Status",
       accessorKey: "status",
       cell: ({ row }) => <StatusBadge status={row.original.status} />,
     },
-  
-    
     {
       header: "Action",
       accessorKey: "action",
       cell: ({ row }) => (
-        <Button variant="ghost" size="icon" onClick={() => router.push(`/asset-list/${row.original.assetId}`)}  >
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => router.push(`/asset-list/${row.original.assetId}`)}
+        >
           <Eye size={14} />
         </Button>
       ),
     },
-  ];
-};
+  );
 
+  return columns;
+};

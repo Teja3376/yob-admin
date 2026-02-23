@@ -5,16 +5,25 @@ import { toast } from "sonner";
 interface SendStatusPayload {
   spvId: string;
   status?: string; // default "Pending"
+  blockchain: {
+    txHash: string;
+    spvAddress: string;
+    daoAddress?: string;
+  };
 }
 
 const useApproveSpvApi = () => {
   return useMutation({
     mutationKey: ["approve-spv"],
-    mutationFn: async ({ spvId, status = "Pending" }: SendStatusPayload) => {
+    mutationFn: async ({
+      spvId,
+      status = "Pending",
+      blockchain,
+    }: SendStatusPayload) => {
       const res = await api.patch(
         `/spv-status/update`,
-        { status },
-        { params: { spvId } }
+        { status, blockchain },
+        { params: { spvId } },
       );
       return res.data;
     },
@@ -32,4 +41,3 @@ const useApproveSpvApi = () => {
 };
 
 export default useApproveSpvApi;
-

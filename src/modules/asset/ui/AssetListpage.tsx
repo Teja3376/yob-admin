@@ -19,7 +19,7 @@ const AssetListpage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const cols=assetTableCols(router)
+  const cols=assetTableCols(router,status)
 
   const {
     data,
