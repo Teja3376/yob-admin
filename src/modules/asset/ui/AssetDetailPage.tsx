@@ -16,6 +16,7 @@ import AssetApprovalDialog from "../components/AssetApprovalDialog";
 import useApproveAsset from "../hooks/useApproveAsset";
 import { toast } from "sonner";
 import { useDeployAsset } from "../hooks/useDeployAsset";
+import Loading from "@/components/Loader";
 
 export default function AssetDetailPage() {
   const { assetId } = useParams();
@@ -29,11 +30,12 @@ export default function AssetDetailPage() {
   const [isApproveDialogOpen, setIsApproveDialogOpen] = useState(false);
   const { handleDeployAsset } = useDeployAsset();
   const { mutate: approveAsset, isPending: isApproving } = useApproveAsset();
+  const [loading, setIsLoading] = useState(false);
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center mt-20">
-        <LoaderCircle size={40} className="animate-spin text-primary" />
+        <Loading message="Loading Asset details..." />{" "}
       </div>
     );
   }
@@ -62,13 +64,13 @@ export default function AssetDetailPage() {
   };
 
   const handleConfirmApprove = async () => {
-    const result = await handleDeployAsset(assetData);
+    const result = await handleDeployAsset(assetData,setIsLoading);
     console.log("Deploy Asset Result:", result);
 
     const blockchain = {
       assetAddress: result?.asset || "",
-      assetManager: result?.assetManager || "",
-      orderManager: result?.orderManager || "",
+      assetManagerAddress: result?.assetManager || "",
+      orderManagerAddress: result?.orderManager || "",
       spvIdHash: result?.spvIdHash || "",
       assetIdHash: result?.assetIdHash || "",
       txHash: result?.txHash || "",
@@ -103,7 +105,7 @@ export default function AssetDetailPage() {
           open={isApproveDialogOpen}
           onOpenChange={setIsApproveDialogOpen}
           onConfirmApprove={handleConfirmApprove}
-          isLoading={isApproving}
+          isLoading={isApproving||loading}
         />
 
         {/* Tabs for Different Sections */}

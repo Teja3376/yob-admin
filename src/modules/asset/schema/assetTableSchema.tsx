@@ -2,9 +2,9 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { handleCopy } from "@/utils/globalFunctions";
+import { handleCopy, handleViewOnBlockchain } from "@/utils/globalFunctions";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Copy, Eye } from "lucide-react";
+import { ArrowUpRight, Copy, Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { AssetApprovalListItem } from "@/modules/asset/hooks/useGetAllAsset";
 
@@ -42,8 +42,8 @@ export const assetTableCols = (
       header: "Asset Id",
       accessorKey: "assetId",
       cell: ({ row }) => {
-        const assetId = row.original.assetId;
-        const shortId = assetId?.slice(-4)?.toUpperCase?.() || "----";
+        const assetId = row.original.assetId?._id;
+        const shortId = assetId?.slice(-4)?.toUpperCase() || "----";
         const assetIdFormatted = `AST-${shortId}`;
 
         return (
@@ -85,39 +85,40 @@ export const assetTableCols = (
   ];
 
   // Step 2: Add Onchain column ONLY for Approved (Active)
-  // if (status === "Active") {
-  //   columns.push({
-  //     header: "Onchain Address",
-  //     accessorKey: "blockchain",
-  //     cell: ({ row }) => {
-  //       const onChainAddress =
-  //         row.original.spvId?.blockchain?.spvAddress;
+  if (status === "approved") {
+    columns.push({
+      header: "Onchain Address",
+      accessorKey: "blockchain",
+      cell: ({ row }) => {
+        const onChainAddress = row.original.assetId?.blockchain?.assetAddress;
 
-  //       const formattedAddress = onChainAddress
-  //         ? `${onChainAddress.slice(0, 6)}...${onChainAddress.slice(-4)}`
-  //         : "-";
+        const formattedAddress = onChainAddress
+          ? `${onChainAddress.slice(0, 6)}...${onChainAddress.slice(-4)}`
+          : "-";
 
-  //       return (
-  //         <div className="flex items-center gap-2">
-  //           <span className="font-medium text-gray-900">
-  //             {formattedAddress}
-  //           </span>
+        return (
+          <div
+            onClick={() => handleViewOnBlockchain(onChainAddress || "-", "spv")}
+            className="group flex items-center gap-2"
+          >
+            <span className="group-hover:underline cursor-pointer font-medium text-gray-900">
+              {formattedAddress}
+            </span>
 
-  //           {onChainAddress && (
-  //             <Button
-  //               variant="ghost"
-  //               size="icon"
-  //               className="h-6 w-6"
-  //               onClick={() => handleCopy(onChainAddress)}
-  //             >
-  //               <Copy size={14} />
-  //             </Button>
-  //           )}
-  //         </div>
-  //       );
-  //     },
-  //   });
-  // }
+            {onChainAddress && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6 cursor-pointer"
+              >
+                <ArrowUpRight size={14} />
+              </Button>
+            )}
+          </div>
+        );
+      },
+    });
+  }
 
   // Step 3: remaining columns
   columns.push(

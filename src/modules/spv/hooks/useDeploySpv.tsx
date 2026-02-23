@@ -4,7 +4,11 @@ import { ethers } from "ethers";
 
 export const useDeploySpv = () => {
   const { uploadSpvFiles } = useIPFSUpload();
-  const handleDeploySpv = async (spv: any) => {
+  const handleDeploySpv = async (
+    spv: any,
+    setIsLoading?: (loading: boolean) => void,
+  ) => {
+    setIsLoading?.(true);
     const {
       _id,
       name,
@@ -69,6 +73,9 @@ export const useDeploySpv = () => {
       return result;
     } catch (error) {
       console.error("Error deploying SPV:", error);
+      setIsLoading?.(false);
+    } finally {
+      setIsLoading?.(false);
     }
   };
   return { handleDeploySpv };

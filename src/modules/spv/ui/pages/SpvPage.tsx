@@ -27,9 +27,10 @@ const SpvPage = () => {
     error,
     refetch,
   } = useGetSpvById(spvId as string);
-  const { mutate: approveSpv } = useApproveSpvApi();
+  const { mutate: approveSpv, isPending: approvalPending } = useApproveSpvApi();
   const [isApproveDialogOpen, setIsApproveDialogOpen] = useState(false);
   const { handleDeploySpv } = useDeploySpv();
+  const [loading, setIsLoading] = useState(false);
 
   const handleRequestUpdate = () => {
     // Handle request update logic
@@ -40,7 +41,7 @@ const SpvPage = () => {
   };
 
   const handleConfirmApprove = async () => {
-    const result = await handleDeploySpv(spvData);
+    const result = await handleDeploySpv(spvData, setIsLoading);
     console.log("SPV deployed result:", result);
 
     const blockChain = {
@@ -162,6 +163,7 @@ const SpvPage = () => {
         open={isApproveDialogOpen}
         onOpenChange={setIsApproveDialogOpen}
         onConfirmApprove={handleConfirmApprove}
+        isLoading={approvalPending || loading}
       />
     </div>
   );

@@ -1,11 +1,16 @@
 import useIPFSUpload from "@/web3/ipfs/useipfsUpload";
 import { deployAsset } from "@/web3/asset/deployAsset";
 import { ethers } from "ethers";
+import { set } from "date-fns";
 
 export const useDeployAsset = () => {
   const { uploadProjectFiles } = useIPFSUpload();
-  const handleDeployAsset = async (asset: any) => {
+  const handleDeployAsset = async (
+    asset: any,
+    setIsLoading: (loading: boolean) => void,
+  ) => {
     console.log("Deploying asset with data:", asset);
+    setIsLoading(true);
     const {
       spvId,
       _id,
@@ -95,6 +100,8 @@ export const useDeployAsset = () => {
     } catch (error) {
       console.error("Error deploying Asset:", error);
       throw error;
+    } finally {
+      setIsLoading(false);
     }
   };
   return { handleDeployAsset };

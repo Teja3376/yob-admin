@@ -7,8 +7,8 @@ interface ApproveAssetPayload {
   status?: string; // default "pending"
   blockchain?: {
     assetAddress: string;
-    assetManager: string;
-    orderManager: string;
+    assetManagerAddress: string;
+    orderManagerAddress: string;
     spvIdHash: string;
     assetIdHash: string;
   };
