@@ -77,6 +77,8 @@ export async function deployAsset(
     tokenPrice,
   } = params;
 
+  console.log("Preparing to deploy asset with the following parameters:",params);
+
 
   if (!spvId || spvId.length > 256) throw new Error("spvId must be 1–256 bytes");
   if (!assetId || assetId.length > 256) throw new Error("assetId must be 1–256 bytes");
@@ -181,8 +183,10 @@ export async function deployAsset(
         console.log("  Order Manager :", orderManager);
         break;
       }
-    } catch {
-    
+    } catch (err) {
+      console.error("Non-matching log, skipping...", err);
+      throw err;
+
     }
   }
 

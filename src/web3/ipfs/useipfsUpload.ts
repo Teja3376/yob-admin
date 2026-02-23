@@ -117,6 +117,7 @@ const useIPFSUpload = () => {
     setLoading(true);
     setError(null);
     const fileUrls: { [key: string]: string } = {};
+    console.log('Starting upload of project files to IPFS with metadata:', metadata);
 
     try {
       // Upload company metadata to IPFS

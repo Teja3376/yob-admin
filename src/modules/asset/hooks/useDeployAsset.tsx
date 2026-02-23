@@ -20,6 +20,20 @@ export const useDeployAsset = () => {
       brokerage,
       investorRequirementsAndTimeline,
     } = asset;
+    console.log("Extracted asset details:", {
+      spvId,
+      _id,
+      name,
+      style,
+      currency,
+      about,
+      company,
+      tokenInformation,
+      legalAdivisory,
+      assetManagementCompany,
+      brokerage,
+      investorRequirementsAndTimeline,
+    });
     try {
       const metaDataCID = await uploadProjectFiles({
         spvId,
@@ -62,7 +76,8 @@ export const useDeployAsset = () => {
       const metaCIDString = ethers.utils.formatBytes32String(
         metaDataCID.toString(),
       );
-      const formattedTotalSupply = tokenInformation?.tokenSupply?.toString() || "0";
+      const formattedTotalSupply =
+        tokenInformation?.tokenSupply?.toString() || "0";
       const result = await deployAsset({
         spvId,
         assetId: _id,
@@ -74,11 +89,13 @@ export const useDeployAsset = () => {
         spv: company?.blockchain?.spvAddress,
         assetOwner: "0x4C8bDd3A27575279f8d7e498e71d570f2e476Fd2",
         lockUpDuration: investorRequirementsAndTimeline?.lockupPeriod,
-        tokenPrice: tokenInformation?.tokenPrice       
-      })
+        tokenPrice: tokenInformation?.tokenPrice,
+      });
+      return result;
     } catch (error) {
       console.error("Error deploying Asset:", error);
       throw error;
     }
   };
+  return { handleDeployAsset };
 };
