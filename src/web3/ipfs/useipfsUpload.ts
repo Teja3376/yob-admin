@@ -38,10 +38,11 @@ interface SpvMetadata {
 }
 
 interface AssetMetadata {
+  spvId: string;
+  assetId: string;
   name: string;
   assetStyle: string;
   currency: string;
-  instrumentType: string;
   description: string;
   companyName: string;
   tokenInformation: {
@@ -50,8 +51,25 @@ interface AssetMetadata {
     minimumTokensToBuy: number;
     maximumTokensToBuy: number;
     availableTokensToBuy: number;
-    tokenPrice?: number;
+    tokenPrice: number;
   };
+  documents:{
+    legalAdvisory:{
+      name: string;
+      doc_name: string;
+      url: string;
+    },
+    assetManagementCompany:{
+      name: string;
+      doc_name: string;
+      url: string;
+    },
+    brokerage:{
+      name: string;
+      doc_name: string;
+      url: string;
+    }
+  }
 
 }
 
