@@ -163,32 +163,32 @@ export async function deployAsset(
 
   let deployed: Omit<DeployAssetResult, "txHash" | "blockNumber"> | null = null;
 
-  for (const log of receipt.logs) {
-    try {
-      const parsed = factory.interface.parseLog(log);
-      if (parsed?.name === "AssetSuiteDeployed") {
-        const { spvIdHash, assetId, asset, assetManager, orderManager } = parsed.args;
+for (const log of receipt.logs) {
+  try {
+    const parsed = factory.interface.parseLog(log);
 
-        deployed = {
-          asset,
-          assetManager,
-          orderManager,
-          spvIdHash,
-          assetIdHash: assetId,
-        };
+    if (parsed?.name === "AssetSuiteDeployed") {
+      const { spvIdHash, assetId, asset, assetManager, orderManager } = parsed.args;
 
-        console.log("\nAsset Deployed Successfully!");
-        console.log("  Asset         :", asset);
-        console.log("  Asset Manager :", assetManager);
-        console.log("  Order Manager :", orderManager);
-        break;
-      }
-    } catch (err) {
-      console.error("Non-matching log, skipping...", err);
-      throw err;
+      deployed = {
+        asset,
+        assetManager,
+        orderManager,
+        spvIdHash,
+        assetIdHash: assetId,
+      };
 
+      console.log("\nAsset Deployed Successfully!");
+      console.log("  Asset         :", asset);
+      console.log("  Asset Manager :", assetManager);
+      console.log("  Order Manager :", orderManager);
+
+      break;
     }
+  } catch {
+    
   }
+}
 
   return {
     txHash: receipt.transactionHash,

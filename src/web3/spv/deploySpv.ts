@@ -82,14 +82,7 @@ export async function deploySPV({
 const maxPriorityFeePerGas = ethers.utils.parseUnits("30", "gwei");
 const maxFeePerGas = ethers.utils.parseUnits("80", "gwei");
 
-  console.log("Deploying SPV...");
-  console.log("  spvId    :", spvId);
-  console.log("  name     :", name);
-  console.log("  metaCID  :", metaCIDBytes32);
-  console.log("  from     :", signer.address);
-  console.log("  gasLimit :", gasLimit.toString());
-  console.log("  maxFeePerGas        :", maxFeePerGas.toString());
-  console.log("  maxPriorityFeePerGas:", maxPriorityFeePerGas.toString());
+
 
   const tx = await factory.deploySPV(spvId, name, metaCIDBytes32, {
     gasLimit,
@@ -97,10 +90,10 @@ const maxFeePerGas = ethers.utils.parseUnits("80", "gwei");
     maxPriorityFeePerGas,
   });
 
-  console.log("Transaction sent:", tx.hash);
+  console.log("Transaction Hash:", tx.hash);
 
   const receipt = await tx.wait(1);
-  console.log("Transaction mined in block:", receipt.blockNumber);
+
 
   let deployedSPV: Omit<DeploySPVResult, "txHash" | "blockNumber"> | null = null;
 
@@ -117,8 +110,7 @@ const maxFeePerGas = ethers.utils.parseUnits("80", "gwei");
 
         console.log("\nSPV Deployed Successfully!");
         console.log("  SPV Address :", spv);
-        console.log("  ID Hash     :", idHash);
-        console.log("  SPV ID      :", deployedSpvId);
+
         break;
       }
     } catch {

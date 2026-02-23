@@ -5,7 +5,6 @@ import { ethers } from "ethers";
 export const useDeploySpv = () => {
   const { uploadSpvFiles } = useIPFSUpload();
   const handleDeploySpv = async (spv: any) => {
-    console.log("Deploying SPV with data:", spv);
     const {
       _id,
       name,
@@ -17,17 +16,7 @@ export const useDeploySpv = () => {
       memoAndTerms,
       legalDocuments,
     } = spv;
-    console.log("SPV details:", {
-      _id,
-      name,
-      type,
-      currency,
-      jurisdiction,
-      formationDate,
-      businessPurpose,
-      memoAndTerms,
-      legalDocuments,
-    });
+
     try {
       const metaDataCID = await uploadSpvFiles({
         name,
@@ -68,7 +57,6 @@ export const useDeploySpv = () => {
       if (!metaDataCID) {
         throw new Error("Failed to upload SPV metadata to IPFS");
       }
-      console.log("SPV metadata uploaded to IPFS with CID:", metaDataCID);
       const metaCIDString = ethers.utils.formatBytes32String(
         metaDataCID.toString(),
       );
