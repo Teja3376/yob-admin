@@ -23,7 +23,7 @@ const SpvListPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const cols= spvTableCols(router);
+  const cols= spvTableCols(router,status);
 
   // Map UI tabs to API status values
   const getApiStatus = (tab: StatusTab): string => {

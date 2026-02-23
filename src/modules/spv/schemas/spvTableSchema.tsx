@@ -1,14 +1,19 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { handleCopy } from "@/utils/globalFunctions";
+import { handleCopy, handleViewOnBlockchain } from "@/utils/globalFunctions";
 import { ColumnDef } from "@tanstack/react-table";
-import { Copy, Eye } from "lucide-react";
+import { ArrowUpRight, Copy, Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 type SpvRow = {
   _id: string;
   issuerId: string;
-  spvId: string;
+  spvId: {
+    _id: string;
+    blockchain?: {
+      spvAddress?: string;
+    };
+  };
   issuername: string;
   spvname: string;
   type?: string;
@@ -19,13 +24,15 @@ type SpvRow = {
 
 export const spvTableCols = (
   router: ReturnType<typeof useRouter>,
+  status: string,
 ): ColumnDef<SpvRow>[] => {
-  return [
+  // Step 1: create base columns
+  const columns: ColumnDef<SpvRow>[] = [
     {
       header: "Spv Id",
       accessorKey: "spvId",
       cell: ({ row }) => {
-        const shortId = row.original.spvId.slice(-4).toUpperCase();
+        const shortId = row.original.spvId?._id.slice(-4).toUpperCase();
         const spvIdFormatted = `SPV-${shortId}`;
         return (
           <div className="flex items-center gap-2">
@@ -53,13 +60,49 @@ export const spvTableCols = (
     },
     {
       header: "Issuer Name",
-      accessorKey: "type",
+      accessorKey: "issuername",
       cell: ({ row }) => (
         <span className="text-sm text-gray-700">
           {row.original.issuername || "N/A"}
         </span>
       ),
     },
+  ];
+
+  if (status === "Active") {
+    columns.push({
+      header: "Onchain Address",
+      accessorKey: "blockchain",
+      cell: ({ row }) => {
+        const onChainAddress = row.original.spvId?.blockchain?.spvAddress;
+        const formattedAddress = onChainAddress
+          ? `${onChainAddress.slice(0, 6)}...${onChainAddress.slice(-4)}`
+          : "-";
+
+        return (
+          <div className=" group flex items-center gap-2">
+            <span className="group-hover:underline font-medium text-gray-900 cursor-pointer">
+              {formattedAddress}
+            </span>
+            {onChainAddress && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6 cursor-pointer"
+                onClick={() =>
+                  handleViewOnBlockchain(onChainAddress || "-", "spv")
+                }
+              >
+                <ArrowUpRight size={14} />
+              </Button>
+            )}
+          </div>
+        );
+      },
+    });
+  }
+
+  columns.push(
     {
       header: "Last Activity",
       accessorKey: "updatedAt",
@@ -83,7 +126,7 @@ export const spvTableCols = (
             variant="ghost"
             size="icon"
             onClick={() => {
-              router.push(`/spv-list/${row.original.spvId}`);
+              router.push(`/spv-list/${row.original.spvId?._id}`);
             }}
           >
             <Eye size={16} />
@@ -91,5 +134,7 @@ export const spvTableCols = (
         </div>
       ),
     },
-  ];
+  );
+
+  return columns;
 };
