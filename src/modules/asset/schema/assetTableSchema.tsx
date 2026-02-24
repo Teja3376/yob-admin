@@ -134,7 +134,7 @@ export const assetTableCols = (
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => router.push(`/asset-list/${row.original.assetId}`)}
+          onClick={() => router.push(`/asset-list/${row.original.assetId?._id}`)}
         >
           <Eye size={14} />
         </Button>
