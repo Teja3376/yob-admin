@@ -98,7 +98,7 @@ export const assetTableCols = (
 
         return (
           <div
-            onClick={() => handleViewOnBlockchain(onChainAddress || "-", "spv")}
+            onClick={() => handleViewOnBlockchain(onChainAddress || "-", "asset")}
             className="group flex items-center gap-2"
           >
             <span className="group-hover:underline cursor-pointer font-medium text-gray-900">
