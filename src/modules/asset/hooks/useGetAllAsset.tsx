@@ -6,7 +6,17 @@ type AssetApprovalStatus = "pending" | "approved" | "rejected" | string;
 export type AssetApprovalListItem = {
   _id: string;
   issuerId: string;
-  assetId: string;
+  assetId:
+     {
+        name: string;
+        _id: string;
+        blockchain?: {
+          assetAddress: string;
+          assetManagerAddress: string;
+          orderManagerAddress: string;
+        };
+      };
+
   issuername: string;
   assetName: string;
   status: string;
@@ -44,14 +54,17 @@ export const useGetAllAsset = (params: UseGetAllAssetParams = {}) => {
   return useQuery({
     queryKey: ["asset-approval-list", page, limit, status, search],
     queryFn: async () => {
-      const res = await api.get<AssetApprovalListResponse>("/asset-approval/list", {
-        params: {
-          page,
-          limit,
-          status,
-          ...(search ? { search } : {}),
+      const res = await api.get<AssetApprovalListResponse>(
+        "/asset-approval/list",
+        {
+          params: {
+            page,
+            limit,
+            status,
+            ...(search ? { search } : {}),
+          },
         },
-      });
+      );
       return res.data;
     },
     staleTime: 1 * 60 * 1000, // 1 minute

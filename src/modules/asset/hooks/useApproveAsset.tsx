@@ -5,16 +5,27 @@ import { toast } from "sonner";
 interface ApproveAssetPayload {
   assetId: string;
   status?: string; // default "pending"
+  blockchain?: {
+    assetAddress: string;
+    assetManagerAddress: string;
+    orderManagerAddress: string;
+    spvIdHash: string;
+    assetIdHash: string;
+  };
 }
 
 const useApproveAsset = () => {
   return useMutation({
     mutationKey: ["approve-asset"],
-    mutationFn: async ({ assetId, status = "pending" }: ApproveAssetPayload) => {
+    mutationFn: async ({
+      assetId,
+      status = "pending",
+      blockchain,
+    }: ApproveAssetPayload) => {
       const res = await api.patch(
         `/asset-approval/update`,
-        { status },
-        { params: { assetId } }
+        { status, blockchain },
+        { params: { assetId } },
       );
       return res.data;
     },

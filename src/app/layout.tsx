@@ -49,7 +49,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={poppins.variable}>
         <Providers>{children}</Providers>
-        <Toaster theme="light" richColors position="top-right" />
+        <Toaster theme="light"  position="bottom-right" />
       </body>
     </html>
   );

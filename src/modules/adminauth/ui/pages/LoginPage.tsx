@@ -11,8 +11,10 @@ import { toast } from "sonner";
 
 const LoginPage = () => {
   const router = useRouter();
-  const { mutate: login, isPending, error: loginError } = useAdminLogin();
+  const { mutate: login, isPending,error } = useAdminLogin();
   const { isAuthenticated, setUser } = useAuthStore1();
+  // console.log("LoginPage rendered, isAuthenticated:", loginError);
+
 
   React.useEffect(() => {
     if (isAuthenticated) {
@@ -32,7 +34,7 @@ const LoginPage = () => {
           setUser(data.user);
         },
         onError: (error: any) => {
-          toast.error(error?.message || "Login failed");
+          console.log("Login error:", error);
         },
       },
     );
@@ -57,7 +59,13 @@ const LoginPage = () => {
           <p className="text-gray-600 mt-2">Sign in to your account</p>
         </div>
 
-        <LoginForm onSubmit={handleLogin} isLoading={isPending} loginError={loginError} />
+        {/* {loginError && (
+          <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-md">
+            {loginError.message}
+          </div>
+        )} */}
+
+        <LoginForm onSubmit={handleLogin} isLoading={isPending} error={error?.message} />
 
         <div className="mt-6 text-center text-sm text-gray-600" />
       </div>

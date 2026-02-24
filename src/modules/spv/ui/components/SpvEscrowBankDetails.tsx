@@ -5,7 +5,8 @@ type EscrowBankDetails = {
   bankName: string;
   accountType: string;
   accountNumber: string;
-  ifscCode: string;
+  routingNumber?: string;
+  ifscCode?: string;
 };
 
 type SpvEscrowBankDetailsProps = {
@@ -34,10 +35,20 @@ const SpvEscrowBankDetails: React.FC<SpvEscrowBankDetailsProps> = ({
             <p className="text-sm text-muted-foreground mb-1">Account Number</p>
             <p className="font-medium">{escrowBankDetails.accountNumber}</p>
           </div>
-          <div>
-            <p className="text-sm text-muted-foreground mb-1">IFSC Code</p>
-            <p className="font-medium">{escrowBankDetails.ifscCode}</p>
-          </div>
+          {escrowBankDetails.routingNumber && (
+            <div>
+              <p className="text-sm text-muted-foreground mb-1">
+                Routing Number
+              </p>
+              <p className="font-medium">{escrowBankDetails.routingNumber}</p>
+            </div>
+          )}
+          {
+            <div>
+              <p className="text-sm text-muted-foreground mb-1">IFSC Code</p>
+              <p className="font-medium">{escrowBankDetails.ifscCode}</p>
+            </div>
+          }
         </div>
       </CardContent>
     </Card>

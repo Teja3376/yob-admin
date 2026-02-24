@@ -4,33 +4,26 @@ import React, { useState } from "react";
 import TableComponent from "@/components/common/TableComponent";
 import {
   LoaderCircle,
-  Plus,
-  Filter,
   Search,
-  ChevronLeft,
-  ChevronRight,
+ 
 } from "lucide-react";
 import { useGetAllSpv } from "../../hooks/useGetAllSpv";
-import { spvTableCols } from "../schemas/spvTableSchema";
+import { spvTableCols } from "../../schemas/spvTableSchema";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Pagination, PaginationContent, PaginationItem } from "@/components/ui/pagination";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
+import { useRouter } from "next/navigation";
+import Pagination from "@/components/common/Pagination";
 
 type StatusTab = "Active" | "Rejected" | "Pending";
 
 const SpvListPage = () => {
+  const router = useRouter();
   const [status, setStatus] = useState<StatusTab>("Pending");
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
+  const cols= spvTableCols(router,status);
 
   // Map UI tabs to API status values
   const getApiStatus = (tab: StatusTab): string => {
@@ -41,8 +34,12 @@ const SpvListPage = () => {
     };
     return statusMap[tab];
   };
-
-  const { data, isLoading, isError, error } = useGetAllSpv({
+  const {
+    data,
+    isFetching: isLoading,
+    isError,
+    error,
+  } = useGetAllSpv({
     page,
     limit,
     status: getApiStatus(status),
@@ -54,13 +51,14 @@ const SpvListPage = () => {
     setPage(1); // Reset to first page when changing tabs
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center mt-20">
-        <LoaderCircle size={40} className="animate-spin text-primary" />
-      </div>
-    );
-  }
+  const onPageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
+  const onPageSizeChange = (pageSize: number) => {
+    setLimit(pageSize);
+    setPage(1);
+  };
 
   if (isError) {
     return (
@@ -82,7 +80,10 @@ const SpvListPage = () => {
           Special Purpose Vehicles (SPV) List
         </h1>
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+          <Search
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            size={18}
+          />
           <Input
             placeholder="Search"
             value={searchQuery}
@@ -90,97 +91,61 @@ const SpvListPage = () => {
             className="pl-10"
           />
         </div>
-      
       </div>
 
       {/* Tabs */}
       <Tabs value={status} onValueChange={handleTabChange}>
-        <TabsList className="bg-transparent border-b border-gray-200 rounded-none p-0 h-auto">
-        <TabsTrigger
+        <TabsList className="bg-transparent border-b border-gray-200 rounded-none p-0 h-auto gap-5 ">
+          <TabsTrigger
             value="Pending"
-            className="data-[state=active]:border-b-2 text-black data-[state=active]:border-b-black data-[state=active]:text-black data-[state=active]:bg-transparent rounded-none border-b-2 border-transparent"
+            className="data-[state=active]:border-b-2 data-[state=active]:shadow-none text-black data-[state=active]:border-b-primary data-[state=active]:text-primary data-[state=active]:bg-transparent rounded-none border-b-2 border-transparent"
           >
             Pending
           </TabsTrigger>
           <TabsTrigger
             value="Rejected"
-            className="data-[state=active]:border-b-2 text-black data-[state=active]:border-b-black data-[state=active]:text-black data-[state=active]:bg-transparent rounded-none border-b-2 border-transparent"
+            className="data-[state=active]:border-b-2 data-[state=active]:shadow-none text-black data-[state=active]:border-b-primary data-[state=active]:text-primary data-[state=active]:bg-transparent rounded-none border-b-2 border-transparent"
           >
             Rejected
           </TabsTrigger>
-         
+
           <TabsTrigger
             value="Active"
-            className="data-[state=active]:border-b-2 text-black data-[state=active]:border-b-black data-[state=active]:text-black data-[state=active]:bg-transparent rounded-none border-b-2 border-transparent"
+            className="data-[state=active]:border-b-2 data-[state=active]:shadow-none text-black data-[state=active]:border-b-primary data-[state=active]:text-primary data-[state=active]:bg-transparent rounded-none border-b-2 border-transparent"
           >
             Approved
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value={status} className="mt-6 space-y-4">
-          <TableComponent
-            data={data?.data || []}
-            columns={spvTableCols()}
-            model="spv"
-          />
+          {isLoading && !data ? (
+            <div className="flex items-center justify-center mt-20">
+              <LoaderCircle size={40} className="animate-spin text-primary" />
+            </div>
+          ) : (
+            <TableComponent
+              data={data?.data || []}
+              columns={cols}
+              model="spv"
+            />
+          )}
 
           {/* Pagination */}
-          {pagination && (
-            <div className="flex items-center justify-between pt-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-600">Per page</span>
-                <Select
-                  value={limit.toString()}
-                  onValueChange={(value) => {
-                    setLimit(Number(value));
-                    setPage(1);
-                  }}
-                >
-                  <SelectTrigger className="w-20 h-8">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="10">10</SelectItem>
-                    <SelectItem value="20">20</SelectItem>
-                    <SelectItem value="50">50</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setPage((p) => Math.max(1, p - 1))}
-                      disabled={!pagination.hasPreviousPage}
-                      className="h-8 w-8"
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                    </Button>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() =>
-                        setPage((p) =>
-                          pagination.hasNextPage ? p + 1 : p
-                        )
-                      }
-                      disabled={!pagination.hasNextPage}
-                      className="h-8 w-8"
-                    >
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
-            </div>
-          )}
         </TabsContent>
       </Tabs>
+      {pagination && data?.data.length > 0 && (
+        <Pagination
+          currentPage={pagination?.currentPage ?? 1}
+          totalPages={pagination?.totalPages ?? 1}
+          totalCount={pagination?.totalCount ?? 0}
+          hasNextPage={pagination?.hasNextPage ?? false}
+          hasPreviousPage={pagination?.hasPreviousPage ?? false}
+          limit={pagination?.limit ?? limit}
+          page={pagination?.page ?? page}
+          onPageChange={onPageChange}
+          onPageSizeChange={onPageSizeChange}
+        />
+      )}
     </div>
   );
 };

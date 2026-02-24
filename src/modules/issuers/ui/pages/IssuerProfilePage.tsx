@@ -15,12 +15,14 @@ import KybVerificationStatus from "../components/KybVerificationStatus";
 import SubmitDecision from "../components/SubmitDecision";
 import { toast } from "sonner";
 import TableComponent from "@/components/common/TableComponent";
-import { spvTableCols } from "../../schemas/spvTableSchema";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { spvTableCols } from "@/modules/spv/schemas/spvTableSchema";
+import { assetTableCols } from "@/modules/asset/schema/assetTableSchema";
 
 const IssuerProfilePage = () => {
   const { issuerId } = useParams();
   const router = useRouter();
+  const spvCols = spvTableCols(router,"all");
   const {
     data: issuer,
     isFetching,
@@ -109,13 +111,13 @@ const IssuerProfilePage = () => {
         <TabsContent value="spvs">
           <TableComponent
             data={issuer?.spvs || []}
-            columns={spvTableCols()}
+            columns={spvCols}
             model="spv" />
           </TabsContent>
           <TabsContent value="assets">
             <TableComponent
               data={issuer?.assets || []}
-              columns={[]}
+              columns={assetTableCols(router, "all")}
               model="asset"
             />
           </TabsContent>

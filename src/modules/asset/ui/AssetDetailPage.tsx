@@ -1,33 +1,41 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useParams } from 'next/navigation';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AssetDetailHeader } from '../components/AssetDetail/AssetdetailHeader';
-import { PropertyOverview } from '../components/AssetDetail/Propertyoverview';
-import { FinancialDetails } from '../components/AssetDetail/FinancialDetails';
+import { useState } from "react";
+import { useParams } from "next/navigation";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AssetDetailHeader } from "../components/AssetDetail/AssetdetailHeader";
+import { PropertyOverview } from "../components/AssetDetail/Propertyoverview";
+import { FinancialDetails } from "../components/AssetDetail/FinancialDetails";
 // import { AmenitiesAndFeatures } from '../components/AssetDetail/AmenitiesAndFeatures';
-import { DocumentsAndTenants } from '../components/AssetDetail/DocumentsAndTenants';
-import { RiskAndAdditionalInfo } from '../components/AssetDetail/RiskAndAdditionalInfo';
-import { AmenitiesAndFeatures } from '../components/AssetDetail/AmenitiesAndFeatures';
-import useGetAssetById from '../hooks/useGetAssetByID';
-import { LoaderCircle } from 'lucide-react';
-import AssetApprovalDialog from '../components/AssetApprovalDialog';
-import useApproveAsset from '../hooks/useApproveAsset';
-import { toast } from 'sonner';
+import { DocumentsAndTenants } from "../components/AssetDetail/DocumentsAndTenants";
+import { RiskAndAdditionalInfo } from "../components/AssetDetail/RiskAndAdditionalInfo";
+import { AmenitiesAndFeatures } from "../components/AssetDetail/AmenitiesAndFeatures";
+import useGetAssetById from "../hooks/useGetAssetByID";
+import { LoaderCircle } from "lucide-react";
+import AssetApprovalDialog from "../components/AssetApprovalDialog";
+import useApproveAsset from "../hooks/useApproveAsset";
+import { toast } from "sonner";
+import { useDeployAsset } from "../hooks/useDeployAsset";
+import Loading from "@/components/Loader";
 
 export default function AssetDetailPage() {
   const { assetId } = useParams();
-  const { data: assetData, isLoading, isError, error, refetch } = useGetAssetById(
-    assetId as string,
-  );
+  const {
+    data: assetData,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useGetAssetById(assetId as string);
   const [isApproveDialogOpen, setIsApproveDialogOpen] = useState(false);
+  const { handleDeployAsset } = useDeployAsset();
   const { mutate: approveAsset, isPending: isApproving } = useApproveAsset();
+  const [loading, setIsLoading] = useState(false);
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center mt-20">
-        <LoaderCircle size={40} className="animate-spin text-primary" />
+        <Loading message="Loading Asset details..." />{" "}
       </div>
     );
   }
@@ -36,7 +44,7 @@ export default function AssetDetailPage() {
     return (
       <div className="flex items-center justify-center mt-20">
         <p className="text-red-500">
-          Error loading Asset details: {error?.message || 'Asset not found'}
+          Error loading Asset details: {error?.message || "Asset not found"}
         </p>
       </div>
     );
@@ -44,20 +52,31 @@ export default function AssetDetailPage() {
 
   const location = `${assetData.city}, ${assetData.state} • ${assetData.landmark}`;
   const isAlreadyApproved =
-    (assetData.status || '').toLowerCase() === 'approved' ||
-    (assetData.status || '').toLowerCase() === 'active';
+    (assetData.status || "").toLowerCase() === "approved" ||
+    (assetData.status || "").toLowerCase() === "active";
 
   const handleRequestUpdate = () => {
-    toast.info('Request update clicked');
+    toast.info("Request update clicked");
   };
 
   const handleApproveClick = () => {
     setIsApproveDialogOpen(true);
   };
 
-  const handleConfirmApprove = () => {
+  const handleConfirmApprove = async () => {
+    const result = await handleDeployAsset(assetData,setIsLoading);
+    console.log("Deploy Asset Result:", result);
+
+    const blockchain = {
+      assetAddress: result?.asset || "",
+      assetManagerAddress: result?.assetManager || "",
+      orderManagerAddress: result?.orderManager || "",
+      spvIdHash: result?.spvIdHash || "",
+      assetIdHash: result?.assetIdHash || "",
+      txHash: result?.txHash || "",
+    };
     approveAsset(
-      { assetId: assetId as string, status: 'approved' },
+      { assetId: assetId as string, status: "approved", blockchain },
       {
         onSuccess: () => {
           setIsApproveDialogOpen(false);
@@ -74,7 +93,7 @@ export default function AssetDetailPage() {
         <AssetDetailHeader
           name={assetData.name}
           location={location}
-          status={assetData.status as 'pending' | 'approved' | 'active'}
+          status={assetData.status as "pending" | "approved" | "active"}
           imageUrl={assetData?.media?.imageURL}
           stage={assetData.stage}
           onRequestUpdate={handleRequestUpdate}
@@ -86,22 +105,42 @@ export default function AssetDetailPage() {
           open={isApproveDialogOpen}
           onOpenChange={setIsApproveDialogOpen}
           onConfirmApprove={handleConfirmApprove}
-          isLoading={isApproving}
+          isLoading={isApproving||loading}
         />
 
         {/* Tabs for Different Sections */}
         <Tabs defaultValue="overview" className="mt-8">
           <TabsList className="grid w-full grid-cols-4 lg:w-fit text-black ">
-            <TabsTrigger value="overview" className="text-black font-medium   data-[state=active]:text-black data-[state=active]:font-medium ">Overview</TabsTrigger>
-            <TabsTrigger value="financial" className="text-black  font-medium data-[state=active]:text-black data-[state=active]:font-medium">Financial</TabsTrigger>
-            <TabsTrigger value="assets" className="text-black font-medium  data-[state=active]:text-black data-[state=active]:font-medium">Assets</TabsTrigger>
-            <TabsTrigger value="risk" className="text-black font-medium  data-[state=active]:text-black data-[state=active]:font-medium">Risk</TabsTrigger>
+            <TabsTrigger
+              value="overview"
+              className="text-black font-medium   data-[state=active]:text-black data-[state=active]:font-medium "
+            >
+              Overview
+            </TabsTrigger>
+            <TabsTrigger
+              value="financial"
+              className="text-black  font-medium data-[state=active]:text-black data-[state=active]:font-medium"
+            >
+              Financial
+            </TabsTrigger>
+            <TabsTrigger
+              value="assets"
+              className="text-black font-medium  data-[state=active]:text-black data-[state=active]:font-medium"
+            >
+              Assets
+            </TabsTrigger>
+            <TabsTrigger
+              value="risk"
+              className="text-black font-medium  data-[state=active]:text-black data-[state=active]:font-medium"
+            >
+              Risk
+            </TabsTrigger>
           </TabsList>
 
           {/* Overview Tab */}
           <TabsContent value="overview" className="mt-8 space-y-6">
             <PropertyOverview
-            //   class={assetData.class}
+              //   class={assetData.class}
               category={assetData.category}
               style={assetData.style}
               stage={assetData.stage}
@@ -109,7 +148,9 @@ export default function AssetDetailPage() {
               totalSfts={assetData.totalNumberOfSfts}
               pricePerSft={assetData.pricePerSft}
               basePropertyValue={assetData.basePropertyValue}
-              totalPropertyValueAfterFees={assetData.totalPropertyValueAfterFees}
+              totalPropertyValueAfterFees={
+                assetData.totalPropertyValueAfterFees
+              }
             />
           </TabsContent>
 
@@ -118,7 +159,9 @@ export default function AssetDetailPage() {
             <FinancialDetails
               investmentPerformance={assetData.investmentPerformance}
               rentalInformation={assetData.rentalInformation}
-              investorRequirementsAndTimeline={assetData.investorRequirementsAndTimeline}
+              investorRequirementsAndTimeline={
+                assetData.investorRequirementsAndTimeline
+              }
               currency={assetData.currency}
             />
           </TabsContent>
