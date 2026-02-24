@@ -3,7 +3,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  // baseURL: "http://localhost:6060/api",
+  // baseURL: "http://localhost:5050/api",
   baseURL: "https://nexa-admin-backend.vercel.app/api",
   headers: {
     "Content-Type": "application/json",
