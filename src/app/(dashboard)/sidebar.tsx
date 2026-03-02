@@ -4,12 +4,13 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
 import { LogOut } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 export const navLinks = [
   { label: "Issuers", href: "/issuers" },
   { label: "Spv's", href: "/spv-list" },
   { label: "Assets", href: "/asset-list" },
+  { label : "Orders", href: "/orders"},
+
 ];
 
 const Sidebar = () => {
