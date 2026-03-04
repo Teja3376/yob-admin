@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 
 import DashboardCard from "../ui/DashboardCard";
 import TableComponent from "@/components/common/TableComponent";
-import { orderListColumn } from "../columns/orderListColumn";
+import { orderListColumn } from "../schemas/orderListColumn";
 import { useOrderList } from "../hooks/useOrderList";
 
 import { Input } from "@/components/ui/input";
