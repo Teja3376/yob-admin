@@ -10,6 +10,7 @@ export const navLinks = [
   { label: "Spv's", href: "/spv-list" },
   { label: "Assets", href: "/asset-list" },
   { label : "Orders", href: "/orders"},
+  { label : "Investors", href: "/investors"},
 
 ];
 

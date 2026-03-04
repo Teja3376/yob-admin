@@ -107,17 +107,17 @@ const OrderList = () => {
       {/* Dashboard Cards */}
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
         <DashboardCard
-          title="Total Investment"
-          value="$ 100"
-          rightIcon={<DollarSign className="w-6 h-6 text-green-500" />}
-          rightIconClassName='border-2 border-green-200 rounded-full p-2 bg-green-100'
-          containerClassName='rounded-lg'
-        />
-        <DashboardCard
           title="Total Orders"
           value="100"
           rightIcon={<ShoppingCartIcon className="w-6 h-6 text-blue-500" />}
           rightIconClassName='border-2 border-blue-200 rounded-full p-2 bg-blue-100'
+          containerClassName='rounded-lg'
+        />
+        <DashboardCard
+          title="Orders Completed"
+          value="80"
+          rightIcon={<ClipboardCheck className="w-6 h-6 text-green-500" />}
+          rightIconClassName='border-2 border-green-200 rounded-full p-2 bg-green-100'
           containerClassName='rounded-lg'
         />
         <DashboardCard
@@ -128,10 +128,10 @@ const OrderList = () => {
           containerClassName='rounded-lg'
         />
         <DashboardCard
-          title="Orders Completed"
-          value="80"
-          rightIcon={<ClipboardCheck className="w-6 h-6 text-green-500" />}
-          rightIconClassName='border-2 border-green-200 rounded-full p-2 bg-green-100'
+          title="Orders Failed"
+          value="20"
+          rightIcon={<XIcon className="w-6 h-6 text-red-500" />}
+          rightIconClassName='border-2 border-red-200 rounded-full p-2 bg-red-100'
           containerClassName='rounded-lg'
         />
       </div>
@@ -185,21 +185,21 @@ const OrderList = () => {
           dateRange?.to ||
           amountRange?.min ||
           amountRange?.max) && (
-          <Button
-            variant="ghost"
-            onClick={() => {
-              setSearchQuery("");
-              setStatus(undefined);
-              setDateRange(undefined);
-              setAmountRange(undefined);
-              setPage(1);
-            }}
-            className='flex items-center gap-2 border border-gray-200 rounded-md px-3 py-2'
-          >
-            <XIcon size={16} />
-            Clear
-          </Button>
-        )}
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setSearchQuery("");
+                setStatus(undefined);
+                setDateRange(undefined);
+                setAmountRange(undefined);
+                setPage(1);
+              }}
+              className='flex items-center gap-2 border border-gray-200 rounded-md px-3 py-2'
+            >
+              <XIcon size={16} />
+              Clear
+            </Button>
+          )}
       </div>
 
       {/* Table */}
