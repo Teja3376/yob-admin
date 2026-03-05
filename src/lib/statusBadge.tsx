@@ -1,6 +1,6 @@
 import React from "react";
 
-export type OrderStatus = "in progress" | "completed" | "failed";
+export type OrderStatus = "initiated" | "in progress" | "completed" | "failed";
 
 
 export const StatusBadge = ({ status }: { status: OrderStatus }) => {
@@ -8,6 +8,8 @@ export const StatusBadge = ({ status }: { status: OrderStatus }) => {
     "px-3 py-1 rounded-full text-xs font-medium inline-flex items-center";
 
   const statusStyles: Record<OrderStatus, string> = {
+    "initiated":
+      "bg-gray-50 text-gray-500 border border-gray-200",
     "in progress":
       "bg-yellow-50 text-yellow-500 border border-yellow-200",
     "completed":
