@@ -38,7 +38,7 @@ export const investorColumns = (router: ReturnType<typeof useRouter>): ColumnDef
         }
     },
     {
-        header: "Investes Asset Count",
+        header: "Invested Assets Count",
         accessorKey: "assetCount",
         cell: ({ row }) => {
             const investedAssetsCount = row.original.assetCount;
