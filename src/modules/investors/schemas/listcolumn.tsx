@@ -68,7 +68,7 @@ export const investorColumns = (router: ReturnType<typeof useRouter>): ColumnDef
             const investorId = row.original.investorId;
             return (
                 <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="icon" onClick={() => router.push(`/investors/${investorId}`)}>
+                    <Button variant="ghost" size="icon" className="cursor-pointer" onClick={() => router.push(`/investors/${investorId}`)}>
                         <Eye size={16} />
                     </Button>
 

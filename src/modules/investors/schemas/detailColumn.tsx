@@ -13,7 +13,7 @@ export const detailColumns = (): ColumnDef<AssetProps>[] => [
             const shortId = assetId?.slice(-4)?.toUpperCase() || "";
             const assetIdFormatted = `AST-${shortId}`;
             return (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 py-2">
                     <span className="text-gray-900">{assetIdFormatted}</span>
                     <CopyIcon className="cursor-pointer" size={16} onClick={() => handleCopy(assetId)} />
                 </div>
@@ -27,8 +27,8 @@ export const detailColumns = (): ColumnDef<AssetProps>[] => [
         cell: ({ row }) => {
             const name = row.original.name;
             return (
-                <div className="flex flex-col leading-tight gap-1">
-                    <p className="text-gray-900 font-medium">{name || "N/A"}</p>
+                <div className="flex flex-col leading-tight gap-1 py-2">
+                    <p className="text-gray-900">{name || "N/A"}</p>
                 </div>
             )
         }
@@ -39,7 +39,7 @@ export const detailColumns = (): ColumnDef<AssetProps>[] => [
         cell: ({ row }) => {
             const totalTokens = row.original.totalTokens;
             return (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 py-2">
                     <span className="text-gray-900">{totalTokens}</span>
                 </div>
             )
@@ -52,7 +52,7 @@ export const detailColumns = (): ColumnDef<AssetProps>[] => [
             const totalInvestedAmount = row.original.totalInvestorPaidAmount;
             const currency = row.original.investorPaidCurrency;
             return (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 py-2">
                     <span className="text-gray-900">{formatCurrency(totalInvestedAmount, currency)}</span>
                 </div>
             )
@@ -64,7 +64,7 @@ export const detailColumns = (): ColumnDef<AssetProps>[] => [
         cell: ({ row }) => {
             const totalInvestedAmountUSD = row.original.totalInvestedAmountUSD;
             return (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 py-2">
                     <span className="text-gray-900">{formatCurrency(totalInvestedAmountUSD)}</span>
                 </div>
             )

@@ -118,7 +118,7 @@ export const orderListColumn = (router: ReturnType<typeof useRouter>): ColumnDef
             const orderId = row.original._id;
             return (
                 <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="icon" onClick={() => router.push(`/orders/${orderId}`)}>
+                    <Button variant="ghost" size="icon" className="cursor-pointer" onClick={() => router.push(`/orders/${orderId}`)}>
                         <Eye size={16} />
                     </Button>
 
