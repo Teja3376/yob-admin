@@ -1,6 +1,6 @@
 import React from "react";
 
-export type OrderStatus = "initiated" | "in progress" | "completed" | "failed";
+export type OrderStatus = "initiated" | "in progress" | "completed" | "failed" | "order_failed";
 
 
 export const StatusBadge = ({ status }: { status: OrderStatus }) => {
@@ -15,6 +15,8 @@ export const StatusBadge = ({ status }: { status: OrderStatus }) => {
     "completed":
       "bg-green-50 text-green-500 border border-green-200",
     "failed":
+      "bg-red-50 text-red-500 border border-red-200",
+    "order_failed":
       "bg-red-50 text-red-500 border border-red-200",
   };
 
