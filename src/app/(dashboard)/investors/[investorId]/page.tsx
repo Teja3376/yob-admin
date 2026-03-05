@@ -1,9 +1,10 @@
+import InvestorDetailpage from '@/modules/investors/pages/InvestorDetailpage'
 import React from 'react'
 
-const page = () => {
+const InvestorDetailRoute = () => {
   return (
-    <div>page</div>
+    <InvestorDetailpage />
   )
 }
 
-export default page
+export default InvestorDetailRoute

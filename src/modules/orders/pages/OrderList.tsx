@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { format } from "date-fns";
 import { DateRange } from "react-day-picker";
 import { useRouter } from "next/navigation";
@@ -28,12 +28,12 @@ import {
 import {
   ClipboardCheck,
   Clock4,
-  DollarSign,
   ShoppingCartIcon,
   XIcon
 } from "lucide-react";
 
 import { useDebounce } from '@/config/useDebounce';
+import { useOrderCount } from '../hooks/useOrderCount';
 
 const OrderList = () => {
   const router = useRouter();
@@ -73,6 +73,8 @@ const OrderList = () => {
   // Fetch Data
   // -----------------------
   const { data: orderList, isFetching } = useOrderList(filters);
+  const { data: orderCount , isFetching: isFetchingOrderCount } = useOrderCount();
+
 
   // -----------------------
   // Pagination Mapping
@@ -99,6 +101,14 @@ const OrderList = () => {
   // -----------------------
   // Render
   // -----------------------
+
+  if (isFetchingOrderCount) {
+    return (
+      <div className="flex items-center justify-center mt-20">
+        <Loading message="Loading..." />
+      </div>
+    );
+  }
   return (
     <div className='space-y-6'>
 
@@ -108,28 +118,28 @@ const OrderList = () => {
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
         <DashboardCard
           title="Total Orders"
-          value="100"
+          value={orderCount?.totalOrders || 0}
           rightIcon={<ShoppingCartIcon className="w-6 h-6 text-blue-500" />}
           rightIconClassName='border-2 border-blue-200 rounded-full p-2 bg-blue-100'
           containerClassName='rounded-lg'
         />
         <DashboardCard
           title="Orders Completed"
-          value="80"
+          value={orderCount?.completed || 0}
           rightIcon={<ClipboardCheck className="w-6 h-6 text-green-500" />}
           rightIconClassName='border-2 border-green-200 rounded-full p-2 bg-green-100'
           containerClassName='rounded-lg'
         />
         <DashboardCard
           title="Order In Progress"
-          value="20"
+          value={orderCount?.order_pending || 0}
           rightIcon={<Clock4 className="w-6 h-6 text-yellow-500" />}
           rightIconClassName='border-2 border-yellow-200 rounded-full p-2 bg-yellow-100'
           containerClassName='rounded-lg'
         />
         <DashboardCard
           title="Orders Failed"
-          value="20"
+          value={orderCount?.order_failed || 0}
           rightIcon={<XIcon className="w-6 h-6 text-red-500" />}
           rightIconClassName='border-2 border-red-200 rounded-full p-2 bg-red-100'
           containerClassName='rounded-lg'

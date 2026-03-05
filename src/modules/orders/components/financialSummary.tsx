@@ -51,7 +51,7 @@ const FinancialSummary = ({ orderDetail }: { orderDetail: OrderDetail }) => {
 
       <div className="border p-4 rounded-md space-y-1 bg-gray-50">
         <p className='text-sm text-gray-500'>USD Normalized Amount</p>
-        <p className='text-xl font-semibold text-primary'>{formatCurrency(150.00)}</p>
+        <p className='text-xl font-semibold text-primary'>{formatCurrency(orderDetail?.usdAmount)}</p>
         <p className="text-xs text-gray-500">FX Rate Snapshot: {formatDate(orderDetail?.createdAt)}</p>
       </div>
       </div>

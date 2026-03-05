@@ -45,10 +45,15 @@ export default function DateRangePicker({
   className,
   disabled,
 }: DateRangePickerProps) {
+  const isSameDay =
+    range?.from && range?.to
+      ? range.from.getTime() === range.to.getTime()
+      : false;
+
   const label = range?.from
-    ? range.to
-      ? `${format(range.from, DATE_FORMAT)} - ${format(range.to, DATE_FORMAT)}`
-      : format(range.from, DATE_FORMAT)
+    ? !range.to || isSameDay
+      ? `${format(range.from, DATE_FORMAT)} - Select end date`
+      : `${format(range.from, DATE_FORMAT)} - ${format(range.to, DATE_FORMAT)}`
     : placeholder;
 
 
@@ -59,7 +64,7 @@ export default function DateRangePicker({
           variant="outline"
           disabled={disabled}
           className={cn(
-            "w-[240px] justify-start text-left font-normal rounded-md",
+            "w-[260px] justify-start text-left font-normal rounded-md",
             !range && "text-muted-foreground",
             className,
           )}

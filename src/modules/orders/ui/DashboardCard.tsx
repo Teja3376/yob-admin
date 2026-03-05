@@ -45,7 +45,7 @@ const DashboardCard = ({
 }: DashboardCardProps) => {
   return (
     <div
-      className={clsx("p-4   bg-white border border-gray-200", containerClassName)}
+      className={clsx("p-4 rounded-lg bg-white border border-gray-200", containerClassName)}
     >
       <div className=" flex items-center gap-2">
         {titleIcon && (

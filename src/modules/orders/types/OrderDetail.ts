@@ -14,6 +14,7 @@ export interface OrderDetail {
     totalFee: number;
     assetValue: AssetValue;
     feeBreakup: FeeBreakup[];
+    usdAmount: number;
     createdAt: string;
     updatedAt: string;
     usertokenPrice: number;

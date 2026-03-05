@@ -1,7 +1,7 @@
 export type InvestorListProps = {
-    _id: string;
+    investorId: string;
     name: string;
     email: string;
-    investedAssetsCount: number;
+    assetCount: number;
     createdAt: string;
 }

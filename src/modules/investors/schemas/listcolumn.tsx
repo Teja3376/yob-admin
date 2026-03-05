@@ -9,9 +9,9 @@ import { handleCopy } from "@/utils/globalFunctions";
 export const investorColumns = (router: ReturnType<typeof useRouter>): ColumnDef<InvestorListProps>[] => [
     {
         header: "Investor ID",
-        accessorKey: "_id",
+        accessorKey: "investorId",
         cell: ({ row }) => {
-            const investorId = row.original._id;
+            const investorId = row.original.investorId;
             const shortId = investorId?.slice(-4)?.toUpperCase() || "";
             const investorIdFormatted = `INV-${shortId}`;
             return (
@@ -39,9 +39,9 @@ export const investorColumns = (router: ReturnType<typeof useRouter>): ColumnDef
     },
     {
         header: "Investes Asset Count",
-        accessorKey: "investedAssetsCount",
+        accessorKey: "assetCount",
         cell: ({ row }) => {
-            const investedAssetsCount = row.original.investedAssetsCount;
+            const investedAssetsCount = row.original.assetCount;
             return (
                 <div className="flex items-center gap-2">
                     <span className="text-gray-900">{investedAssetsCount}</span>
@@ -65,7 +65,7 @@ export const investorColumns = (router: ReturnType<typeof useRouter>): ColumnDef
         header: "Actions",
         accessorKey: "actions",
         cell: ({ row }) => {
-            const investorId = row.original._id;
+            const investorId = row.original.investorId;
             return (
                 <div className="flex items-center gap-2">
                     <Button variant="ghost" size="icon" onClick={() => router.push(`/investors/${investorId}`)}>
