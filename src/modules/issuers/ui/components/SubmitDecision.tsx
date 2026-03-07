@@ -18,7 +18,7 @@ const SubmitDecision = ({
   disabled = false,
 }: SubmitDecisionProps) => {
   return (
-    <div className="w-full rounded-lg border p-5 shadow-sm space-y-4">
+    <div className="flex-1 rounded-lg border p-5 shadow-sm space-y-4">
       {status === "pending" &&
         (disabled ? (
           <div className="flex items-center justify-center mt-20">

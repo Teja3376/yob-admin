@@ -1,14 +1,23 @@
 import api from "@/config/httpClient";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-export const useGetIssuerList = () => {
+export const useGetIssuerList = (
+  status: string,
+  page: number,
+  limit: number,
+  searchTerm: string,
+) => {
   return useQuery({
-    queryKey: ["issuer-list"],
+    queryKey: ["issuer-list", status, page, limit, searchTerm],
     queryFn: async () => {
-      const res = await api.get("/issuers/list");
-      return res.data.data;
+      const res = await api.get("/issuers/list", {
+        params: { status, page, limit, search: searchTerm },
+      });
+      return res.data;
     },
     staleTime: 1 * 60 * 1000,
+    refetchOnWindowFocus: false,
+
     retry: 3,
   });
 };
@@ -23,6 +32,8 @@ export const useGetIssuerById = (issuerId: string) => {
 
     staleTime: 1 * 60 * 1000,
     retry: 3,
+    refetchOnWindowFocus: false,
+    enabled: !!issuerId,
   });
 };
 
@@ -33,7 +44,7 @@ export const useUpdateIssuerStatus = (issuerId: string) => {
       const res = await api.patch(`/issuers/${issuerId}/status`, { status });
       return res.data.data;
     },
-    mutationKey: ["update-issuer-status","issuer-list", issuerId,],
+    mutationKey: ["update-issuer-status", "issuer-list", issuerId],
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["issuer-details", issuerId] });
     },

@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 
 import { useRouter } from "next/navigation";
 import Pagination from "@/components/common/Pagination";
+import Loading from "@/components/Loader";
 
 type StatusTab = "Active" | "Rejected" | "Pending";
 
@@ -119,8 +120,8 @@ const SpvListPage = () => {
 
         <TabsContent value={status} className="mt-6 space-y-4">
           {isLoading && !data ? (
-            <div className="flex items-center justify-center mt-20">
-              <LoaderCircle size={40} className="animate-spin text-primary" />
+           <div className="flex items-center justify-center mt-20">
+              <Loading message="Loading..." />{" "}
             </div>
           ) : (
             <TableComponent
@@ -135,13 +136,10 @@ const SpvListPage = () => {
       </Tabs>
       {pagination && data?.data.length > 0 && (
         <Pagination
+        {...pagination}
           currentPage={pagination?.currentPage ?? 1}
           totalPages={pagination?.totalPages ?? 1}
-          totalCount={pagination?.totalCount ?? 0}
-          hasNextPage={pagination?.hasNextPage ?? false}
-          hasPreviousPage={pagination?.hasPreviousPage ?? false}
           limit={pagination?.limit ?? limit}
-          page={pagination?.page ?? page}
           onPageChange={onPageChange}
           onPageSizeChange={onPageSizeChange}
         />

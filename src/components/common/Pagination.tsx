@@ -11,11 +11,10 @@ import {
 import { cn } from "@/lib/utils";
 
 interface PaginationProps {
-  page: number;
+ 
   limit: number;
   currentPage: number;
   totalPages: number;
-  totalCount: number;
   hasPreviousPage: boolean;
   hasNextPage: boolean;
   pageSizeOptions?: number[];
@@ -25,11 +24,9 @@ interface PaginationProps {
 }
 
 const Pagination: React.FC<PaginationProps> = ({
-  page = 1,
   limit = 10,
   currentPage = 1,
   totalPages = 1,
-  totalCount = 0,
   hasPreviousPage = false,
   hasNextPage = false,
   pageSizeOptions = [1, 3, 5, 10, 25, 50],

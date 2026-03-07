@@ -19,8 +19,7 @@ export type IssuerRow = {
   status: "active" | "inactive" | "pending";
 };
 
-export const issuerTableCols = (): ColumnDef<IssuerRow>[] => {
-  const router = useRouter();
+export const issuerTableCols = (router:any): ColumnDef<IssuerRow>[] => {
   return [
     {
       accessorKey: "applicationId",

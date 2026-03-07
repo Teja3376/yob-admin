@@ -34,11 +34,7 @@ const Empty: React.FC<EmptyProps> = ({
           {description}
         </p>
       </div>
-      {actionButton && (
-        <Button className="cursor-pointer" onClick={handleButtonClick}>
-          {actionButton.label}
-        </Button>
-      )}
+      
     </div>
   );
 };
