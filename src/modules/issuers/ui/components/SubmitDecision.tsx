@@ -9,6 +9,7 @@ type SubmitDecisionProps = {
   onApprove?: () => void;
   onReject?: () => void;
   disabled?: boolean;
+  canDoAction?: boolean;
 };
 
 const SubmitDecision = ({
@@ -16,6 +17,7 @@ const SubmitDecision = ({
   onApprove,
   onReject,
   disabled = false,
+  canDoAction = false,
 }: SubmitDecisionProps) => {
   return (
     <div className="flex-1 rounded-lg border p-5 shadow-sm space-y-4">
@@ -28,27 +30,33 @@ const SubmitDecision = ({
           <>
             <h2 className="text-lg font-semibold">Make a Decision</h2>
 
-            <div className="flex gap-3">
-              <Button
-                variant="outline"
-                className="flex-1 gap-2 text-green-600"
-                onClick={onApprove}
-                disabled={disabled}
-              >
-                <CheckCircle size={16} />
-                Approve
-              </Button>
+            {!canDoAction ? (
+              <p className="text-sm text-muted-foreground">
+                You do not have permission to take action on this application.
+              </p>
+            ) : (
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
+                  className="flex-1 gap-2 text-green-600"
+                  onClick={onApprove}
+                  disabled={disabled}
+                >
+                  <CheckCircle size={16} />
+                  Approve
+                </Button>
 
-              <Button
-                variant="outline"
-                className="flex-1 gap-2 text-red-600"
-                onClick={onReject}
-                disabled={disabled}
-              >
-                <CircleAlert size={16} />
-                Reject
-              </Button>
-            </div>
+                <Button
+                  variant="outline"
+                  className="flex-1 gap-2 text-red-600"
+                  onClick={onReject}
+                  disabled={disabled}
+                >
+                  <CircleAlert size={16} />
+                  Reject
+                </Button>
+              </div>
+            )}
           </>
         ))}
 

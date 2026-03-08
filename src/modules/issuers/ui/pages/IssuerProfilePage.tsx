@@ -28,21 +28,21 @@ import Investors from "../components/Tabs/Investors";
 import SubmitDecision from "../components/SubmitDecision";
 import IssuerStats from "../components/IssuerStats";
 import Loading from "@/components/Loader";
+import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
 
 const IssuerProfilePage = () => {
   const { issuerId } = useParams();
   const router = useRouter();
-
+  const { hasPermission } = useAuthStore1();
   const {
     data: issuer,
     isFetching,
     isError,
     error,
   } = useGetIssuerById(issuerId as string);
-  const {
-    mutate: updateIssuerStatus,
-    isPending,
-  } = useUpdateIssuerStatus(issuerId as string);
+  const { mutate: updateIssuerStatus, isPending } = useUpdateIssuerStatus(
+    issuerId as string,
+  );
 
   const issuerData = issuer?.issuer;
   const application = issuer?.application;
@@ -51,6 +51,8 @@ const IssuerProfilePage = () => {
     rejected: "bg-red-100 text-red-700",
     pending: "bg-yellow-100 text-yellow-700",
   };
+  const canDoAction = hasPermission("issuers", "action");
+
   const handleUpdateStatus = (status: "approved" | "rejected") => {
     updateIssuerStatus(status, {
       onSuccess: () => {
@@ -94,7 +96,7 @@ const IssuerProfilePage = () => {
     return (
       <div className="flex items-center justify-center mt-20">
         <Loading message="Getting Issuer Details..." />
-      </div>      
+      </div>
     );
   }
   if (isError) {
@@ -177,11 +179,12 @@ const IssuerProfilePage = () => {
             onApprove={() => handleUpdateStatus("approved")}
             onReject={() => handleUpdateStatus("rejected")}
             disabled={isPending}
+            canDoAction={canDoAction}
           />
         </div>
       </div>
       {application?.status === "approved" && (
-       <IssuerStats issuer={issuerData}/>
+        <IssuerStats issuer={issuerData} />
       )}
       {application?.status === "approved" && (
         <div className="mt-3">

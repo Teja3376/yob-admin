@@ -29,9 +29,12 @@ import { ClipboardCheck, Clock4, ShoppingCartIcon, XIcon } from "lucide-react";
 
 import { useDebounce } from "@/config/useDebounce";
 import { useOrderCount } from "../hooks/useOrderCount";
+import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
 
 const OrderList = () => {
   const router = useRouter();
+  const{hasPermission}=useAuthStore1()
+  const canView=hasPermission("orders","review")
 
   // -----------------------
   // State
@@ -102,7 +105,7 @@ const OrderList = () => {
   // Render
   // -----------------------
 
-  if (isFetchingOrderCount) {
+  if (isFetchingOrderCount&&isFetching) {
     return (
       <div className="flex items-center justify-center mt-20">
         <Loading message="Loading..." />
@@ -226,7 +229,7 @@ const OrderList = () => {
         <Loading message="Loading..." />
       ) : (
         <TableComponent
-          columns={orderListColumn(router)}
+          columns={orderListColumn(router,canView)}
           data={orderList?.data || []}
           model="order"
         />

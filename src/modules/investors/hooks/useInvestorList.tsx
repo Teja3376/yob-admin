@@ -25,7 +25,6 @@ export const useInvestorList = ({
     queryKey: ["investor-list", page, limit, search, fromDate, toDate],
 
     queryFn: async () => {
-      try {
       const res = await api.get("/investor/list", {
         params: {
           search,
@@ -35,14 +34,10 @@ export const useInvestorList = ({
           toDate,
         },
       });
-
-        return res.data;
-      } catch (error: unknown) {
-        const err = error as AxiosError<ErrorResponse>;
-        toast.error(err.response?.data?.message || "Failed to fetch investor list");
-        return null;
-      }
+      return res.data;
     },
     staleTime: 1000 * 60,
+    retry: 3,
+    refetchOnWindowFocus: false,
   });
 };

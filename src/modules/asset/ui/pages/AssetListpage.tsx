@@ -12,17 +12,20 @@ import Pagination from "@/components/common/Pagination";
 import { useRouter } from "next/navigation";
 import { useDebounce } from "@/config/useDebounce";
 import Loading from "@/components/Loader";
+import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
 
 type StatusTab = "pending" | "rejected" | "approved";
 
 const AssetListpage = () => {
-  const router=useRouter()
+  const router = useRouter();
+  const { hasPermission } = useAuthStore1();
   const [status, setStatus] = useState<StatusTab>("pending");
   const [searchQuery, setSearchQuery] = useState("");
-  const searchTerm=useDebounce(searchQuery,500)
+  const searchTerm = useDebounce(searchQuery, 500);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const cols=assetTableCols(router,status)
+  const canView = hasPermission("assets", "review");
+  const cols = assetTableCols(router, status,canView);
 
   const {
     data,
@@ -131,7 +134,7 @@ const AssetListpage = () => {
       </Tabs>
       {pagination && data?.data.length > 0 && (
         <Pagination
-        {...pagination}
+          {...pagination}
           currentPage={pagination?.currentPage ?? 1}
           totalPages={pagination?.totalPages ?? 1}
           limit={pagination?.limit ?? limit}

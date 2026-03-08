@@ -13,9 +13,12 @@ import { format } from 'date-fns'
 import { useDebounce } from '@/config/useDebounce'
 import { Button } from '@/components/ui/button'
 import { XIcon } from 'lucide-react'
+import { useAuthStore1 } from '@/modules/adminauth/state/adminAuthStore'
 
 const InvestorList = () => {
     const router = useRouter();
+     const{hasPermission}=useAuthStore1()
+      const canView=hasPermission("investors","review")
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
     const [searchQuery, setSearchQuery] = useState('');
@@ -71,7 +74,7 @@ const InvestorList = () => {
     return (
       <div className="flex items-center justify-center mt-20">
         <p className="text-red-500">
-          Error loading Asset list: {error?.message || "Unknown error"}
+          Error loading Investor list: {error?.message || "Unknown error"}
         </p>
       </div>
     );
@@ -99,7 +102,7 @@ const InvestorList = () => {
                     </Button>
                 ))}
             </div>
-            <TableComponent columns={investorColumns(router)} data={investorList?.data ?? []} model="investor" />
+            <TableComponent columns={investorColumns(router,canView)} data={investorList?.data ?? []} model="investor" />
             {pagination && investorList?.data?.length > 0 && (
                 <Pagination
                     limit={limit}

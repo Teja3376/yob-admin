@@ -11,6 +11,7 @@ export const navLinks = [
   { label: "Assets", href: "/asset-list" },
   { label : "Orders", href: "/orders"},
   { label : "Investors", href: "/investors"},
+  { label : "Roles", href: "/roles"},
 
 ];
 
@@ -26,7 +27,7 @@ const Sidebar = () => {
   };
   return (
     <div className="w-52 h-full border-r flex flex-col  bg-white pt-10">
-      <nav className="px-4 space-y-1 flex-1">
+      <nav className="px-4 space-y-3 flex-1">
         {navLinks.map((item) => {
           const isActive = pathname.includes(item.href);
 

@@ -10,16 +10,19 @@ import { FinancialDetails } from "../components/AssetDetail/FinancialDetails";
 import { DocumentsAndTenants } from "../components/AssetDetail/DocumentsAndTenants";
 import { RiskAndAdditionalInfo } from "../components/AssetDetail/RiskAndAdditionalInfo";
 import { AmenitiesAndFeatures } from "../components/AssetDetail/AmenitiesAndFeatures";
-import useGetAssetById from "../hooks/useGetAssetByID";
 import { LoaderCircle } from "lucide-react";
 import AssetApprovalDialog from "../components/AssetApprovalDialog";
-import useApproveAsset from "../hooks/useApproveAsset";
 import { toast } from "sonner";
-import { useDeployAsset } from "../hooks/useDeployAsset";
 import Loading from "@/components/Loader";
+import useGetAssetById from "../../hooks/useGetAssetByID";
+import { useDeployAsset } from "../../hooks/useDeployAsset";
+import useApproveAsset from "../../hooks/useApproveAsset";
+import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
 
 export default function AssetDetailPage() {
   const { assetId } = useParams();
+  const { hasPermission } = useAuthStore1();
+  const canDoAction = hasPermission("assets", "action");
   const {
     data: assetData,
     isLoading,
@@ -64,7 +67,7 @@ export default function AssetDetailPage() {
   };
 
   const handleConfirmApprove = async () => {
-    const result = await handleDeployAsset(assetData,setIsLoading);
+    const result = await handleDeployAsset(assetData, setIsLoading);
     console.log("Deploy Asset Result:", result);
 
     const blockchain = {
@@ -99,13 +102,14 @@ export default function AssetDetailPage() {
           onRequestUpdate={handleRequestUpdate}
           onApprove={handleApproveClick}
           approveDisabled={isAlreadyApproved || isApproving}
+          canApprove={canDoAction}
         />
 
         <AssetApprovalDialog
           open={isApproveDialogOpen}
           onOpenChange={setIsApproveDialogOpen}
           onConfirmApprove={handleConfirmApprove}
-          isLoading={isApproving||loading}
+          isLoading={isApproving || loading}
         />
 
         {/* Tabs for Different Sections */}

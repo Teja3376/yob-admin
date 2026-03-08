@@ -10,14 +10,11 @@ export const useOrderCount = () => {
   return useQuery({
     queryKey: ["order-count"],
     queryFn: async () => {
-      try {
-        const res = await api.get("/orders/order-count");
-        return res.data;
-      } catch (error: unknown) {
-        const err = error as AxiosError<ErrorResponse>;
-        toast.error(err.response?.data?.message || "Failed to fetch order count");
-        return null;
-      }
+      const res = await api.get("/orders/order-count");
+      return res.data;
     },
+    staleTime: 1000 * 60 * 1,
+    retry: 3,
+    refetchOnWindowFocus: false,
   });
 };

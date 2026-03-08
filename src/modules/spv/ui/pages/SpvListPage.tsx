@@ -15,16 +15,21 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import Pagination from "@/components/common/Pagination";
 import Loading from "@/components/Loader";
+import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
 
 type StatusTab = "Active" | "Rejected" | "Pending";
 
 const SpvListPage = () => {
   const router = useRouter();
+  const {hasPermission}=useAuthStore1()
   const [status, setStatus] = useState<StatusTab>("Pending");
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const cols= spvTableCols(router,status);
+    const canView = hasPermission("spvs", "review");
+
+
+  const cols= spvTableCols(router,status,canView);
 
   // Map UI tabs to API status values
   const getApiStatus = (tab: StatusTab): string => {

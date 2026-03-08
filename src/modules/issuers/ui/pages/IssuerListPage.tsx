@@ -11,16 +11,19 @@ import Loading from "@/components/Loader";
 import TableComponent from "@/components/common/TableComponent";
 import { useRouter } from "next/navigation";
 import Pagination from "@/components/common/Pagination";
+import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
 
 type StatusTab = "pending" | "rejected" | "approved";
 
 const IssuerListPage = () => {
   const router = useRouter();
+  const { hasPermission } = useAuthStore1();
   const [searchQuery, setSearchQuery] = useState("");
   const [status, setStatus] = useState<StatusTab>("pending");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const searchTerm = useDebounce(searchQuery, 500);
+  const canView = hasPermission("issuers", "review");
 
   const {
     data: issuerList,
@@ -30,7 +33,7 @@ const IssuerListPage = () => {
   } = useGetIssuerList(status, page, limit, searchTerm);
   const pagination = issuerList?.pagination;
 
-  const cols = issuerTableCols(router);
+  const cols = issuerTableCols(router,canView);
   const handleTabChange = (value: string) => {
     setStatus(value as StatusTab);
     setPage(1);

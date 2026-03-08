@@ -30,8 +30,8 @@ const LoginPage = () => {
         onSuccess: (data) => {
           toast.success("Login successful");
           sessionStorage.setItem("access_token", data.accessToken);
-          router.push("/assets");
           setUser(data.user);
+          router.push("/assets");
         },
         onError: (error: any) => {
           console.log("Login error:", error);

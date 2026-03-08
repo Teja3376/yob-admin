@@ -25,6 +25,7 @@ type SpvRow = {
 export const spvTableCols = (
   router: ReturnType<typeof useRouter>,
   status: string,
+  canView: boolean,
 ): ColumnDef<SpvRow>[] => {
   // Step 1: create base columns
   const columns: ColumnDef<SpvRow>[] = [
@@ -128,6 +129,7 @@ export const spvTableCols = (
             onClick={() => {
               router.push(`/spv-list/${row.original.spvId?._id}`);
             }}
+            disabled={!canView}
           >
             <Eye size={16} />
           </Button>
