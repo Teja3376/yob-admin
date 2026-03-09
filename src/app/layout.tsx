@@ -14,7 +14,6 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "YOB Assets Super Admin Panel",
   description:
     "YOB Assets Super admin portal for managing asset records, internal users, approvals, and operational configurations securely.",
 

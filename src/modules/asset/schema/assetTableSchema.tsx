@@ -6,7 +6,7 @@ import { handleCopy, handleViewOnBlockchain } from "@/utils/globalFunctions";
 import type { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpRight, Copy, Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
-import type { AssetApprovalListItem } from "@/modules/asset/hooks/useGetAllAsset";
+import { AssetApprovalListItem } from "../hooks/useGetAllAsset";
 
 const StatusBadge = ({ status }: { status: string }) => {
   const s = (status || "").toLowerCase();

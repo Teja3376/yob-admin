@@ -12,6 +12,7 @@ import TableComponent from "@/components/common/TableComponent";
 import { useRouter } from "next/navigation";
 import Pagination from "@/components/common/Pagination";
 import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
+import PageTitle from "@/components/PageTitle";
 
 type StatusTab = "pending" | "rejected" | "approved";
 
@@ -60,6 +61,10 @@ const IssuerListPage = () => {
 
   return (
     <div className="w-full space-y-6">
+      <PageTitle
+              title={ "List of Issuers"}
+              suffix="Issuers"
+            />
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-gray-900">Issuer List</h1>
         <div className="relative flex-1 max-w-md">

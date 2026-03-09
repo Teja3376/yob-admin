@@ -23,6 +23,7 @@ import useGetMemberById from "../../hooks/members/useGetMember";
 import DeleteDialog from "../components/DeleteDialog";
 import useDeleteMember from "../../hooks/members/useDeleteMember";
 import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
+import PageTitle from "@/components/PageTitle";
 
 const MembersPage = () => {
   const router = useRouter();
@@ -144,6 +145,7 @@ const MembersPage = () => {
 
   return (
     <div className="space-y-6">
+      <PageTitle title={"List of Members"} suffix="Members" />
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="relative flex-1 max-w-md">
@@ -208,6 +210,7 @@ const MembersPage = () => {
         setOpen={setIsDeleteDialogOpen}
         type="Member"
         onDelete={handleDeleteRoleFromDialog}
+        isDeleting={isMemberDeleting}
       />
     </div>
   );

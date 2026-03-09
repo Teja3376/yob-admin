@@ -18,6 +18,7 @@ import useGetAssetById from "../../hooks/useGetAssetByID";
 import { useDeployAsset } from "../../hooks/useDeployAsset";
 import useApproveAsset from "../../hooks/useApproveAsset";
 import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
+import PageTitle from "@/components/PageTitle";
 
 export default function AssetDetailPage() {
   const { assetId } = useParams();
@@ -30,6 +31,7 @@ export default function AssetDetailPage() {
     error,
     refetch,
   } = useGetAssetById(assetId as string);
+
   const [isApproveDialogOpen, setIsApproveDialogOpen] = useState(false);
   const { handleDeployAsset } = useDeployAsset();
   const { mutate: approveAsset, isPending: isApproving } = useApproveAsset();
@@ -91,6 +93,11 @@ export default function AssetDetailPage() {
 
   return (
     <main className="min-h-screen ">
+        <PageTitle
+          title={assetData?.name || "Detailed View of Asset"}
+          suffix="Asset Details"
+        />
+
       <div className="mx-auto">
         {/* Header Section */}
         <AssetDetailHeader
