@@ -1,11 +1,13 @@
+import { formatCurrencyWithLocale } from "@/lib/formatCurrency";
 import DashboardCard from "@/modules/orders/ui/DashboardCard"
-import { Briefcase, Building, ShoppingCart, Users } from "lucide-react"
+import { Briefcase, Building, DollarSign, ShoppingCart, Users } from "lucide-react"
 
 interface IssuerStatsProps {
     activeSpvCount: number;
     activeAssetCount: number;
     totalOrders: number;
     totalInvestors: number;
+    totalAum: number;
     
 }
 
@@ -34,6 +36,12 @@ const IssuerStats = ({issuer}:{issuer:IssuerStatsProps}) => {
             leftIcon={<Users size={20} className="text-primary" />}
             value={issuer.totalInvestors || "0"}
             title="Total Investors"
+            containerClassName="shadow-sm"
+          />
+          <DashboardCard
+            leftIcon={<DollarSign size={20} className="text-primary" />}
+            value={formatCurrencyWithLocale(issuer.totalAum || 0)}  
+            title="Total AUM"
             containerClassName="shadow-sm"
           />
         </div>
