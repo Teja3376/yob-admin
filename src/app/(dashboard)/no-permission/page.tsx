@@ -11,9 +11,9 @@ export default function NoPermission() {
   const hasPermission = useAuthStore1((s) => s.hasPermission);
 
   const routes = [
-    { module: "asset-list", action: "view", path: "/assets" },
+    { module: "asset-list", action: "view", path: "/asset-list" },
     { module: "issuers", action: "view", path: "/issuers" },
-    { module: "spv-list", action: "view", path: "/spvs" },
+    { module: "spvs", action: "view", path: "/spv-list" },
     { module: "investors", action: "view", path: "/investors" },
   ];
 
