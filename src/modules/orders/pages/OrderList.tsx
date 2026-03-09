@@ -30,6 +30,7 @@ import { ClipboardCheck, Clock4, ShoppingCartIcon, XIcon } from "lucide-react";
 import { useDebounce } from "@/config/useDebounce";
 import { useOrderCount } from "../hooks/useOrderCount";
 import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
+import PageTitle from "@/components/PageTitle";
 
 const OrderList = () => {
   const router = useRouter();
@@ -125,6 +126,7 @@ const OrderList = () => {
   }
   return (
     <div className="space-y-6">
+      <PageTitle title={"List of Orders"} suffix="Orders" />
       <h1 className="text-2xl font-semibold">Orders</h1>
 
       {/* Dashboard Cards */}

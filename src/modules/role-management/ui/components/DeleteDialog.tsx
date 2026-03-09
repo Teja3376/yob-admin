@@ -1,14 +1,36 @@
+import Loading from "@/components/Loader";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface DeleteDialogProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   type: string;
   onDelete: () => void;
+  isDeleting?: boolean;
 }
 
-const DeleteDialog = ({ open, setOpen, type, onDelete }: DeleteDialogProps) => {
+const DeleteDialog = ({
+  open,
+  setOpen,
+  type,
+  onDelete,
+  isDeleting,
+}: DeleteDialogProps) => {
+  if (isDeleting) {
+    return (
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-2xl">
+          <Loading message="Loading..." />
+        </DialogContent>
+      </Dialog>
+    );
+  }
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-sm">

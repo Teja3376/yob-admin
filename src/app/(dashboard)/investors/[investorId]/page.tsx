@@ -1,5 +1,8 @@
 import InvestorDetailpage from '@/modules/investors/pages/InvestorDetailpage'
-import React from 'react'
+import { Metadata } from 'next';
+export const metadata: Metadata = {
+  title: "Profile of Investor",
+};
 
 const InvestorDetailRoute = () => {
   return (

@@ -80,7 +80,7 @@ const Header = () => {
         <div className=" bg-white shadow-xs">
           <div className="px-4 py-4 space-y-3">
             <div className="text-xs font-semibold text-gray-500 uppercase">
-              Super Admin Panel
+              {profile?.user?.role||"Panel"}
             </div>
           </div>
         </div>

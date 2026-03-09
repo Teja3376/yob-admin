@@ -1,5 +1,7 @@
 import OrderList from '@/modules/orders/pages/OrderList'
-import React from 'react'
+import { Metadata } from 'next';
+
+
 
 const OrdersRoute = () => {
   return (
