@@ -13,7 +13,7 @@ interface IssuerStatsProps {
 
 const IssuerStats = ({issuer}:{issuer:IssuerStatsProps}) => {
   return (
-   <div className="mt-3 grid grid-cols-4 gap-3 w-full items-stretch auto-rows-fr">
+   <div className="mt-3 grid grid-cols-5 gap-3 w-full items-stretch auto-rows-fr">
           <DashboardCard
             leftIcon={<Briefcase size={20} className="text-primary" />}
             value={issuer.activeSpvCount || "0"}
