@@ -1,24 +1,36 @@
 "use client";
-import React from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
 import { LogOut } from "lucide-react";
 
-export const navLinks = [
-  { label: "Issuers", href: "/issuers" },
-  { label: "Spv's", href: "/spv-list" },
-  { label: "Assets", href: "/asset-list" },
-  { label : "Orders", href: "/orders"},
-  { label : "Investors", href: "/investors"},
-  { label : "Roles", href: "/roles"},
-
-];
 
 const Sidebar = () => {
   const pathname = usePathname();
   const router = useRouter();
-  const { isAuthenticated, clearAuth } = useAuthStore1();
+  const { isAuthenticated, clearAuth ,hasPermission } = useAuthStore1();
+  const isIssuersAllowed = hasPermission("issuers", "view");
+  const isSpvsAllowed = hasPermission("spvs", "view");
+  const isAssetsAllowed = hasPermission("assets", "view");
+  const isOrdersAllowed = hasPermission("orders", "view");
+  const isInvestorsAllowed = hasPermission("investors", "view");
+  const isRolesAllowed = hasPermission("roles", "view") || hasPermission("members", "view");
+  const navLinks = [
+    { label: "Issuers", href: "/issuers", allowed: isIssuersAllowed },
+    { label: "Spv's", href: "/spv-list", allowed: isSpvsAllowed },
+    { label: "Assets", href: "/asset-list", allowed: isAssetsAllowed },
+    { label: "Orders", href: "/orders", allowed: isOrdersAllowed },
+    { label: "Investors", href: "/investors", allowed: isInvestorsAllowed },
+    { label: "Roles", href: "/roles", allowed: isRolesAllowed },
+  ];
+  console.log(navLinks);
+  console.log(isIssuersAllowed);
+  console.log(isSpvsAllowed);
+  console.log(isAssetsAllowed);
+  console.log(isOrdersAllowed);
+  console.log(isInvestorsAllowed);
+  console.log(isRolesAllowed);
+
   const handleLogout = () => {
     if (isAuthenticated) {
       clearAuth();
@@ -30,17 +42,26 @@ const Sidebar = () => {
       <nav className="px-4 space-y-3 flex-1">
         {navLinks.map((item) => {
           const isActive = pathname.includes(item.href);
+          const baseClass = `block rounded-md px-4 py-2 text-sm transition ${
+            isActive
+              ? "text-white font-medium bg-primary"
+              : "text-black hover:bg-zinc-100"
+          }`;
+
+          if (!item.allowed) {
+            return (
+              <span
+                key={item.href}
+                className={`${baseClass} cursor-not-allowed opacity-50 pointer-events-none`}
+                aria-disabled
+              >
+                {item.label}
+              </span>
+            );
+          }
 
           return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`block rounded-md px-4 py-2 text-sm transition ${
-                isActive
-                  ? "text-white font-medium bg-primary"
-                  : "text-black hover:bg-zinc-100"
-              }`}
-            >
+            <Link key={item.href} href={item.href} className={baseClass}>
               {item.label}
             </Link>
           );
