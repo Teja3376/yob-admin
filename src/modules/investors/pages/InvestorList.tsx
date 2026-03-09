@@ -13,9 +13,12 @@ import { format } from 'date-fns'
 import { useDebounce } from '@/config/useDebounce'
 import { Button } from '@/components/ui/button'
 import { XIcon } from 'lucide-react'
+import { useAuthStore1 } from '@/modules/adminauth/state/adminAuthStore'
 
 const InvestorList = () => {
     const router = useRouter();
+     const{hasPermission}=useAuthStore1()
+      const canView=hasPermission("investors","review")
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
     const [searchQuery, setSearchQuery] = useState('');
@@ -36,7 +39,7 @@ const InvestorList = () => {
     };
 
     const filters = useDebounce(rawFilters, 1000)
-    const { data: investorList, isFetching } = useInvestorList(filters);
+    const { data: investorList, isFetching,isError,error } = useInvestorList(filters);
 
     const pagination = investorList?.pagination;
 
@@ -67,6 +70,15 @@ const InvestorList = () => {
             </div>
         )
     }
+    if (isError) {
+    return (
+      <div className="flex items-center justify-center mt-20">
+        <p className="text-red-500">
+          Error loading Investor list: {error?.message || "Unknown error"}
+        </p>
+      </div>
+    );
+  }
 
     return (
         <div className='space-y-4'>
@@ -90,14 +102,12 @@ const InvestorList = () => {
                     </Button>
                 ))}
             </div>
-            <TableComponent columns={investorColumns(router)} data={investorList?.data ?? []} model="investor" />
+            <TableComponent columns={investorColumns(router,canView)} data={investorList?.data ?? []} model="investor" />
             {pagination && investorList?.data?.length > 0 && (
                 <Pagination
-                    page={page}
                     limit={limit}
                     currentPage={pageNumber}
                     totalPages={totalPages}
-                    totalCount={totalCount}
                     hasNextPage={hasNextPage}
                     hasPreviousPage={hasPreviousPage}
                     onPageChange={onPageChange}

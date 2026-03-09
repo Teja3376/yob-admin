@@ -5,7 +5,7 @@ import clsx from "clsx";
 interface DashboardCardProps {
   uptitle?: string;
   title?: string;
-  value?: string;
+  value?: string|number;
   titleIcon?: React.ReactNode;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;

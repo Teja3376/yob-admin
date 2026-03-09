@@ -19,8 +19,7 @@ export type IssuerRow = {
   status: "active" | "inactive" | "pending";
 };
 
-export const issuerTableCols = (): ColumnDef<IssuerRow>[] => {
-  const router = useRouter();
+export const issuerTableCols = (router:any,canView:boolean): ColumnDef<IssuerRow>[] => {
   return [
     {
       accessorKey: "applicationId",
@@ -105,6 +104,7 @@ export const issuerTableCols = (): ColumnDef<IssuerRow>[] => {
             className="cursor-pointer"
             variant="ghost"
             size="sm"
+            disabled={!canView}
           >
             <Eye />
           </Button>

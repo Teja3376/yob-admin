@@ -14,12 +14,21 @@ import InvestorOrderBreakdown from '../components/InvestorOrderBreakdown'
 const OrderDetailPage = () => {
   const router = useRouter();
   const { orderId } = useParams();
-  const { data: orderDetail, isFetching } = useOrderDetail(orderId as string);
+  const { data: orderDetail, isFetching,isError,error } = useOrderDetail(orderId as string);
   console.log(orderDetail);
   if (isFetching) {
     return <div className=' h-screen flex items-center justify-center'>
       <Loading message="Loading order details..." />
     </div>;
+  }
+  if (isError) {
+    return (
+      <div className="flex items-center justify-center mt-20">
+        <p className="text-red-500">
+          Error loading Order Details: {error?.message || "Unknown error"}
+        </p>
+      </div>
+    );
   }
 
   return (

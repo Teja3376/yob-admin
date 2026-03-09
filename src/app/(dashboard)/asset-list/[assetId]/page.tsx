@@ -1,10 +1,5 @@
-import React from 'react'
-import AssetDetailPage from '@/modules/asset/ui/AssetDetailPage'
+import AssetDetailPage from "@/modules/asset/ui/pages/AssetDetailPage";
 
-const page = () => {
-  return (
-    <AssetDetailPage />
-  )
+export default function AssetDetails() {
+  return <AssetDetailPage />;
 }
-
-export default page

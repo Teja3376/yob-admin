@@ -22,19 +22,13 @@ export const useOrderList = (filters: OrderFilters) => {
   return useQuery({
     queryKey: ["order-list", filters],
     queryFn: async () => {
-      try {
-        const res = await api.get("/orders", {
-          params: filters,
-        });
-
-        return res.data;
-      } catch (error: unknown) {
-        const err = error as AxiosError<ErrorResponse>;
-        toast.error(
-          err.response?.data?.message || "Failed to fetch orders"
-        );
-      }
+      const res = await api.get("/orders", {
+        params: filters,
+      });
+      return res.data;
     },
     staleTime: 1000 * 60 * 1,
+    retry: 3,
+    refetchOnWindowFocus: false,
   });
 };

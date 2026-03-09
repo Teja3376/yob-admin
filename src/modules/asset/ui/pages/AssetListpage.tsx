@@ -3,23 +3,29 @@
 import React, { useState } from "react";
 import TableComponent from "@/components/common/TableComponent";
 import { LoaderCircle, Search, ChevronLeft, ChevronRight } from "lucide-react";
-import { useGetAllAsset } from "../hooks/useGetAllAsset";
-import { assetTableCols } from "../schema/assetTableSchema";
+import { useGetAllAsset } from "../../hooks/useGetAllAsset";
+import { assetTableCols } from "../../schema/assetTableSchema";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 
 import Pagination from "@/components/common/Pagination";
 import { useRouter } from "next/navigation";
+import { useDebounce } from "@/config/useDebounce";
+import Loading from "@/components/Loader";
+import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
 
 type StatusTab = "pending" | "rejected" | "approved";
 
 const AssetListpage = () => {
-  const router=useRouter()
+  const router = useRouter();
+  const { hasPermission } = useAuthStore1();
   const [status, setStatus] = useState<StatusTab>("pending");
   const [searchQuery, setSearchQuery] = useState("");
+  const searchTerm = useDebounce(searchQuery, 500);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const cols=assetTableCols(router,status)
+  const canView = hasPermission("assets", "review");
+  const cols = assetTableCols(router, status,canView);
 
   const {
     data,
@@ -30,7 +36,7 @@ const AssetListpage = () => {
     page,
     limit,
     status,
-    search: searchQuery,
+    search: searchTerm,
   });
 
   const handleTabChange = (value: string) => {
@@ -115,7 +121,7 @@ const AssetListpage = () => {
         <TabsContent value={status} className="mt-6 space-y-4">
           {isLoading && !data ? (
             <div className="flex items-center justify-center mt-20">
-              <LoaderCircle size={40} className="animate-spin text-primary" />
+              <Loading message="Loading..." />{" "}
             </div>
           ) : (
             <TableComponent
@@ -128,13 +134,10 @@ const AssetListpage = () => {
       </Tabs>
       {pagination && data?.data.length > 0 && (
         <Pagination
+          {...pagination}
           currentPage={pagination?.currentPage ?? 1}
           totalPages={pagination?.totalPages ?? 1}
-          totalCount={pagination?.totalCount ?? 0}
-          hasNextPage={pagination?.hasNextPage ?? false}
-          hasPreviousPage={pagination?.hasPreviousPage ?? false}
           limit={pagination?.limit ?? limit}
-          page={pagination?.page ?? page}
           onPageChange={onPageChange}
           onPageSizeChange={onPageSizeChange}
         />

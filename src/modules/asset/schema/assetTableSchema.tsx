@@ -35,6 +35,7 @@ const StatusBadge = ({ status }: { status: string }) => {
 export const assetTableCols = (
   router: ReturnType<typeof useRouter>,
   status: string,
+  canView: boolean,
 ): ColumnDef<AssetApprovalListItem>[] => {
   // Step 1: base columns
   const columns: ColumnDef<AssetApprovalListItem>[] = [
@@ -98,7 +99,9 @@ export const assetTableCols = (
 
         return (
           <div
-            onClick={() => handleViewOnBlockchain(onChainAddress || "-", "asset")}
+            onClick={() =>
+              handleViewOnBlockchain(onChainAddress || "-", "asset")
+            }
             className="group flex items-center gap-2"
           >
             <span className="group-hover:underline cursor-pointer font-medium text-gray-900">
@@ -134,7 +137,10 @@ export const assetTableCols = (
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => router.push(`/asset-list/${row.original.assetId?._id}`)}
+          onClick={() =>
+            router.push(`/asset-list/${row.original.assetId?._id}`)
+          }
+          disabled={!canView}
         >
           <Eye size={14} />
         </Button>

@@ -16,10 +16,14 @@ import useApproveSpvApi from "../../hooks/useApproveSpvApi";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { useDeploySpv } from "../../hooks/useDeploySpv";
+import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
 
 const SpvPage = () => {
   const router = useRouter();
   const { spvId } = useParams();
+    const {hasPermission}=useAuthStore1()
+    const canDoAction = hasPermission("spvs", "action");
+  
   const {
     data: spvData,
     isLoading,
@@ -156,6 +160,7 @@ const SpvPage = () => {
         onRequestUpdate={handleRequestUpdate}
         onApprove={handleApprove}
         isApproved={spvData.status === "Active"}
+        canDoAction={canDoAction}
       />
 
       {/* Approve Dialog */}

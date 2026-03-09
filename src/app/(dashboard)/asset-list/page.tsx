@@ -1,4 +1,4 @@
-import AssetListpage from "@/modules/asset/ui/AssetListpage";
+import AssetListpage from "@/modules/asset/ui/pages/AssetListpage";
 
 export default function AssetListRoute() {
     
