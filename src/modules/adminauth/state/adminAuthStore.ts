@@ -57,10 +57,17 @@ export const useAuthStore1 = create<AuthState>()(
           isAuthenticated: false,
         }),
 
-     hasPermission: (module: PermissionModule, action: PermissionAction) => {
-  const permissions = get().permissions;
-  return permissions?.[module]?.[action] === true;
-}
+      hasPermission: (module: PermissionModule, action: PermissionAction) => {
+        const { permissions, hasHydrated } = get();
+
+        // While permissions are still loading / before hydration,
+        // treat all modules as allowed so the sidebar is not disabled by default.
+        if (!hasHydrated || !permissions) {
+          return true;
+        }
+
+        return permissions?.[module]?.[action] === true;
+      },
     }),
     {
       name: "auth-session",
