@@ -10,7 +10,7 @@ export type IssuerRow = {
   _id: string;
   legalEntityName: string;
   applicationId: string;
-
+  issuerName: string;
   email?: string;
   phone?: string;
 
@@ -19,7 +19,7 @@ export type IssuerRow = {
   status: "active" | "inactive" | "pending";
 };
 
-export const issuerTableCols = (router:any,canView:boolean): ColumnDef<IssuerRow>[] => {
+export const issuerTableCols = (router: any, canView: boolean): ColumnDef<IssuerRow>[] => {
   return [
     {
       accessorKey: "applicationId",
@@ -52,40 +52,33 @@ export const issuerTableCols = (router:any,canView:boolean): ColumnDef<IssuerRow
       ),
     },
     {
-      id: "contactDetails",
-      header: "Contact Details",
+      id: "Issuer Name",
+      header: "Issuer Name",
       size: 240,
       cell: ({ row }) => {
-        const { email, phone } = row.original || {};
+        const issuerName = row.original.issuerName;
         return (
           <div className="flex flex-col text-xs justify-center">
-            {email && <p>{email}</p>}
-            {phone && <p className="text-gray-500">{phone}</p>}
+            <p>{issuerName}</p>
           </div>
         );
       },
     },
-    {
-      accessorKey: "assetCategory",
-      header: "Asset Category",
-      size: 160,
-    },
-    
+
     {
       accessorKey: "status",
       header: "Status",
       cell: ({ getValue }) => {
         const status = getValue<string>();
         const statusStyles: Record<string, string> = {
-          approved: "bg-green-100 text-green-700",
-          rejected: "bg-red-100 text-red-700",
-          pending: "bg-yellow-100 text-yellow-700",
+          approved: "bg-green-100 text-green-700 border border-green-200",
+          rejected: "bg-red-100 text-red-700 border border-red-200",
+          pending: "bg-yellow-100 text-yellow-700 border border-yellow-200 ",
         };
         return (
           <Badge
-            className={`inline-flex rounded px-2 py-0.5 text-xs font-medium cursor-pointer capitalize ${
-              statusStyles[status] ?? "bg-gray-100 text-gray-600"
-            }`}
+            className={`inline-flex rounded px-2 py-0.5 text-xs font-medium cursor-pointer capitalize ${statusStyles[status] ?? "bg-gray-100 text-gray-600"
+              }`}
           >
             {" "}
             {status}{" "}
