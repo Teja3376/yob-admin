@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import IssuersTable from "../components/IssuersTable";
 import { IssuerRow, issuerTableCols } from "../../schemas/issuerTableCols";
 import { useGetIssuerList } from "../../hooks/issuer.hook";
-import { Search } from "lucide-react";
+import { Check, Clock, Search, Users, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/config/useDebounce";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -13,6 +13,8 @@ import { useRouter } from "next/navigation";
 import Pagination from "@/components/common/Pagination";
 import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
 import PageTitle from "@/components/PageTitle";
+import DashboardCard from "@/modules/orders/ui/DashboardCard";
+import { useGetIssuerCount } from "../../hooks/useGetIssuerCount";
 
 type StatusTab = "pending" | "rejected" | "approved";
 
@@ -32,15 +34,17 @@ const IssuerListPage = () => {
     isError,
     error,
   } = useGetIssuerList(status, page, limit, searchTerm);
+  const { data: issuerCount, isFetching: isFetchingIssuerCount } = useGetIssuerCount();
+  console.log(issuerCount);
   const pagination = issuerList?.pagination;
 
-  const cols = issuerTableCols(router,canView);
+  const cols = issuerTableCols(router, canView);
   const handleTabChange = (value: string) => {
     setStatus(value as StatusTab);
     setPage(1);
   };
 
-  const onPageChange = (newPage: number) => {
+  const onPageChange = (newPage: number) => { 
     setPage(newPage);
   };
 
@@ -48,6 +52,13 @@ const IssuerListPage = () => {
     setLimit(pageSize);
     setPage(1);
   };
+  if (isLoading && isFetchingIssuerCount) {
+    return (
+      <div className="flex items-center justify-center mt-20">
+        <Loading message="Loading Issuer List and Count..." />
+      </div>
+    );
+  }
 
   if (isError) {
     return (
@@ -61,10 +72,41 @@ const IssuerListPage = () => {
 
   return (
     <div className="w-full space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <DashboardCard
+          title="Total Issuers"
+          value={`${issuerCount?.total || "0"}`}
+          rightIcon={<Users size={20} className="text-primary" />}
+          rightIconClassName="border-2 border-primary rounded-full p-2 bg-primary/10"
+          containerClassName="rounded-lg"
+        />
+        <DashboardCard
+          title="Approved Issuers"
+          value={`${issuerCount?.approved || "0"}`}
+          rightIcon={<Check size={20} className="text-green-500" />}
+          rightIconClassName="border-2 border-green-500 rounded-full p-2 bg-green-100"
+          containerClassName="rounded-lg"
+        />
+        <DashboardCard
+          title="Pending Issuers"
+          value={`${issuerCount?.pending || "0"}`}
+          rightIcon={<Clock size={20} className="text-yellow-500" />}
+          rightIconClassName="border-2 border-yellow-500 rounded-full p-2 bg-yellow-100"
+          containerClassName="rounded-lg"
+        />
+        <DashboardCard
+          title="Rejected Issuers"
+          value={`${issuerCount?.rejected || "0"}`}
+          rightIcon={<X size={20} className="text-red-500" />}
+          rightIconClassName="border-2 border-red-500 rounded-full p-2 bg-red-100"
+          containerClassName="rounded-lg"
+        />
+
+      </div>
       <PageTitle
-              title={ "List of Issuers"}
-              suffix="Issuers"
-            />
+        title={"List of Issuers"}
+        suffix="Issuers"
+      />
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-gray-900">Issuer List</h1>
         <div className="relative flex-1 max-w-md">
