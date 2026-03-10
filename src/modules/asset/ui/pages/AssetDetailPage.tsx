@@ -101,6 +101,8 @@ export default function AssetDetailPage() {
         {/* Header Section */}
         <AssetDetailHeader
           name={assetData.name}
+          companyId={assetData.company._id}
+          assetId={assetId as string}
           location={location}
           status={assetData.status as "pending" | "approved" | "active"}
           imageUrl={assetData?.media?.imageURL}
@@ -127,6 +129,7 @@ export default function AssetDetailPage() {
             >
               Overview
             </TabsTrigger>
+            
             <TabsTrigger
               value="financial"
               className="text-black  font-medium data-[state=active]:text-black data-[state=active]:font-medium"
@@ -151,6 +154,8 @@ export default function AssetDetailPage() {
           <TabsContent value="overview" className="mt-8 space-y-6">
             <PropertyOverview
               //   class={assetData.class}
+              companyName={assetData.company.name}
+              jurisdiction={assetData.company.jurisdiction}
               category={assetData.category}
               style={assetData.style}
               stage={assetData.stage}

@@ -11,8 +11,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import clsx from "clsx";
+import { useRouter } from "next/navigation";
 
 interface AssetDetailHeaderProps {
+  assetId?: string;
   name?: string;
   location?: string;
   status?: "pending" | "approved" | "active";
@@ -22,10 +24,13 @@ interface AssetDetailHeaderProps {
   onApprove?: () => void;
   approveDisabled?: boolean;
   canApprove?: boolean;
+  companyId?: string;
 }
 
 export function AssetDetailHeader(props: AssetDetailHeaderProps) {
+  const router = useRouter();
   const {
+    assetId,
     name,
     location,
     status,
@@ -34,6 +39,7 @@ export function AssetDetailHeader(props: AssetDetailHeaderProps) {
     onApprove,
     approveDisabled,
     canApprove,
+    companyId,
   } = props;
   const statusConfig = {
     pending: {
@@ -90,15 +96,22 @@ export function AssetDetailHeader(props: AssetDetailHeaderProps) {
               <Edit2 className="h-4 w-4" />
               Request to update
             </Button>
-            <Button
+            {approveDisabled ? <Button
+              variant="outline"
+              className="text-black gap-2"
+              onClick={() => router.push(`/spv-list/${companyId}`)}
+
+            >
+              Go to DashBoard
+              <Send className="h-4 w-4" />
+            </Button> : <Button
               variant="outline"
               className="text-black gap-2"
               onClick={onApprove}
-              disabled={approveDisabled}
             >
               Approve
               <Send className="h-4 w-4" />
-            </Button>
+            </Button>}
           </div>
         ) : (
           <div>
