@@ -59,7 +59,6 @@ const ProfilePopover = ({
 const Header = () => {
   const { data: profile } = useGetProfile();
   const { setUser } = useAuthStore1();
-  console.log("Profile data in Header:", profile);
   useEffect(() => {
     if (profile?.user) {
       setUser(profile.user, profile.user.permissions);

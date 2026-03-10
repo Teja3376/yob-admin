@@ -46,7 +46,6 @@ const SpvPage = () => {
 
   const handleConfirmApprove = async () => {
     const result = await handleDeploySpv(spvData, setIsLoading);
-    console.log("SPV deployed result:", result);
 
     const blockChain = {
       txHash: result?.txHash || "",

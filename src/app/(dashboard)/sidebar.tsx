@@ -23,13 +23,7 @@ const Sidebar = () => {
     { label: "Investors", href: "/investors", allowed: isInvestorsAllowed },
     { label: "Roles", href: "/roles", allowed: isRolesAllowed },
   ];
-  console.log(navLinks);
-  console.log(isIssuersAllowed);
-  console.log(isSpvsAllowed);
-  console.log(isAssetsAllowed);
-  console.log(isOrdersAllowed);
-  console.log(isInvestorsAllowed);
-  console.log(isRolesAllowed);
+  
 
   const handleLogout = () => {
     if (isAuthenticated) {

@@ -26,7 +26,6 @@ const Orders = ({ issuerId }: { issuerId: string }) => {
     isError,
     error,
   } = useGetIssuerOrders(issuerId as string, page, limit, searchTerm);
-  console.log(searchTerm)
 
   const onPageChange = (newPage: number) => {
     setPage(newPage);

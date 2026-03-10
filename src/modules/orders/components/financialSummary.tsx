@@ -18,7 +18,6 @@ const FieldItem = ({ label, value }: FieldItemProps) => {
 };
 
 const FinancialSummary = ({ orderDetail }: { orderDetail: OrderDetail }) => {
-  console.log(orderDetail, 'orderDetail');
   return (
     <div className="border rounded-md w-full">
       <div className="px-4 py-2 bg-primary/10 rounded-t-md ">

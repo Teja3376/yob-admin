@@ -69,7 +69,6 @@ export const useDeploySpv = () => {
         name,
         metaCID: metaCIDString,
       });
-      console.log("SPV deployed successfully:", result);
       return result;
     } catch (error) {
       console.error("Error deploying SPV:", error);

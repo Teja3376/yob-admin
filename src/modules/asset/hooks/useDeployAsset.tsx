@@ -9,7 +9,6 @@ export const useDeployAsset = () => {
     asset: any,
     setIsLoading: (loading: boolean) => void,
   ) => {
-    console.log("Deploying asset with data:", asset);
     setIsLoading(true);
     const {
       spvId,
@@ -25,20 +24,6 @@ export const useDeployAsset = () => {
       brokerage,
       investorRequirementsAndTimeline,
     } = asset;
-    console.log("Extracted asset details:", {
-      spvId,
-      _id,
-      name,
-      style,
-      currency,
-      about,
-      company,
-      tokenInformation,
-      legalAdivisory,
-      assetManagementCompany,
-      brokerage,
-      investorRequirementsAndTimeline,
-    });
     try {
       const metaDataCID = await uploadProjectFiles({
         spvId,
@@ -74,7 +59,6 @@ export const useDeployAsset = () => {
           },
         },
       });
-      console.log("Metadata uploaded to IPFS with CID:", metaDataCID);
       if (!metaDataCID) {
         throw new Error("Failed to upload SPV metadata to IPFS");
       }
