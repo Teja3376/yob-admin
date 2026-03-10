@@ -22,7 +22,7 @@ const IssuerListPage = () => {
   const router = useRouter();
   const { hasPermission } = useAuthStore1();
   const [searchQuery, setSearchQuery] = useState("");
-  const [status, setStatus] = useState<StatusTab>("pending");
+  const [status, setStatus] = useState<StatusTab>("approved");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const searchTerm = useDebounce(searchQuery, 500);
@@ -38,7 +38,7 @@ const IssuerListPage = () => {
   console.log(issuerCount);
   const pagination = issuerList?.pagination;
 
-  const cols = issuerTableCols(router, canView);
+  const cols = issuerTableCols(router, canView, status);
   const handleTabChange = (value: string) => {
     setStatus(value as StatusTab);
     setPage(1);
@@ -125,6 +125,12 @@ const IssuerListPage = () => {
       <Tabs value={status} onValueChange={handleTabChange}>
         <TabsList className="bg-transparent border-b border-gray-200 rounded-none p-0 h-auto gap-5">
           <TabsTrigger
+            value="approved"
+            className="data-[state=active]:border-b-2 data-[state=active]:shadow-none text-black data-[state=active]:border-b-primary data-[state=active]:text-primary data-[state=active]:bg-transparent rounded-none border-b-2 border-transparent"
+          >
+            Approved
+          </TabsTrigger>
+          <TabsTrigger
             value="pending"
             className="data-[state=active]:border-b-2 data-[state=active]:shadow-none text-black data-[state=active]:border-b-primary data-[state=active]:text-primary data-[state=active]:bg-transparent rounded-none border-b-2 border-transparent"
           >
@@ -137,12 +143,6 @@ const IssuerListPage = () => {
             Rejected
           </TabsTrigger>
 
-          <TabsTrigger
-            value="approved"
-            className="data-[state=active]:border-b-2 data-[state=active]:shadow-none text-black data-[state=active]:border-b-primary data-[state=active]:text-primary data-[state=active]:bg-transparent rounded-none border-b-2 border-transparent"
-          >
-            Approved
-          </TabsTrigger>
         </TabsList>
 
         <TabsContent value={status} className="mt-6 space-y-4">
@@ -154,7 +154,7 @@ const IssuerListPage = () => {
             <TableComponent
               data={issuerList?.data || []}
               columns={cols}
-              model="asset"
+              model="issuer"
             />
           )}
         </TabsContent>

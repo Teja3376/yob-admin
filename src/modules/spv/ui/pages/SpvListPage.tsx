@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import TableComponent from "@/components/common/TableComponent";
-import { LoaderCircle, Search } from "lucide-react";
+import { Clock, LoaderCircle, Search, ShieldCheck, Users, X } from "lucide-react";
 import { useGetAllSpv } from "../../hooks/useGetAllSpv";
 import { spvTableCols } from "../../schemas/spvTableSchema";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -13,17 +13,21 @@ import Pagination from "@/components/common/Pagination";
 import Loading from "@/components/Loader";
 import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
 import PageTitle from "@/components/PageTitle";
+import DashboardCard from "@/modules/orders/ui/DashboardCard";
+import { useGetSpvCount } from "../../hooks/useGetSpvCount";
 
 type StatusTab = "Active" | "Rejected" | "Pending";
 
 const SpvListPage = () => {
   const router = useRouter();
   const { hasPermission } = useAuthStore1();
-  const [status, setStatus] = useState<StatusTab>("Pending");
+  const [status, setStatus] = useState<StatusTab>("Active");
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const canView = hasPermission("spvs", "review");
+  const { data: spvCount, isFetching: isFetchingSpvCount } = useGetSpvCount();
+
 
   const cols = spvTableCols(router, status, canView);
 
@@ -76,6 +80,41 @@ const SpvListPage = () => {
 
   return (
     <div className="space-y-6">
+      <div className="grid grif-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+
+        <DashboardCard
+          title="Total SPVs"
+          value={`${spvCount?.total || "0"}`}
+          rightIcon={<ShieldCheck size={20} className="text-primary" />}
+          rightIconClassName="border-2 border-primary rounded-full p-2 bg-primary/10"
+          containerClassName="rounded-lg"
+        />
+        
+        <DashboardCard
+          title="Active SPVs"
+          value={`${spvCount?.active || "0"}`}
+          rightIcon={<ShieldCheck size={20} className="text-green-500" />}
+          rightIconClassName="border-2 border-primary rounded-full p-2 bg-primary/10"
+          containerClassName="rounded-lg"
+        />
+        
+        <DashboardCard
+          title="Pending SPVs"
+          value={`${spvCount?.pending || "0"}`}
+          rightIcon={<Clock size={20} className="text-yellow-500" />}
+          rightIconClassName="border-2 border-primary rounded-full p-2 bg-primary/10"
+          containerClassName="rounded-lg"
+        />
+        
+        <DashboardCard
+          title="Rejected SPVs"
+          value={`${spvCount?.rejected || "0"}`}
+          rightIcon={<X size={20} className="text-red-500" />}
+          rightIconClassName="border-2 border-primary rounded-full p-2 bg-primary/10"
+          containerClassName="rounded-lg"
+        />
+      </div>
+        
       {/* Header */}
       <PageTitle title={"List of SPVs"} suffix="spvs" />
       <div className="flex items-center justify-between">
@@ -100,6 +139,12 @@ const SpvListPage = () => {
       <Tabs value={status} onValueChange={handleTabChange}>
         <TabsList className="bg-transparent border-b border-gray-200 rounded-none p-0 h-auto gap-5 ">
           <TabsTrigger
+            value="Active"
+            className="data-[state=active]:border-b-2 data-[state=active]:shadow-none text-black data-[state=active]:border-b-primary data-[state=active]:text-primary data-[state=active]:bg-transparent rounded-none border-b-2 border-transparent"
+          >
+            Approved
+          </TabsTrigger>
+          <TabsTrigger
             value="Pending"
             className="data-[state=active]:border-b-2 data-[state=active]:shadow-none text-black data-[state=active]:border-b-primary data-[state=active]:text-primary data-[state=active]:bg-transparent rounded-none border-b-2 border-transparent"
           >
@@ -112,12 +157,6 @@ const SpvListPage = () => {
             Rejected
           </TabsTrigger>
 
-          <TabsTrigger
-            value="Active"
-            className="data-[state=active]:border-b-2 data-[state=active]:shadow-none text-black data-[state=active]:border-b-primary data-[state=active]:text-primary data-[state=active]:bg-transparent rounded-none border-b-2 border-transparent"
-          >
-            Approved
-          </TabsTrigger>
         </TabsList>
 
         <TabsContent value={status} className="mt-6 space-y-4">
