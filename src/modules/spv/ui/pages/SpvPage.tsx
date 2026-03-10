@@ -18,12 +18,14 @@ import { Badge } from "@/components/ui/badge";
 import { useDeploySpv } from "../../hooks/useDeploySpv";
 import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
 import PageTitle from "@/components/PageTitle";
+import { Button } from "@/components/ui/button";
 
 const SpvPage = () => {
   const router = useRouter();
   const { spvId } = useParams();
   const { hasPermission } = useAuthStore1();
   const canDoAction = hasPermission("spvs", "action");
+  const canDoReview = hasPermission("spvs", "review");
 
   const {
     data: spvData,
@@ -122,14 +124,24 @@ const SpvPage = () => {
     <div className="space-y-6">
       <PageTitle title={spvData.name || "Detailed view of spv"} suffix="SPV" />
       {/* Header */}
-      <div className="flex items-center gap-2">
-        <ArrowLeft
-          onClick={() => router.back()}
-          className="cursor-pointer"
-          size={20}
-        />
-        <h1 className="text-xl font-medium">{spvData.name}</h1>
-        {getStatusBadge(spvData.status)}
+      <div className="flex justify-between items-center">
+        <div className="flex items-center gap-2">
+          <ArrowLeft
+            onClick={() => router.back()}
+            className="cursor-pointer"
+            size={20}
+          />
+          <h1 className="text-xl font-medium">{spvData.name}</h1>
+          {getStatusBadge(spvData.status)}
+        </div>
+        {spvData.status === "Active" && canDoReview && (
+          <Button
+            variant="outline"
+            onClick={() => router.push(`/spv-list/${spvId}/overview`)}
+          >
+            Dashboard
+          </Button>
+        )}
       </div>
 
       {/* Basic Information */}
