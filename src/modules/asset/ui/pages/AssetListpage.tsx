@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import TableComponent from "@/components/common/TableComponent";
-import { LoaderCircle, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { LoaderCircle, Search, ChevronLeft, ChevronRight, X, FileText } from "lucide-react";
 import { useGetAllAsset } from "../../hooks/useGetAllAsset";
 import { assetTableCols } from "../../schema/assetTableSchema";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -14,13 +14,16 @@ import { useDebounce } from "@/config/useDebounce";
 import Loading from "@/components/Loader";
 import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
 import PageTitle from "@/components/PageTitle";
+import { useGetAssetCount } from "../../hooks/useGetAssetCount";
+import DashboardCard from "@/modules/orders/ui/DashboardCard";
 
 type StatusTab = "pending" | "rejected" | "approved";
 
 const AssetListpage = () => {
   const router = useRouter();
   const { hasPermission } = useAuthStore1();
-  const [status, setStatus] = useState<StatusTab>("pending");
+  const [status, setStatus] = useState<StatusTab>("approved");
+  const { data: assetCount, isFetching: isFetchingAssetCount } = useGetAssetCount();
   const [searchQuery, setSearchQuery] = useState("");
   const searchTerm = useDebounce(searchQuery, 500);
   const [page, setPage] = useState(1);
@@ -76,6 +79,40 @@ const AssetListpage = () => {
 
   return (
     <div className="space-y-6">
+        <div className="grid grif-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+
+<DashboardCard
+  title="Total Assets"
+  value={`${assetCount?.total || "0"}`}
+  rightIcon={<FileText size={20} className="text-primary" />}
+  rightIconClassName="border-2 border-primary rounded-full p-2 bg-primary/10"
+  containerClassName="rounded-lg"
+/>
+
+<DashboardCard
+  title="Approved Assets"
+  value={`${assetCount?.approved || "0"}`}
+  rightIcon={<FileText size={20} className="text-green-500" />}
+  rightIconClassName="border-2 border-primary rounded-full p-2 bg-primary/10"
+  containerClassName="rounded-lg"
+/>
+
+<DashboardCard
+  title="Pending Assets"
+  value={`${assetCount?.pending || "0"}`}
+  rightIcon={<FileText size={20} className="text-yellow-500" />}
+  rightIconClassName="border-2 border-primary rounded-full p-2 bg-primary/10"
+  containerClassName="rounded-lg"
+/>
+
+<DashboardCard
+    title="Rejected Assets"
+  value={`${assetCount?.rejected || "0"}`}
+  rightIcon={<X size={20} className="text-red-500" />}
+  rightIconClassName="border-2 border-primary rounded-full p-2 bg-primary/10"
+  containerClassName="rounded-lg"
+/>
+</div>  
       <PageTitle title={"List of Assets"} suffix="Assets" />
 
       {/* Header */}
@@ -101,6 +138,12 @@ const AssetListpage = () => {
       <Tabs value={status} onValueChange={handleTabChange}>
         <TabsList className="bg-transparent border-b border-gray-200 rounded-none p-0 h-auto gap-5">
           <TabsTrigger
+            value="approved"
+            className="data-[state=active]:border-b-2 data-[state=active]:shadow-none text-black data-[state=active]:border-b-primary data-[state=active]:text-primary data-[state=active]:bg-transparent rounded-none border-b-2 border-transparent"
+          >
+            Approved
+          </TabsTrigger>
+          <TabsTrigger
             value="pending"
             className="data-[state=active]:border-b-2 data-[state=active]:shadow-none text-black data-[state=active]:border-b-primary data-[state=active]:text-primary data-[state=active]:bg-transparent rounded-none border-b-2 border-transparent"
           >
@@ -113,12 +156,6 @@ const AssetListpage = () => {
             Rejected
           </TabsTrigger>
 
-          <TabsTrigger
-            value="approved"
-            className="data-[state=active]:border-b-2 data-[state=active]:shadow-none text-black data-[state=active]:border-b-primary data-[state=active]:text-primary data-[state=active]:bg-transparent rounded-none border-b-2 border-transparent"
-          >
-            Approved
-          </TabsTrigger>
         </TabsList>
 
         <TabsContent value={status} className="mt-6 space-y-4">

@@ -4,113 +4,123 @@ import { Button } from "@/components/ui/button";
 import { handleCopy } from "@/utils/globalFunctions";
 import { ColumnDef } from "@tanstack/react-table";
 import { Copy, Eye } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 export type IssuerRow = {
   _id: string;
-  legalEntityName: string;
-  applicationId: string;
-
+  applicationId?: string;
+  legalEntityName?: string;
+  issuerName?: string;
   email?: string;
   phone?: string;
-
-  assetCategory: string;
-  shortAssetDescription: string;
-  status: "active" | "inactive" | "pending";
+  status?: string;
+  rejectionReason?: string;
+  spvCount?: number;
+  assetCount?: number;
+  totalInvestors?: number;
 };
 
-export const issuerTableCols = (router:any,canView:boolean): ColumnDef<IssuerRow>[] => {
-  return [
+type IssuerTab = "pending" | "rejected" | "approved";
+
+const IdCell = ({ value }: { value: string }) => (
+  <div className="flex items-center gap-1 p-1">
+    <button
+      onClick={() => handleCopy(value, "Issuer ID")}
+      className="cursor-pointer py-1 rounded hover:bg-gray-100"
+      type="button"
+    >
+      <Copy size={15} />
+    </button>
+    <p className="font-mono text-xs">{value}</p>
+  </div>
+);
+
+const RejectionBadge = ({ reason }: { reason?: string }) => (
+  <Badge className="bg-red-100 text-red-700 font-medium">{reason || "—"}</Badge>
+);
+
+const ViewAction = (router: any, canView: boolean): ColumnDef<IssuerRow> => ({
+  id: "actions",
+  header: "Action",
+  cell: ({ row }) => (
+    <Button
+      onClick={() => router.push(`/issuers/${row.original._id}`)}
+      className="cursor-pointer"
+      variant="ghost"
+      size="sm"
+      disabled={!canView}
+    >
+      <Eye />
+    </Button>
+  ),
+  size: 100,
+});
+
+export const issuerTableCols = (
+  router: any,
+  canView: boolean,
+  tab: IssuerTab,
+): ColumnDef<IssuerRow>[] => {
+  const baseCols: ColumnDef<IssuerRow>[] = [
     {
       accessorKey: "applicationId",
-      header: "Application ID",
+      header: "ID",
       size: 170,
-      cell: ({ getValue }) => (
-        <div className="flex items-center gap-1 p-1">
-          <button
-            onClick={() =>
-              handleCopy(
-                getValue<string>(),
-
-                "Application ID"
-              )
-            }
-            className="cursor-pointer py-1 rounded hover:bg-gray-100"
-          >
-            <Copy size={15} />
-          </button>
-          <p className="font-mono text-xs">{getValue<string>()}</p>
-        </div>
+      cell: ({ row }) => (
+        <IdCell value={(row.original.applicationId || row.original._id) as string} />
       ),
     },
     {
       accessorKey: "legalEntityName",
       header: "Legal Entity Name",
-      size: 220,
-      cell: ({ getValue }) => (
-        <p className="font-medium">{getValue<string>()}</p>
-      ),
-    },
-    {
-      id: "contactDetails",
-      header: "Contact Details",
       size: 240,
-      cell: ({ row }) => {
-        const { email, phone } = row.original || {};
-        return (
-          <div className="flex flex-col text-xs justify-center">
-            {email && <p>{email}</p>}
-            {phone && <p className="text-gray-500">{phone}</p>}
-          </div>
-        );
-      },
+      cell: ({ row }) => <p className="font-medium">{row.original.legalEntityName || "—"}</p>,
     },
     {
-      accessorKey: "assetCategory",
-      header: "Asset Category",
-      size: 160,
-    },
-    
-    {
-      accessorKey: "status",
-      header: "Status",
-      cell: ({ getValue }) => {
-        const status = getValue<string>();
-        const statusStyles: Record<string, string> = {
-          approved: "bg-green-100 text-green-700",
-          rejected: "bg-red-100 text-red-700",
-          pending: "bg-yellow-100 text-yellow-700",
-        };
-        return (
-          <Badge
-            className={`inline-flex rounded px-2 py-0.5 text-xs font-medium cursor-pointer capitalize ${
-              statusStyles[status] ?? "bg-gray-100 text-gray-600"
-            }`}
-          >
-            {" "}
-            {status}{" "}
-          </Badge>
-        );
-      },
-      size: 120,
-    },
-    {
-      id: "actions",
-      header: "Actions",
-      cell: ({ row }) => {
-        return (
-          <Button
-            onClick={() => router.push(`/issuers/${row.original._id}`)}
-            className="cursor-pointer"
-            variant="ghost"
-            size="sm"
-            disabled={!canView}
-          >
-            <Eye />
-          </Button>
-        );
-      },
-      size: 100,
+      accessorKey: "issuerName",
+      header: "Issuer Name",
+      size: 220,
+      cell: ({ row }) => <p className="text-sm">{row.original.issuerName || "—"}</p>,
     },
   ];
+
+  if (tab === "approved") {
+    return [
+      ...baseCols,
+      {
+        accessorKey: "spvCount",
+        header: "SPV Count",
+        size: 120,
+        cell: ({ row }) => <p className="text-sm">{row.original.spvCount ?? 0}</p>,
+      },
+      {
+        accessorKey: "assetCount",
+        header: "Asset Count",
+        size: 120,
+        cell: ({ row }) => <p className="text-sm">{row.original.assetCount ?? 0}</p>,
+      },
+      {
+        accessorKey: "totalInvestors",
+        header: "Total Investors",
+        size: 140,
+        cell: ({ row }) => <p className="text-sm">{row.original.totalInvestors ?? 0}</p>,
+      },
+      ViewAction(router, canView),
+    ];
+  }
+
+  if (tab === "rejected") {
+    return [
+      ...baseCols,
+      {
+        accessorKey: "rejectionReason",
+        header: "Rejection Reason",
+        size: 240,
+        cell: ({ row }) => <RejectionBadge reason={row.original.rejectionReason} />,
+      },
+      ViewAction(router, canView),
+    ];
+  }
+
+  // pending / awaiting review
+  return [...baseCols, ViewAction(router, canView)];
 };
