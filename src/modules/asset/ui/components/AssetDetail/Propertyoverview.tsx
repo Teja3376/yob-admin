@@ -1,10 +1,12 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import CountryFormat from '@/lib/formatCountry';
+import { formatCurrency } from '@/lib/formatCurrency';
 import { MapPin, DollarSign, Home, Zap } from 'lucide-react';
 
 interface PropertyOverviewProps {
-//   class: string;
+  //   class: string;
   category: string;
   style: string;
   stage: string;
@@ -13,10 +15,12 @@ interface PropertyOverviewProps {
   pricePerSft: number;
   basePropertyValue: number;
   totalPropertyValueAfterFees: number;
+  companyName: string;
+  jurisdiction: string;
 }
 
 export function PropertyOverview({
-//   class: _assetClass,
+  //   class: _assetClass,
   category,
   style,
   stage,
@@ -25,6 +29,8 @@ export function PropertyOverview({
   pricePerSft,
   basePropertyValue,
   totalPropertyValueAfterFees,
+  companyName,
+  jurisdiction,
 }: PropertyOverviewProps) {
   const metrics = [
     {
@@ -40,7 +46,7 @@ export function PropertyOverview({
     {
       icon: DollarSign,
       label: 'Price per SFT',
-      value: `${currency} ${pricePerSft.toLocaleString()}`,
+      value: `${formatCurrency(pricePerSft, currency)}`,
     },
     {
       icon: MapPin,
@@ -51,7 +57,7 @@ export function PropertyOverview({
 
   return (
     <div className="space-y-6">
-        
+
       {/* Quick Metrics */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
         {metrics.map((metric) => {
@@ -73,29 +79,52 @@ export function PropertyOverview({
           );
         })}
       </div>
+      <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2'>
+        <Card>
+          <CardHeader>
+            <CardTitle>Company Overview</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-gray-600">Company Name</span>
+                <span className="font-semibold">
+                  {companyName}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-gray-600">Jurisdiction</span>
+                <span className="font-semibold">
+                  <CountryFormat code={jurisdiction} />
+                </span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-      {/* Valuation Summary */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Property Valuation</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between border-b pb-4">
-              <span className="text-gray-600">Base Property Value</span>
-              <span className="font-semibold">
-                {currency} {basePropertyValue.toLocaleString()}
-              </span>
+        {/* Valuation Summary */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Property Valuation</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between border-b pb-4">
+                <span className="text-gray-600">Base Property Value</span>
+                <span className="font-semibold">
+                  {formatCurrency(basePropertyValue, currency)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between pt-2">
+                <span className="text-gray-600">Total Value (After Fees)</span>
+                <span className="text-lg font-bold text-blue-600">
+                  {formatCurrency(totalPropertyValueAfterFees, currency)}
+                </span>
+              </div>
             </div>
-            <div className="flex items-center justify-between pt-2">
-              <span className="text-gray-600">Total Value (After Fees)</span>
-              <span className="text-lg font-bold text-blue-600">
-                {currency} {totalPropertyValueAfterFees.toLocaleString()}
-              </span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div >
   );
 }

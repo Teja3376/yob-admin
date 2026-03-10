@@ -1,6 +1,7 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { formatCurrency } from '@/lib/formatCurrency';
 import { TrendingUp, Percent, Calendar } from 'lucide-react';
 
 interface FinancialDetailsProps {
@@ -121,13 +122,13 @@ export function FinancialDetails({
               <div>
                 <p className="text-sm text-gray-600">Gross Monthly Rent</p>
                 <p className="text-md font-semibold">
-                  {currency} {rentalInformation.grossMonthlyRent.toLocaleString()}
+                  {formatCurrency(rentalInformation.grossMonthlyRent, currency)}
                 </p>
               </div>
               <div>
                 <p className="text-sm text-gray-600">Net Monthly Rent</p>
                 <p className="text-md font-semibold text-green-600">
-                  {currency} {rentalInformation.netMonthlyRent.toLocaleString()}
+                  {formatCurrency(rentalInformation.netMonthlyRent, currency)}
                 </p>
               </div>
             </div>
@@ -137,13 +138,13 @@ export function FinancialDetails({
               <div>
                 <p className="text-sm text-gray-600">Gross Annual Rent</p>
                 <p className="mt-1 text-md font-semibold">
-                  {currency} {rentalInformation.grossAnnualRent.toLocaleString()}
+                  {formatCurrency(rentalInformation.grossAnnualRent, currency)}
                 </p>
               </div>
               <div>
                 <p className="text-sm text-gray-600">Net Annual Rent</p>
                 <p className="mt-1 text-md font-semibold text-green-600">
-                  {currency} {rentalInformation.netAnnualRent.toLocaleString()}
+                  {formatCurrency(rentalInformation.netAnnualRent, currency)}
                 </p>
               </div>
             </div>
