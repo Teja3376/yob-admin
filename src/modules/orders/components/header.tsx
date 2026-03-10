@@ -9,7 +9,6 @@ import { formatDate } from '@/lib/utils'
 
 const Header = ({ orderDetail }: { orderDetail: OrderDetail }) => {
     const router = useRouter();
-    console.log(orderDetail, 'orderDetail');
     return (
         <>
             <div className='flex justify-between items-center gap-2 border p-4 rounded-md'>

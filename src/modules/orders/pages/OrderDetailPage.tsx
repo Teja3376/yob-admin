@@ -21,7 +21,6 @@ const OrderDetailPage = () => {
     isError,
     error,
   } = useOrderDetail(orderId as string);
-  console.log(orderDetail);
   if (isFetching) {
     return (
       <div className=" h-screen flex items-center justify-center">

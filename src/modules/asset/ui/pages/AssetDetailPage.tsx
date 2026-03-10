@@ -70,7 +70,6 @@ export default function AssetDetailPage() {
 
   const handleConfirmApprove = async () => {
     const result = await handleDeployAsset(assetData, setIsLoading);
-    console.log("Deploy Asset Result:", result);
 
     const blockchain = {
       assetAddress: result?.asset || "",

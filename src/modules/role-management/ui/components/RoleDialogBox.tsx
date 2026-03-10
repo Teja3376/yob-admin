@@ -165,7 +165,6 @@ export default function AddRoleDialog({
       description: values.description,
       permissions,
     };
-    console.log("Payload: ", payload);
 
     if (isEdit && role) {
       onUpdate({ id: role._id, data: payload });

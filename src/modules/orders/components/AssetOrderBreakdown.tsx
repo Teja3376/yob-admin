@@ -49,7 +49,6 @@ const AssetOrderBreakdown = ({
   }, [fees, tokenValue]);
 
 
-  console.log({ mergedFees, totalOrderValue });
   return (
     <div className="border rounded-md">
       <div className="px-4 py-2 bg-primary/10 rounded-t-md ">

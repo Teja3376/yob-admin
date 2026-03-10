@@ -75,7 +75,6 @@ const RolesPage = () => {
   );
 
   const handleCreateRole = (data: any) => {
-    console.log("Data", data);
     createRole(data, {
       onSuccess: () => {
         toast.success("Role created successfully");
@@ -89,7 +88,6 @@ const RolesPage = () => {
     });
   };
   const handleUpdateRole = ({ id, data }: { id: string; data: any }) => {
-    console.log("Data", data);
     updateRole(
       { id, body: data },
       {

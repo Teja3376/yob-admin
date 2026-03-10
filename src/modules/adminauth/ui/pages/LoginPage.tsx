@@ -14,7 +14,6 @@ const LoginPage = () => {
   const router = useRouter();
   const { mutate: login, isPending,error } = useAdminLogin();
   const { isAuthenticated, setUser } = useAuthStore1();
-  // console.log("LoginPage rendered, isAuthenticated:", loginError);
 
 
   React.useEffect(() => {
@@ -34,8 +33,8 @@ const LoginPage = () => {
           setUser(data.user);
           router.push("/assets");
         },
-        onError: (error: any) => {
-          console.log("Login error:", error);
+        onError: (error: any) => { 
+          toast.error(error?.message || "Login failed");
         },
       },
     );

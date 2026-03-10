@@ -63,7 +63,6 @@ export const spvCols = (router:any): ColumnDef<SPVRow>[] => {
       header: "AUM",
       size: 160,
       cell: ({ row }) => {
-        console.log(row.original)
         const aum = row.original?.aum;
         const currency = row.original?.Currency;
         return (

@@ -27,7 +27,6 @@ const Assets = ({ issuerId }: { issuerId: string }) => {
     isError,
     error,
   } = useGetIssuerAssets(issuerId as string, page, limit, searchTerm);
-  console.log(searchTerm)
 
   const onPageChange = (newPage: number) => {
     setPage(newPage);
