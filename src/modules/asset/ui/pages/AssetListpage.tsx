@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { useDebounce } from "@/config/useDebounce";
 import Loading from "@/components/Loader";
 import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
+import PageTitle from "@/components/PageTitle";
 
 type StatusTab = "pending" | "rejected" | "approved";
 
@@ -25,7 +26,7 @@ const AssetListpage = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const canView = hasPermission("assets", "review");
-  const cols = assetTableCols(router, status,canView);
+  const cols = assetTableCols(router, status, canView);
 
   const {
     data,
@@ -75,6 +76,8 @@ const AssetListpage = () => {
 
   return (
     <div className="space-y-6">
+      <PageTitle title={"List of Assets"} suffix="Assets" />
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-gray-900">

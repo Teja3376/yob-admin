@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import { useResetPassword } from "../../hooks/useAdminResetPassword";
 import { routerServerGlobal } from "next/dist/server/lib/router-utils/router-server-context";
 import { toast } from "sonner";
+import PageTitle from "@/components/PageTitle";
 
 const ResetPasswordPage = () => {
   const searchParams = useSearchParams();
@@ -60,6 +61,7 @@ const ResetPasswordPage = () => {
 
   return (
     <div className="min-h-screen font-poppins flex items-center justify-center bg-linear-to-br from-blue-50 to-orange-100 p-4">
+      <PageTitle title="Reset Password" suffix="Authentication" />{" "}
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
         <div className="text-center mb-8">
           <div className="mx-auto w-30 h-30  relative rounded-full flex items-center justify-center mb-4">

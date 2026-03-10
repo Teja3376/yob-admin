@@ -19,13 +19,17 @@ import TableComponent from "@/components/common/TableComponent";
 import { handleCopy } from "@/utils/globalFunctions";
 import DashboardCard from "@/modules/orders/ui/DashboardCard";
 import { formatCurrency } from "@/lib/formatCurrency";
+import PageTitle from "@/components/PageTitle";
 
 const InvestorDetailpage = () => {
   const router = useRouter();
   const { investorId } = useParams();
-  const { data: investorDetail, isFetching,isError,error } = useInvestorDetail(
-    investorId as string,
-  );
+  const {
+    data: investorDetail,
+    isFetching,
+    isError,
+    error,
+  } = useInvestorDetail(investorId as string);
   const initals =
     investorDetail?.investor?.firstName?.charAt(0) +
     investorDetail?.investor?.lastName?.charAt(0);
@@ -42,13 +46,17 @@ const InvestorDetailpage = () => {
     return (
       <div className="flex items-center justify-center mt-20">
         <p className="text-red-500">
-          Error loading Asset list: {error?.message || "Unknown error"}
+          Error loading Investor details: {error?.message || "Unknown error"}
         </p>
       </div>
     );
   }
   return (
     <div className="space-y-4">
+      <PageTitle
+        title={investorDetail?.investor?.fullName || "Detailed View of Investors"}
+        suffix="Investor Details"
+      />
       <div className="flex items-center gap-2">
         <ArrowLeft
           onClick={() => router.back()}

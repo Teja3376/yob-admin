@@ -8,6 +8,7 @@ import LoginForm from "../components/LoginForm";
 import { useAdminLogin } from "../../hooks/useAdminLogin";
 import Image from "next/image";
 import { toast } from "sonner";
+import PageTitle from "@/components/PageTitle";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -41,6 +42,10 @@ const LoginPage = () => {
 
   return (
     <div className="min-h-screen font-poppins flex items-center justify-center bg-linear-to-br from-blue-50 to-orange-100 p-4">
+      <PageTitle
+                title={"Authentication Required"}
+                suffix="Login"
+              />
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
         <div className="text-center mb-8">
           <div className="mx-auto w-30 h-30  relative rounded-full flex items-center justify-center mb-4">

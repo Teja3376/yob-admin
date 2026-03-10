@@ -17,13 +17,14 @@ import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { useDeploySpv } from "../../hooks/useDeploySpv";
 import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
+import PageTitle from "@/components/PageTitle";
 
 const SpvPage = () => {
   const router = useRouter();
   const { spvId } = useParams();
-    const {hasPermission}=useAuthStore1()
-    const canDoAction = hasPermission("spvs", "action");
-  
+  const { hasPermission } = useAuthStore1();
+  const canDoAction = hasPermission("spvs", "action");
+
   const {
     data: spvData,
     isLoading,
@@ -119,6 +120,7 @@ const SpvPage = () => {
 
   return (
     <div className="space-y-6">
+      <PageTitle title={spvData.name || "Detailed view of spv"} suffix="SPV" />
       {/* Header */}
       <div className="flex items-center gap-2">
         <ArrowLeft

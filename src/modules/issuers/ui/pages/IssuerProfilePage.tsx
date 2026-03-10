@@ -29,6 +29,7 @@ import SubmitDecision from "../components/SubmitDecision";
 import IssuerStats from "../components/IssuerStats";
 import Loading from "@/components/Loader";
 import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
+import PageTitle from "@/components/PageTitle";
 
 const IssuerProfilePage = () => {
   const { issuerId } = useParams();
@@ -110,6 +111,14 @@ const IssuerProfilePage = () => {
   }
   return (
     <div>
+      <PageTitle
+        title={
+          issuerData?.firstName
+            ? `${issuerData.firstName} ${issuerData.lastName}`
+            : "Deatiled view of Issuer"
+        }
+        suffix="Issuer"
+      />
       <div className="flex-1 flex items-center gap-2">
         <ArrowLeft onClick={() => router.back()} className="cursor-pointer" />
         <div className="space-y-1">

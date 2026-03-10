@@ -102,8 +102,8 @@ export function AssetDetailHeader(props: AssetDetailHeaderProps) {
           </div>
         ) : (
           <div>
-            <p className="text-sm text-muted-foreground ">
-              You do not have permission to take action on this SPV.
+            <p className="text-sm text-muted-foreground mt-5 ">
+              You do not have permission to take action on this Asset.
             </p>
           </div>
         )}

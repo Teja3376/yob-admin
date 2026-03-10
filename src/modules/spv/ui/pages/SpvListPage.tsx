@@ -2,11 +2,7 @@
 
 import React, { useState } from "react";
 import TableComponent from "@/components/common/TableComponent";
-import {
-  LoaderCircle,
-  Search,
- 
-} from "lucide-react";
+import { LoaderCircle, Search } from "lucide-react";
 import { useGetAllSpv } from "../../hooks/useGetAllSpv";
 import { spvTableCols } from "../../schemas/spvTableSchema";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -16,20 +12,20 @@ import { useRouter } from "next/navigation";
 import Pagination from "@/components/common/Pagination";
 import Loading from "@/components/Loader";
 import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
+import PageTitle from "@/components/PageTitle";
 
 type StatusTab = "Active" | "Rejected" | "Pending";
 
 const SpvListPage = () => {
   const router = useRouter();
-  const {hasPermission}=useAuthStore1()
+  const { hasPermission } = useAuthStore1();
   const [status, setStatus] = useState<StatusTab>("Pending");
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-    const canView = hasPermission("spvs", "review");
+  const canView = hasPermission("spvs", "review");
 
-
-  const cols= spvTableCols(router,status,canView);
+  const cols = spvTableCols(router, status, canView);
 
   // Map UI tabs to API status values
   const getApiStatus = (tab: StatusTab): string => {
@@ -81,6 +77,7 @@ const SpvListPage = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
+      <PageTitle title={"List of SPVs"} suffix="spvs" />
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-gray-900">
           Special Purpose Vehicles (SPV) List
@@ -125,7 +122,7 @@ const SpvListPage = () => {
 
         <TabsContent value={status} className="mt-6 space-y-4">
           {isLoading && !data ? (
-           <div className="flex items-center justify-center mt-20">
+            <div className="flex items-center justify-center mt-20">
               <Loading message="Loading..." />{" "}
             </div>
           ) : (
@@ -141,7 +138,7 @@ const SpvListPage = () => {
       </Tabs>
       {pagination && data?.data.length > 0 && (
         <Pagination
-        {...pagination}
+          {...pagination}
           currentPage={pagination?.currentPage ?? 1}
           totalPages={pagination?.totalPages ?? 1}
           limit={pagination?.limit ?? limit}

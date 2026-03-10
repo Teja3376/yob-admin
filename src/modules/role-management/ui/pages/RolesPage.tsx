@@ -20,6 +20,7 @@ import DeleteDialog from "../components/DeleteDialog";
 import { set } from "date-fns";
 import useDeleteRole from "../../hooks/roles/useDeleteRole";
 import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
+import PageTitle from "@/components/PageTitle";
 
 const RolesPage = () => {
   const router = useRouter();
@@ -129,6 +130,8 @@ const RolesPage = () => {
 
   return (
     <div className="space-y-6">
+            <PageTitle title={"List of Roles"} suffix="Roles" />
+      
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="relative flex-1 max-w-md">
@@ -183,6 +186,7 @@ const RolesPage = () => {
         setOpen={setIsDeleteDialogOpen}
         type="Role"
         onDelete={handleDeleteRoleFromDialog}
+        isDeleting={isRoleDeleting}
       />
     </div>
   );
