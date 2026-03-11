@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, LoaderCircle } from "lucide-react";
+import { ArrowLeft, ArrowRight, LoaderCircle } from "lucide-react";
 import SpvBasicInfo from "@/modules/spv/ui/components/SpvBasicInfo";
 import SpvMemoTerms from "@/modules/spv/ui/components/SpvMemoTerms";
 import SpvEscrowBankDetails from "@/modules/spv/ui/components/SpvEscrowBankDetails";
@@ -134,12 +134,13 @@ const SpvPage = () => {
           <h1 className="text-xl font-medium">{spvData.name}</h1>
           {getStatusBadge(spvData.status)}
         </div>
-        {spvData.status === "Active" && canDoReview && (
+        {spvData.status === "Active" && canDoReview && spvData.isAssetLinked&& (
           <Button
             variant="outline"
+            className="hover:underline"
             onClick={() => router.push(`/spv-list/${spvId}/overview`)}
           >
-            Dashboard
+            Go To Dashboard <ArrowRight size={16} className="ml-1" />
           </Button>
         )}
       </div>

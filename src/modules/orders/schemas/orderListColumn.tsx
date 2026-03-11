@@ -48,15 +48,29 @@ export const orderListColumn = (
     },
   },
   {
-    header: "Investor ID",
-    accessorKey: "investorId",
+    header: "Investor",
+    accessorKey: "investor",
     cell: ({ row }) => {
       const investorId = row.original.investorId;
+      const firstName = row.original.investor.firstName;
+      const lastName = row.original.investor.lastName;
+      const email = row.original.investor.email;
       const shortId = investorId?.slice(-4)?.toUpperCase() || "";
       const investorIdFormatted = `INV-${shortId}`;
       return (
-        <div className="flex items-center gap-2">
-          <span className="text-gray-900">{investorIdFormatted}</span>
+        <div className="flex flex-col items-start gap-2">
+          <p className="text-gray-900">
+            {firstName} {lastName}
+          </p>
+          <p className="text-gray-500 text-sm">{email}</p>
+          <span className="text-gray-900 text-xs flex items-center gap-1">
+            {investorIdFormatted}{" "}
+            <CopyIcon
+              className="cursor-pointer"
+              size={16}
+              onClick={() => handleCopy(investorId)}
+            />
+          </span>
         </div>
       );
     },

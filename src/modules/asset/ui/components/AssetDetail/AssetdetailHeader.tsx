@@ -2,7 +2,9 @@
 
 import {
   AlertCircle,
+  ArrowRight,
   Edit2,
+  Lock,
   MoveUpRightIcon,
   Send,
   Share2,
@@ -25,6 +27,7 @@ interface AssetDetailHeaderProps {
   approveDisabled?: boolean;
   canApprove?: boolean;
   companyId?: string;
+  isAlreadyApproved?: boolean;
 }
 
 export function AssetDetailHeader(props: AssetDetailHeaderProps) {
@@ -40,6 +43,7 @@ export function AssetDetailHeader(props: AssetDetailHeaderProps) {
     approveDisabled,
     canApprove,
     companyId,
+    isAlreadyApproved,
   } = props;
   const statusConfig = {
     pending: {
@@ -85,42 +89,47 @@ export function AssetDetailHeader(props: AssetDetailHeaderProps) {
         </div>
       </div>
       {/* Pending Notice */}
-      <>
-        {canApprove ? (
-          <div className={clsx("flex gap-2 mt-4")}>
-            <Button
-              variant="primary"
-              className="text-white gap-2"
-              onClick={onRequestUpdate}
-            >
-              <Edit2 className="h-4 w-4" />
-              Request to update
-            </Button>
-            {approveDisabled ? <Button
-              variant="outline"
-              className="text-black gap-2"
-              onClick={() => router.push(`/spv-list/${companyId}`)}
+      {canApprove && !isAlreadyApproved && (
+        <div className={clsx("flex gap-2 mt-4")}>
+          <Button
+            variant="primary"
+            className="text-white gap-2"
+            onClick={onRequestUpdate}
+            disabled={approveDisabled}
+          >
+            <Edit2 className="h-4 w-4" />
+            Request to update
+          </Button>
 
-            >
-              Go to DashBoard
-              <Send className="h-4 w-4" />
-            </Button> : <Button
-              variant="outline"
-              className="text-black gap-2"
-              onClick={onApprove}
-            >
-              Approve
-              <Send className="h-4 w-4" />
-            </Button>}
-          </div>
-        ) : (
-          <div>
-            <p className="text-sm text-muted-foreground mt-5 ">
-              You do not have permission to take action on this Asset.
-            </p>
-          </div>
-        )}
-      </>
+          <Button
+            variant="outline"
+            className="text-black gap-2"
+            onClick={onApprove}
+            disabled={approveDisabled}
+          >
+            Approve
+            <Send className="h-4 w-4" />
+          </Button>
+        </div>
+      )}{" "}
+      {!isAlreadyApproved && !canApprove && (
+        <div className="w-full border-red-500 bg-red-200/30 text-red-500 rounded-md p-4 mt-4 flex items-center gap-2 border">
+          <Lock />
+          <p className="text-sm ">
+            You do not have permission to take action on this Asset.
+          </p>
+        </div>
+      )}
+      {isAlreadyApproved && (
+        <Button
+          variant="outline"
+          className="text-black gap-2 mt-2 "
+          onClick={() => router.push(`/spv-list/${companyId}/overview`)}
+        >
+          Go to DashBoard
+          <ArrowRight className="h-4 w-4" />
+        </Button>
+      )}
     </div>
   );
 }
