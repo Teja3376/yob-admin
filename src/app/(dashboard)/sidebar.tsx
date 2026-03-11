@@ -3,6 +3,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
 import { LogOut } from "lucide-react";
+import clsx from "clsx";
 
 
 const Sidebar = () => {
@@ -46,7 +47,7 @@ const Sidebar = () => {
             return (
               <span
                 key={item.href}
-                className={`${baseClass} cursor-not-allowed opacity-50 pointer-events-none`}
+                className={clsx(`${baseClass} hidden cursor-not-allowed opacity-50 pointer-events-none`)}
                 aria-disabled
               >
                 {item.label}

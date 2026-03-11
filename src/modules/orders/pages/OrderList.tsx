@@ -17,13 +17,7 @@ import { Button } from "@/components/ui/button";
 import Loading from "@/components/Loader";
 import Pagination from "@/components/common/Pagination";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 
 import { ClipboardCheck, Clock4, ShoppingCartIcon, XIcon } from "lucide-react";
 
@@ -31,6 +25,7 @@ import { useDebounce } from "@/config/useDebounce";
 import { useOrderCount } from "../hooks/useOrderCount";
 import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
 import PageTitle from "@/components/PageTitle";
+import clsx from "clsx";
 
 const OrderList = () => {
   const router = useRouter();
@@ -41,7 +36,7 @@ const OrderList = () => {
   // State
   // -----------------------
   const [searchQuery, setSearchQuery] = useState("");
-  const [status, setStatus] = useState<string | undefined>();
+  const [status, setStatus] = useState<string | undefined>("");
   const [dateRange, setDateRange] = useState<DateRange>();
   const [amountRange, setAmountRange] = useState<{
     min?: number;
@@ -62,8 +57,6 @@ const OrderList = () => {
       ? format(dateRange.from, "yyyy-MM-dd")
       : undefined,
     toDate: dateRange?.to ? format(dateRange.to, "yyyy-MM-dd") : undefined,
-    minAmount: amountRange?.min,
-    maxAmount: amountRange?.max,
   };
 
   // Debounce everything
@@ -124,6 +117,13 @@ const OrderList = () => {
       </div>
     );
   }
+
+   const ORDER_STATUSES = [
+    { label: "All", value: "" },
+    { label: "Pending", value: "pending" },
+    { label: "Completed", value: "completed" },
+    { label: "Failed", value: "failed" },
+  ];
   return (
     <div className="space-y-6">
       <PageTitle title={"List of Orders"} suffix="Orders" />
@@ -178,30 +178,49 @@ const OrderList = () => {
           onSelect={setDateRange}
         />
 
-        <AmountRangePicker
+        {/* <AmountRangePicker
           placeholder="Select amount range"
           range={amountRange}
           currency={orderList?.data?.[0]?.asset?.currency || "USD"}
           onChange={setAmountRange}
-        />
+        /> */}
 
-        <Select
+        {/* <Select
           value={status}
           onValueChange={(value) =>
             setStatus(value === "all" ? undefined : value)
           }
         >
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-45">
             <SelectValue placeholder="Select status" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All</SelectItem>
             <SelectItem value="pending">Pending</SelectItem>
-            <SelectItem value="payment_success">Payment Success</SelectItem>
             <SelectItem value="completed">Completed</SelectItem>
             <SelectItem value="failed">Failed</SelectItem>
           </SelectContent>
-        </Select>
+        </Select> */}
+          {ORDER_STATUSES.map((item) => {
+            const isActive = status === item.value;
+            return (
+              <Button
+                key={item.value}
+                onClick={() => {
+                  setStatus(item.value);
+                  setPage(1);
+                }}
+                className={clsx(
+                  "px-4 py-0! text-xs font-medium rounded-full border transition-all",
+                  isActive
+                    ? "bg-primary text-white border-primary shadow-sm hover:bg-primary"
+                    : "bg-white text-muted-foreground border-gray-200 hover:border-primary! hover:text-white!",
+                )}
+              >
+                {item.label}
+              </Button>
+            );
+          })}
 
         {(searchQuery ||
           status ||

@@ -109,8 +109,9 @@ export default function AssetDetailPage() {
           stage={assetData.stage}
           onRequestUpdate={handleRequestUpdate}
           onApprove={handleApproveClick}
-          approveDisabled={isAlreadyApproved || isApproving}
+          approveDisabled={ isApproving}
           canApprove={canDoAction}
+          isAlreadyApproved={isAlreadyApproved}
         />
 
         <AssetApprovalDialog
