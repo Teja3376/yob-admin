@@ -4,16 +4,18 @@ import { ArrowRight, Check, CheckCircle } from "lucide-react";
 import clsx from "clsx";
 
 type SpvActionButtonsProps = {
-  onRequestUpdate?: () => void;
   onApprove?: () => void;
-  isApproved?: boolean;
+  onReject?: () => void;
+  status?: string;
+  reason?: string;
   canDoAction?: boolean;
 };
 
 const SpvActionButtons: React.FC<SpvActionButtonsProps> = ({
-  onRequestUpdate,
   onApprove,
-  isApproved,
+  onReject,
+  status,
+  reason,
   canDoAction = false,
 }) => {
   return (
@@ -21,7 +23,7 @@ const SpvActionButtons: React.FC<SpvActionButtonsProps> = ({
       {!canDoAction ? (
         <div
           className={clsx(
-            isApproved ? "hidden" : "flex",
+            status !== "Pending" ? "hidden" : "flex",
             " justify-start gap-3 p-4",
           )}
         >
@@ -32,15 +34,12 @@ const SpvActionButtons: React.FC<SpvActionButtonsProps> = ({
       ) : (
         <div
           className={clsx(
-            isApproved ? "hidden" : "flex",
+            status !== "Pending" ? "hidden" : "flex",
             " justify-end gap-3 pb-6",
           )}
         >
-          <Button variant="outline" onClick={onRequestUpdate}>
-            Request to update
-          </Button>
           <Button onClick={onApprove}>
-            {isApproved ? (
+            {status !== "Pending" ? (
               <>
                 <span>Approved</span>
                 <CheckCircle size={16} />
@@ -51,6 +50,9 @@ const SpvActionButtons: React.FC<SpvActionButtonsProps> = ({
                 <ArrowRight size={16} />
               </>
             )}
+          </Button>
+          <Button variant="destructive" onClick={onReject}>
+            Reject
           </Button>
         </div>
       )}

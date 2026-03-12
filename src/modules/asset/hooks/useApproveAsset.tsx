@@ -12,6 +12,7 @@ interface ApproveAssetPayload {
     spvIdHash: string;
     assetIdHash: string;
   };
+  rejectionReason?: string;
 }
 
 const useApproveAsset = () => {
@@ -21,10 +22,11 @@ const useApproveAsset = () => {
       assetId,
       status = "pending",
       blockchain,
+      rejectionReason
     }: ApproveAssetPayload) => {
       const res = await api.patch(
         `/asset-approval/update`,
-        { status, blockchain },
+        { status, blockchain,rejectionReason },
         { params: { assetId } },
       );
       return res.data;

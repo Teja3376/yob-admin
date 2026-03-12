@@ -29,7 +29,7 @@ const AssetApprovalDialog = ({
       <DialogContent>
         {isLoading ? (
           <div className="flex items-center justify-center py-10">
-            <Loading message="Approving SPV..." />{" "}
+            <Loading message="Approving Asset..." />{" "}
           </div>
         ) : (
           <>
