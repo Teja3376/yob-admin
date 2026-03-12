@@ -13,6 +13,8 @@ interface ApproveDialogProps {
   onApprove: () => void;
   setOpen: (open: boolean) => void;
   isLoading: boolean;
+  isError?: boolean;
+  errorMessage?: string;
 }
 
 const ApproveDialog = ({
@@ -20,6 +22,8 @@ const ApproveDialog = ({
   onApprove,
   setOpen,
   isLoading,
+  isError = false,
+  errorMessage = "",
 }: ApproveDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -27,6 +31,10 @@ const ApproveDialog = ({
         {isLoading ? (
           <div className="flex items-center justify-center py-10">
             <Loading message="Approving Issuer Application..." />{" "}
+          </div>
+        ) : isError ? (
+          <div className="flex items-center justify-center py-10">
+            <p className="text-red-500">{errorMessage}</p>
           </div>
         ) : (
           <>

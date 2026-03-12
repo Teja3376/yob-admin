@@ -20,6 +20,7 @@ import PageTitle from "@/components/PageTitle";
 import { Button } from "@/components/ui/button";
 import RejectApprovalDialog from "../components/RejectionDialog";
 import SpvStatus from "../components/SpvStatus";
+import ErrorPage from "@/components/Error";
 
 const SpvPage = () => {
   const router = useRouter();
@@ -35,7 +36,12 @@ const SpvPage = () => {
     error,
     refetch,
   } = useGetSpvById(spvId as string);
-  const { mutate: approveSpv, isPending: approvalPending } = useApproveSpvApi();
+  const {
+    mutate: approveSpv,
+    isPending: approvalPending,
+    isError: isApprovalError,
+    error: approvalError,
+  } = useApproveSpvApi();
   const [isApproveDialogOpen, setIsApproveDialogOpen] = useState(false);
   const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
   const { handleDeploySpv } = useDeploySpv();
@@ -132,11 +138,10 @@ const SpvPage = () => {
 
   if (isError || !spvData) {
     return (
-      <div className="flex items-center justify-center mt-20">
-        <p className="text-red-500">
-          Error loading SPV details: {error?.message || "SPV not found"}
-        </p>
-      </div>
+      <ErrorPage
+        title="Error Gathering Spv Data"
+        errorMessage={error?.message || "Unknown error"}
+      />
     );
   }
 
@@ -209,12 +214,16 @@ const SpvPage = () => {
         onOpenChange={setIsApproveDialogOpen}
         onConfirmApprove={handleConfirmApprove}
         isLoading={approvalPending || loading}
+        isError={isApprovalError}
+        errorMessage={approvalError?.message || "Unknown error during approval"}
       />
       <RejectApprovalDialog
         open={isRejectDialogOpen}
         setOpen={setIsRejectDialogOpen}
         onReject={(reason) => handleReject(reason)}
         isLoading={approvalPending}
+         isError={isApprovalError}
+        errorMessage={approvalError?.message || "Unknown error during approval"}
       />
     </div>
   );

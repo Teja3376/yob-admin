@@ -17,6 +17,8 @@ interface RejectApprovalDialogProps {
   onReject: (reason: string) => void;
   setOpen: (open: boolean) => void;
   isLoading: boolean;
+  isError?: boolean;
+  errorMessage?: string;
 }
 
 const RejectApprovalDialog = ({
@@ -24,6 +26,8 @@ const RejectApprovalDialog = ({
   onReject,
   setOpen,
   isLoading,
+  isError,
+  errorMessage,
 }: RejectApprovalDialogProps) => {
   const [reason, setReason] = useState("");
 
@@ -40,6 +44,10 @@ const RejectApprovalDialog = ({
         {isLoading ? (
           <div className="flex items-center justify-center py-10">
             <Loading message="Rejecting Asset Application..." />{" "}
+          </div>
+        ) : isError ? (
+          <div className="flex items-center justify-center py-10">
+            <p className="text-rose-500">{errorMessage}</p>
           </div>
         ) : (
           <>

@@ -16,6 +16,8 @@ type AssetApprovalDialogProps = {
   onOpenChange: (open: boolean) => void;
   onConfirmApprove: () => void;
   isLoading?: boolean;
+  isError?: boolean;
+  errorMessage?: string;
 };
 
 const AssetApprovalDialog = ({
@@ -23,6 +25,8 @@ const AssetApprovalDialog = ({
   onOpenChange,
   onConfirmApprove,
   isLoading = false,
+  isError = false,
+  errorMessage = "",
 }: AssetApprovalDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -30,6 +34,10 @@ const AssetApprovalDialog = ({
         {isLoading ? (
           <div className="flex items-center justify-center py-10">
             <Loading message="Approving Asset..." />{" "}
+          </div>
+        ) : isError ? (
+          <div className="flex items-center justify-center py-10">
+            <p className="text-rose-500">{errorMessage}</p>
           </div>
         ) : (
           <>

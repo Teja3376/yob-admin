@@ -21,6 +21,7 @@ import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
 import PageTitle from "@/components/PageTitle";
 import RejectApprovalDialog from "../components/RejectionDialog";
 import AssetStatus from "../components/AssetDetail/AssetStatus";
+import ErrorPage from "@/components/Error";
 
 export default function AssetDetailPage() {
   const { assetId } = useParams();
@@ -38,7 +39,12 @@ export default function AssetDetailPage() {
   const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
 
   const { handleDeployAsset } = useDeployAsset();
-  const { mutate: approveAsset, isPending: isApproving } = useApproveAsset();
+  const {
+    mutate: approveAsset,
+    isPending: isApproving,
+    isError: isApproveError,
+    error: approveError,
+  } = useApproveAsset();
   const [loading, setIsLoading] = useState(false);
 
   if (isLoading) {
@@ -49,13 +55,17 @@ export default function AssetDetailPage() {
     );
   }
 
-  if (isError || !assetData) {
+  if (isError && !assetData) {
     return (
-      <div className="flex items-center justify-center mt-20">
-        <p className="text-red-500">
-          Error loading Asset details: {error?.message || "Asset not found"}
-        </p>
-      </div>
+      // <div className="flex items-center justify-center mt-20 min-h-screen">
+      //   <p className="text-red-500">
+      //     Error loading Asset details: {error?.message || "Asset not found"}
+      //   </p>
+      // </div>
+      <ErrorPage
+        title="Error Gathering Asset Details"
+        errorMessage={error?.message || "Unknown error occurred while fetching asset details."}
+      />
     );
   }
 
@@ -154,6 +164,8 @@ export default function AssetDetailPage() {
           onOpenChange={setIsApproveDialogOpen}
           onConfirmApprove={handleConfirmApprove}
           isLoading={isApproving || loading}
+          isError={isApproveError}
+          errorMessage={approveError?.message}
         />
 
         {/* Tabs for Different Sections */}
@@ -247,6 +259,8 @@ export default function AssetDetailPage() {
         setOpen={setIsRejectDialogOpen}
         onReject={(reason) => handleReject(reason)}
         isLoading={isApproving}
+         isError={isApproveError}
+          errorMessage={approveError?.message}
       />
     </main>
   );

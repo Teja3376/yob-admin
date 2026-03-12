@@ -16,6 +16,8 @@ type SubmitDecisionProps = {
   isLoading?: boolean;
   canDoAction?: boolean;
   reason?: string;
+  isError?: boolean;
+  errorMessage?: string;
 };
 
 const SubmitDecision = ({
@@ -24,6 +26,8 @@ const SubmitDecision = ({
   onReject,
   isLoading = false,
   canDoAction = false,
+  isError = false,
+  errorMessage = "",
   reason,
 }: SubmitDecisionProps) => {
   const [isApprovalDialogOpen, setIsApprovalDialogOpen] = useState(false);
@@ -106,7 +110,9 @@ const SubmitDecision = ({
 
           <p className="text-sm text-muted-foreground">
             This issuer application has been rejected.{" "}
-            {reason && <span className="text-red-700">Because of {reason}</span>}
+            {reason && (
+              <span className="text-red-700">Because of {reason}</span>
+            )}
           </p>
 
           <Badge className="bg-red-100 text-red-700">Rejected</Badge>
@@ -118,12 +124,16 @@ const SubmitDecision = ({
         onApprove={handleApprove}
         setOpen={setIsApprovalDialogOpen}
         isLoading={isLoading}
+        isError={isError}
+        errorMessage={errorMessage}
       />
       <RejectApprovalDialog
         open={isRejectDialogOpen}
         onReject={(reason) => handleReject(reason)}
         setOpen={setIsRejectDialogOpen}
         isLoading={isLoading}
+        isError={isError}
+        errorMessage={errorMessage}
       />
     </div>
   );

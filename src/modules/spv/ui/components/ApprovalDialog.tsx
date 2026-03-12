@@ -15,6 +15,8 @@ type ApprovalDialogProps = {
   onOpenChange: (open: boolean) => void;
   onConfirmApprove: () => void;
   isLoading: boolean;
+  isError?: boolean;
+  errorMessage?: string;
 };
 
 const ApprovalDialog = ({
@@ -22,6 +24,8 @@ const ApprovalDialog = ({
   onOpenChange,
   onConfirmApprove,
   isLoading,
+  isError,
+  errorMessage,
 }: ApprovalDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -29,6 +33,10 @@ const ApprovalDialog = ({
         {isLoading ? (
           <div className="flex items-center justify-center py-10">
             <Loading message="Approving SPV..." />{" "}
+          </div>
+        ) : isError ? (
+          <div className="flex items-center justify-center py-10">
+            <p className="text-red-500">Error: {errorMessage}</p>
           </div>
         ) : (
           <>

@@ -2,7 +2,15 @@
 
 import React, { useState } from "react";
 import TableComponent from "@/components/common/TableComponent";
-import { Clock, FileText, LoaderCircle, Search, ShieldCheck, Users, X } from "lucide-react";
+import {
+  Clock,
+  FileText,
+  LoaderCircle,
+  Search,
+  ShieldCheck,
+  Users,
+  X,
+} from "lucide-react";
 import { useGetAllSpv } from "../../hooks/useGetAllSpv";
 import { spvTableCols } from "../../schemas/spvTableSchema";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -15,6 +23,7 @@ import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
 import PageTitle from "@/components/PageTitle";
 import DashboardCard from "@/modules/orders/ui/DashboardCard";
 import { useGetSpvCount } from "../../hooks/useGetSpvCount";
+import ErrorPage from "@/components/Error";
 
 type StatusTab = "Active" | "Rejected" | "Pending";
 
@@ -26,8 +35,12 @@ const SpvListPage = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const canView = hasPermission("spvs", "review");
-  const { data: spvCount, isFetching: isFetchingSpvCount } = useGetSpvCount();
-
+  const {
+    data: spvCount,
+    isFetching: isFetchingSpvCount,
+    isError: isSpvCountError,
+    error: spvCountError,
+  } = useGetSpvCount();
 
   const cols = spvTableCols(router, status, canView);
 
@@ -73,13 +86,20 @@ const SpvListPage = () => {
     setPage(1);
   };
 
-  if (isError) {
+  if (isError || !data) {
     return (
-      <div className="flex items-center justify-center mt-20">
-        <p className="text-red-500">
-          Error loading SPV list: {error?.message || "Unknown error"}
-        </p>
-      </div>
+      <ErrorPage
+        title="Error Gathering Spv List"
+        errorMessage={error?.message || "Unknown error"}
+      />
+    );
+  }
+  if (isSpvCountError|| !spvCount) {
+    return (
+      <ErrorPage
+        title="Error Gathering SPV Count"
+        errorMessage={spvCountError?.message || "Unknown error"}
+      />
     );
   }
 
@@ -87,8 +107,7 @@ const SpvListPage = () => {
 
   return (
     <div className="space-y-6">
-      <div className="grid grif-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <DashboardCard
           title="Total SPVs"
           value={`${spvCount?.total || "0"}`}
@@ -96,7 +115,7 @@ const SpvListPage = () => {
           rightIconClassName=" rounded-full p-2 bg-primary/10"
           containerClassName="rounded-lg"
         />
-        
+
         <DashboardCard
           title="Active SPVs"
           value={`${spvCount?.active || "0"}`}
@@ -104,7 +123,7 @@ const SpvListPage = () => {
           rightIconClassName=" rounded-full p-2 bg-green-100"
           containerClassName="rounded-lg"
         />
-        
+
         <DashboardCard
           title="Pending SPVs"
           value={`${spvCount?.pending || "0"}`}
@@ -112,7 +131,7 @@ const SpvListPage = () => {
           rightIconClassName=" rounded-full p-2 bg-yellow-100"
           containerClassName="rounded-lg"
         />
-        
+
         <DashboardCard
           title="Rejected SPVs"
           value={`${spvCount?.rejected || "0"}`}
@@ -121,7 +140,7 @@ const SpvListPage = () => {
           containerClassName="rounded-lg"
         />
       </div>
-        
+
       {/* Header */}
       <PageTitle title={"List of SPVs"} suffix="spvs" />
       <div className="flex items-center justify-between">
@@ -163,7 +182,6 @@ const SpvListPage = () => {
           >
             Rejected
           </TabsTrigger>
-
         </TabsList>
 
         <TabsContent value={status} className="mt-6 space-y-4">

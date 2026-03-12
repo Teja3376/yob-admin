@@ -23,6 +23,7 @@ import IssuerStats from "../components/IssuerStats";
 import Loading from "@/components/Loader";
 import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
 import PageTitle from "@/components/PageTitle";
+import ErrorPage from "@/components/Error";
 
 const IssuerProfilePage = () => {
   const { issuerId } = useParams();
@@ -34,8 +35,12 @@ const IssuerProfilePage = () => {
     isError,
     error,
   } = useGetIssuerById(issuerId as string);
-  const { mutate: updateIssuerStatus, isPending: isUpdatingStatus } =
-    useUpdateIssuerStatus(issuerId as string);
+  const {
+    mutate: updateIssuerStatus,
+    isPending: isUpdatingStatus,
+    isError: isUpdateError,
+    error: updateError,
+  } = useUpdateIssuerStatus(issuerId as string);
 
   const issuerData = issuer?.issuer;
   const application = issuer?.application;
@@ -98,13 +103,13 @@ const IssuerProfilePage = () => {
       </div>
     );
   }
-  if (isError) {
+
+  if (isError&&!issuer) {
     return (
-      <div className="flex items-center justify-center mt-20">
-        <p className="text-red-500">
-          Error loading Issuer: {error?.message || "Unknown error"}
-        </p>
-      </div>
+      <ErrorPage
+        title="Error Gathering Issuer Details"
+        errorMessage={error?.message || "Unknown error"}
+      />
     );
   }
   return (
@@ -189,6 +194,8 @@ const IssuerProfilePage = () => {
             isLoading={isUpdatingStatus}
             canDoAction={canDoAction}
             reason={application?.rejectionReason}
+            isError={isUpdateError}
+            errorMessage={updateError?.message || "Unknown error"}
           />
         </div>
       </div>
