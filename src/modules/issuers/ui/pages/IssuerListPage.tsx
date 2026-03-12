@@ -32,10 +32,9 @@ const IssuerListPage = () => {
     data: issuerList,
     isFetching: isLoading,
     isError,
-    error,
+    error,  
   } = useGetIssuerList(status, page, limit, searchTerm);
   const { data: issuerCount, isFetching: isFetchingIssuerCount } = useGetIssuerCount();
-  console.log(issuerCount);
   const pagination = issuerList?.pagination;
 
   const cols = issuerTableCols(router, canView, status);
