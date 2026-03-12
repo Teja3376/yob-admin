@@ -1,7 +1,7 @@
 "use client"
 import { OrderStatus, StatusBadge } from '@/lib/statusBadge'
 import { handleCopy } from '@/utils/globalFunctions'
-import { CopyIcon } from 'lucide-react'
+import { ArrowUpRightIcon, CopyIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 import { OrderDetail } from '../types/OrderDetail'
@@ -9,6 +9,9 @@ import { formatDate } from '@/lib/utils'
 
 const Header = ({ orderDetail }: { orderDetail: OrderDetail }) => {
     const router = useRouter();
+    const handleViewOnBlockchain = (txHash: string) => {
+        window.open(`https://amoy.polygonscan.com/tx/${txHash}`, '_blank');
+    }
     return (
         <>
             <div className='flex justify-between items-center gap-2 border p-4 rounded-md'>
@@ -29,6 +32,12 @@ const Header = ({ orderDetail }: { orderDetail: OrderDetail }) => {
                             Status:
                         </p>
                         <StatusBadge status={orderDetail?.status as OrderStatus} />
+                    </div>
+                    <div className='flex items-center gap-2 text-gray-500 text-sm'>
+                        <p>
+                            Tx Hash:
+                        </p>
+                        <p className='text-primary hover:underline cursor-pointer flex items-center' onClick={() => handleViewOnBlockchain(orderDetail?.transactionHash)}>{orderDetail?.transactionHash.slice(0, 6)}...{orderDetail?.transactionHash.slice(-4)} <ArrowUpRightIcon className='w-4 h-4' /></p>
                     </div>
                 </div>
                 <div className='flex flex-col gap-2'>

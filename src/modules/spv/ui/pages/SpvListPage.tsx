@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import TableComponent from "@/components/common/TableComponent";
-import { Clock, LoaderCircle, Search, ShieldCheck, Users, X } from "lucide-react";
+import { Clock, FileText, LoaderCircle, Search, ShieldCheck, Users, X } from "lucide-react";
 import { useGetAllSpv } from "../../hooks/useGetAllSpv";
 import { spvTableCols } from "../../schemas/spvTableSchema";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -51,6 +51,13 @@ const SpvListPage = () => {
     status: getApiStatus(status),
     search: searchQuery,
   });
+  if (isLoading && isFetchingSpvCount) {
+    return (
+      <div className="flex items-center justify-center mt-20">
+        <Loading message="Loading SPV List and Count..." />
+      </div>
+    );
+  }
 
   const handleTabChange = (value: string) => {
     setStatus(value as StatusTab);
@@ -85,7 +92,7 @@ const SpvListPage = () => {
         <DashboardCard
           title="Total SPVs"
           value={`${spvCount?.total || "0"}`}
-          rightIcon={<ShieldCheck size={20} className="text-primary" />}
+          rightIcon={<FileText size={20} className="text-primary" />}
           rightIconClassName=" rounded-full p-2 bg-primary/10"
           containerClassName="rounded-lg"
         />
@@ -94,7 +101,7 @@ const SpvListPage = () => {
           title="Active SPVs"
           value={`${spvCount?.active || "0"}`}
           rightIcon={<ShieldCheck size={20} className="text-green-500" />}
-          rightIconClassName=" rounded-full p-2 bg-primary/10"
+          rightIconClassName=" rounded-full p-2 bg-green-100"
           containerClassName="rounded-lg"
         />
         
@@ -102,7 +109,7 @@ const SpvListPage = () => {
           title="Pending SPVs"
           value={`${spvCount?.pending || "0"}`}
           rightIcon={<Clock size={20} className="text-yellow-500" />}
-          rightIconClassName=" rounded-full p-2 bg-primary/10"
+          rightIconClassName=" rounded-full p-2 bg-yellow-100"
           containerClassName="rounded-lg"
         />
         
@@ -110,7 +117,7 @@ const SpvListPage = () => {
           title="Rejected SPVs"
           value={`${spvCount?.rejected || "0"}`}
           rightIcon={<X size={20} className="text-red-500" />}
-          rightIconClassName=" rounded-full p-2 bg-primary/10"
+          rightIconClassName=" rounded-full p-2 bg-red-100"
           containerClassName="rounded-lg"
         />
       </div>

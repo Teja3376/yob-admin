@@ -62,6 +62,7 @@ const SpvPage = () => {
       toast.error("Failed to deploy SPV on blockchain. Approval aborted.");
       return;
     }
+    console.log(blockChain);
 
     approveSpv(
       { spvId: spvId as string, status: "Active", blockchain: blockChain },

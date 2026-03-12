@@ -78,30 +78,12 @@ export const orderListColumn = (
   {
     header: "Investment",
     cell: ({ row }) => {
-      const {
-        investorAmount,
-        investorPaidAmount,
-        investorCurrency,
-        fxRate,
-        asset,
-      } = row.original;
-
-      const assetCurrency = asset?.currency;
+      const usdAmount = row.original.usdAmount;
 
       return (
         <div className="flex flex-col leading-tight gap-1">
-          {/* Line 1 */}
-          <div className="font-semibold text-gray-900">
-            {formatCurrency(investorAmount, assetCurrency)}
-          </div>
-
-          {/* Line 2 */}
-          <div className="text-xs text-gray-500">
-            {formatCurrency(investorPaidAmount, investorCurrency)}
-            {" • FX: "}
-            {Number(fxRate).toFixed(4)}
-            {" • "}
-            {investorCurrency}
+          <div className="px-2 py-1">
+            {formatCurrency(usdAmount, "USD")}
           </div>
         </div>
       );
