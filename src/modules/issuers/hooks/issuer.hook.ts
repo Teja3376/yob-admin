@@ -48,7 +48,6 @@ export const useUpdateIssuerStatus = (issuerId: string) => {
       status: "approved" | "rejected";
       rejectionReason?: string;
     }) => {
-      console.log("Updating issuer status with:", { status, rejectionReason });
       const res = await api.patch(`/issuers/${issuerId}/status`, {
         status,
         rejectionReason,

@@ -113,7 +113,7 @@ const OrderList = () => {
     );
   }
 
-  if (isError || orderList) {
+  if (isError && !orderList) {
     return (
       <ErrorPage
         title="Error Gathering Orders List"

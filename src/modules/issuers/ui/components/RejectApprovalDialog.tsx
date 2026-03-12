@@ -10,7 +10,6 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { LoaderCircle } from "lucide-react";
 import Loading from "@/components/Loader";
 
 interface RejectApprovalDialogProps {
@@ -37,7 +36,7 @@ const RejectApprovalDialog = ({
 
     onReject(reason);
     setReason("");
-    setOpen(false);
+    // setOpen(false);
   };
 
   return (
@@ -54,12 +53,12 @@ const RejectApprovalDialog = ({
         ) : (
           <>
             <DialogHeader>
-              <DialogTitle>Reject SPV</DialogTitle>
+              <DialogTitle>Reject this Issuer Application</DialogTitle>
             </DialogHeader>
 
             <div className="space-y-3">
               <p className="text-sm text-muted-foreground">
-                Please provide a reason for rejecting this SPV.
+                Please provide a reason for rejecting this application.
               </p>
 
               <Textarea

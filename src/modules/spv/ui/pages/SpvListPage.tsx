@@ -86,7 +86,7 @@ const SpvListPage = () => {
     setPage(1);
   };
 
-  if (isError || !data) {
+  if (isError && !data) {
     return (
       <ErrorPage
         title="Error Gathering Spv List"
@@ -94,7 +94,7 @@ const SpvListPage = () => {
       />
     );
   }
-  if (isSpvCountError|| !spvCount) {
+  if (isSpvCountError&& !spvCount) {
     return (
       <ErrorPage
         title="Error Gathering SPV Count"

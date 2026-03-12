@@ -68,7 +68,6 @@ const SpvPage = () => {
       toast.error("Failed to deploy SPV on blockchain. Approval aborted.");
       return;
     }
-    console.log(blockChain);
 
     approveSpv(
       { spvId: spvId as string, status: "Active", blockchain: blockChain },
@@ -86,7 +85,6 @@ const SpvPage = () => {
   };
 
   const handleReject = (reason: string) => {
-    console.log("Rejetction", reason);
     approveSpv(
       { spvId: spvId as string, status: "Rejected", rejectionReason: reason },
       {
@@ -136,7 +134,7 @@ const SpvPage = () => {
     );
   }
 
-  if (isError || !spvData) {
+  if (isError && !spvData) {
     return (
       <ErrorPage
         title="Error Gathering Spv Data"

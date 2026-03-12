@@ -19,7 +19,7 @@ const FieldItem = ({ label, value }: FieldItemProps) => {
 };
 
 const FinancialSummary = ({ orderDetail }: { orderDetail: OrderDetail }) => {
-  const isOrderComplted = [
+  const isOrderCompleted = [
     OrderStatus.COMPLETED,
     OrderStatus.TOKEN_TRANSFERRED,
     OrderStatus.SIGNATURE_PENDING,
@@ -92,9 +92,9 @@ const FinancialSummary = ({ orderDetail }: { orderDetail: OrderDetail }) => {
               FX Rate Snapshot: {formatDate(orderDetail?.createdAt)}
             </p>
           </div>
-          {isOrderComplted && (
+          {isOrderCompleted && (
             <div className="flex-1 p-4 rounded-md rounded-l-none space-y-1 flex-col text-right">
-              <p className="text-sm text-gray-500">OwnerShip</p>
+              <p className="text-sm text-gray-500">Ownership</p>
               <p className="text-xl font-semibold text-primary">
                 {orderDetail?.ownership?.percentage?.toFixed(2)}%
               </p>
