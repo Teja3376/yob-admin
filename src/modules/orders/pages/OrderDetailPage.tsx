@@ -11,6 +11,7 @@ import Loading from "@/components/Loader";
 import AssetOrderBreakdown from "../components/AssetOrderBreakdown";
 import InvestorOrderBreakdown from "../components/InvestorOrderBreakdown";
 import PageTitle from "@/components/PageTitle";
+import ErrorPage from "@/components/Error";
 
 const OrderDetailPage = () => {
   const router = useRouter();
@@ -28,19 +29,21 @@ const OrderDetailPage = () => {
       </div>
     );
   }
-  if (isError) {
+  if (isError && !orderDetail) {
     return (
-      <div className="flex items-center justify-center mt-20">
-        <p className="text-red-500">
-          Error loading Order Details: {error?.message || "Unknown error"}
-        </p>
-      </div>
+      <ErrorPage
+        title="Error Gathering Order Details"
+        errorMessage={error?.message || "Unknown error occurred while fetching order details."}
+      />
     );
   }
 
   return (
     <div className="space-y-4">
-      <PageTitle title={orderDetail?.asset?.name || "Detailed View of Order"} suffix="Order Details" />
+      <PageTitle
+        title={orderDetail?.asset?.name || "Detailed View of Order"}
+        suffix="Order Details"
+      />
       <div className="flex items-center gap-2">
         <ArrowLeft
           onClick={() => router.back()}

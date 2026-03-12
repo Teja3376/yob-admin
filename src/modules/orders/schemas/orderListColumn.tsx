@@ -2,7 +2,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { OrderListTableProps } from "../types/OrderListTableProps";
 import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { CopyIcon, Eye } from "lucide-react";
+import { Coins, CopyIcon, Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { StatusBadge, type OrderStatus } from "@/lib/statusBadge";
@@ -76,32 +76,27 @@ export const orderListColumn = (
     },
   },
   {
+    header: "Tokens",
+    accessorKey: "numberOfTokens",
+    cell: ({ row }) => {
+      const numberOfTokens = row.original.numberOfTokens;
+      return (
+        <div className="flex items-center gap-2">
+          <Coins size={16} className="text-primary" />
+          <p className="text-gray-900">{numberOfTokens}</p>
+        </div>
+      );
+    },
+  },
+  {
     header: "Investment",
     cell: ({ row }) => {
-      const {
-        investorAmount,
-        investorPaidAmount,
-        investorCurrency,
-        fxRate,
-        asset,
-      } = row.original;
-
-      const assetCurrency = asset?.currency;
+      const usdAmount = row.original.usdAmount;
 
       return (
         <div className="flex flex-col leading-tight gap-1">
-          {/* Line 1 */}
-          <div className="font-semibold text-gray-900">
-            {formatCurrency(investorAmount, assetCurrency)}
-          </div>
-
-          {/* Line 2 */}
-          <div className="text-xs text-gray-500">
-            {formatCurrency(investorPaidAmount, investorCurrency)}
-            {" • FX: "}
-            {Number(fxRate).toFixed(4)}
-            {" • "}
-            {investorCurrency}
+          <div className="px-2 py-1">
+            {formatCurrency(usdAmount, "USD")}
           </div>
         </div>
       );

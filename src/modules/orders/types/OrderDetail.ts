@@ -10,6 +10,7 @@ export interface OrderDetail {
     fxRate: number;
     reversefxRate: number;
     status: string;
+    transactionHash: string;
     tokenValue: number;
     totalFee: number;
     assetValue: AssetValue;
@@ -18,6 +19,11 @@ export interface OrderDetail {
     createdAt: string;
     updatedAt: string;
     usertokenPrice: number;
+    ownership:{
+    percentage: number;
+    tokensOwned: number;
+    totalTokens: number;
+    }
     __v: number;
     asset: Asset;
     issuer: Issuer;

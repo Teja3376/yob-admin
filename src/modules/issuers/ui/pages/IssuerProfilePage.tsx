@@ -1,18 +1,11 @@
 "use client";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import {
   useGetIssuerById,
   useUpdateIssuerStatus,
 } from "../../hooks/issuer.hook";
-import {
-  ArrowLeft,
-  Briefcase,
-  Building,
-  LoaderCircle,
-  ShoppingCart,
-  Users,
-} from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import IssuerInfo from "../components/IssuerInfo";
 import { toast } from "sonner";
@@ -30,6 +23,7 @@ import IssuerStats from "../components/IssuerStats";
 import Loading from "@/components/Loader";
 import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
 import PageTitle from "@/components/PageTitle";
+import ErrorPage from "@/components/Error";
 
 const IssuerProfilePage = () => {
   const { issuerId } = useParams();
@@ -41,9 +35,12 @@ const IssuerProfilePage = () => {
     isError,
     error,
   } = useGetIssuerById(issuerId as string);
-  const { mutate: updateIssuerStatus, isPending } = useUpdateIssuerStatus(
-    issuerId as string,
-  );
+  const {
+    mutate: updateIssuerStatus,
+    isPending: isUpdatingStatus,
+    isError: isUpdateError,
+    error: updateError,
+  } = useUpdateIssuerStatus(issuerId as string);
 
   const issuerData = issuer?.issuer;
   const application = issuer?.application;
@@ -54,17 +51,23 @@ const IssuerProfilePage = () => {
   };
   const canDoAction = hasPermission("issuers", "action");
 
-  const handleUpdateStatus = (status: "approved" | "rejected") => {
-    updateIssuerStatus(status, {
-      onSuccess: () => {
-        toast.success(
-          `Application ${status === "approved" ? "approved" : "rejected"}`,
-        );
+  const handleUpdateStatus = (
+    status: "approved" | "rejected",
+    rejectionReason?: string,
+  ) => {
+    updateIssuerStatus(
+      { status, rejectionReason },
+      {
+        onSuccess: () => {
+          toast.success(
+            `Application ${status === "approved" ? "approved" : "rejected"}`,
+          );
+        },
+        onError: () => {
+          toast.error("Failed to update application status");
+        },
       },
-      onError: () => {
-        toast.error("Failed to update application status");
-      },
-    });
+    );
   };
 
   const tabs = useMemo(
@@ -100,13 +103,13 @@ const IssuerProfilePage = () => {
       </div>
     );
   }
-  if (isError) {
+
+  if (isError&&!issuer) {
     return (
-      <div className="flex items-center justify-center mt-20">
-        <p className="text-red-500">
-          Error loading Issuer: {error?.message || "Unknown error"}
-        </p>
-      </div>
+      <ErrorPage
+        title="Error Gathering Issuer Details"
+        errorMessage={error?.message || "Unknown error"}
+      />
     );
   }
   return (
@@ -160,6 +163,7 @@ const IssuerProfilePage = () => {
             firstName={issuerData.firstName}
             lastName={issuerData.lastName}
             email={application.email}
+            legalEntityName={application.legalEntityName}
             mobileNumber={`${application.phoneCountryCode}${application.phoneNumber}`}
             country={application.countryOfIncorporation}
           />
@@ -186,9 +190,12 @@ const IssuerProfilePage = () => {
           <SubmitDecision
             status={application?.status}
             onApprove={() => handleUpdateStatus("approved")}
-            onReject={() => handleUpdateStatus("rejected")}
-            disabled={isPending}
+            onReject={(reason) => handleUpdateStatus("rejected", reason)}
+            isLoading={isUpdatingStatus}
             canDoAction={canDoAction}
+            reason={application?.rejectionReason}
+            isError={isUpdateError}
+            errorMessage={updateError?.message || "Unknown error"}
           />
         </div>
       </div>

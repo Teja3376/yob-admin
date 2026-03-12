@@ -19,11 +19,12 @@ interface AssetDetailHeaderProps {
   assetId?: string;
   name?: string;
   location?: string;
-  status?: "pending" | "approved" | "active";
+  status?: "pending" | "approved" | "active" | "rejected";
   stage?: string;
   imageUrl?: string;
   onRequestUpdate?: () => void;
   onApprove?: () => void;
+  onReject?: () => void;
   approveDisabled?: boolean;
   canApprove?: boolean;
   companyId?: string;
@@ -40,6 +41,7 @@ export function AssetDetailHeader(props: AssetDetailHeaderProps) {
     imageUrl,
     onRequestUpdate,
     onApprove,
+    onReject,
     approveDisabled,
     canApprove,
     companyId,
@@ -52,6 +54,7 @@ export function AssetDetailHeader(props: AssetDetailHeaderProps) {
     },
     approved: { label: "Approved", color: "bg-green-100 text-green-800" },
     active: { label: "Active", color: "bg-blue-100 text-blue-800" },
+    rejected: { label: "Rejected", color: "bg-red-100 text-red-800" },
   };
 
   const safeStatus: keyof typeof statusConfig =
@@ -89,7 +92,7 @@ export function AssetDetailHeader(props: AssetDetailHeaderProps) {
         </div>
       </div>
       {/* Pending Notice */}
-      {canApprove && !isAlreadyApproved && (
+      {canApprove &&  status === "pending" && (
         <div className={clsx("flex gap-2 mt-4")}>
           <Button
             variant="primary"
@@ -110,8 +113,16 @@ export function AssetDetailHeader(props: AssetDetailHeaderProps) {
             Approve
             <Send className="h-4 w-4" />
           </Button>
+          <Button
+            variant="destructive"
+            className="text-black gap-2 text-white"
+            onClick={onReject}
+            disabled={approveDisabled}
+          >
+            Reject
+          </Button>
         </div>
-      )}{" "}
+      )}
       {!isAlreadyApproved && !canApprove && (
         <div className="w-full border-red-500 bg-red-200/30 text-red-500 rounded-md p-4 mt-4 flex items-center gap-2 border">
           <Lock />

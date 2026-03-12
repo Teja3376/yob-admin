@@ -5,11 +5,12 @@ import { toast } from "sonner";
 interface SendStatusPayload {
   spvId: string;
   status?: string; // default "Pending"
-  blockchain: {
+  blockchain?: {
     txHash: string;
     spvAddress: string;
     daoAddress?: string;
   };
+  rejectionReason?: string;
 }
 
 const useApproveSpvApi = () => {
@@ -19,10 +20,11 @@ const useApproveSpvApi = () => {
       spvId,
       status = "Pending",
       blockchain,
+      rejectionReason
     }: SendStatusPayload) => {
       const res = await api.patch(
         `/spv-status/update`,
-        { status, blockchain },
+        { status, blockchain, rejectionReason },
         { params: { spvId } },
       );
       return res.data;

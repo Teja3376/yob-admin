@@ -19,6 +19,9 @@ import { useDeployAsset } from "../../hooks/useDeployAsset";
 import useApproveAsset from "../../hooks/useApproveAsset";
 import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
 import PageTitle from "@/components/PageTitle";
+import RejectApprovalDialog from "../components/RejectionDialog";
+import AssetStatus from "../components/AssetDetail/AssetStatus";
+import ErrorPage from "@/components/Error";
 
 export default function AssetDetailPage() {
   const { assetId } = useParams();
@@ -33,8 +36,15 @@ export default function AssetDetailPage() {
   } = useGetAssetById(assetId as string);
 
   const [isApproveDialogOpen, setIsApproveDialogOpen] = useState(false);
+  const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
+
   const { handleDeployAsset } = useDeployAsset();
-  const { mutate: approveAsset, isPending: isApproving } = useApproveAsset();
+  const {
+    mutate: approveAsset,
+    isPending: isApproving,
+    isError: isApproveError,
+    error: approveError,
+  } = useApproveAsset();
   const [loading, setIsLoading] = useState(false);
 
   if (isLoading) {
@@ -45,13 +55,17 @@ export default function AssetDetailPage() {
     );
   }
 
-  if (isError || !assetData) {
+  if (isError && !assetData) {
     return (
-      <div className="flex items-center justify-center mt-20">
-        <p className="text-red-500">
-          Error loading Asset details: {error?.message || "Asset not found"}
-        </p>
-      </div>
+      // <div className="flex items-center justify-center mt-20 min-h-screen">
+      //   <p className="text-red-500">
+      //     Error loading Asset details: {error?.message || "Asset not found"}
+      //   </p>
+      // </div>
+      <ErrorPage
+        title="Error Gathering Asset Details"
+        errorMessage={error?.message || "Unknown error occurred while fetching asset details."}
+      />
     );
   }
 
@@ -90,12 +104,32 @@ export default function AssetDetailPage() {
     );
   };
 
+  const handleReject = (reason: string) => {
+    approveAsset(
+      {
+        assetId: assetId as string,
+        status: "rejected",
+        rejectionReason: reason,
+      },
+      {
+        onSuccess: () => {
+          setIsRejectDialogOpen(false);
+          toast.success("Asset rejected successfully");
+          refetch();
+        },
+        onError: () => {
+          toast.error("Failed to reject Asset");
+        },
+      },
+    );
+  };
+
   return (
     <main className="min-h-screen ">
-        <PageTitle
-          title={assetData?.name || "Detailed View of Asset"}
-          suffix="Asset Details"
-        />
+      <PageTitle
+        title={assetData?.name || "Detailed View of Asset"}
+        suffix="Asset Details"
+      />
 
       <div className="mx-auto">
         {/* Header Section */}
@@ -104,21 +138,34 @@ export default function AssetDetailPage() {
           companyId={assetData.company._id}
           assetId={assetId as string}
           location={location}
-          status={assetData.status as "pending" | "approved" | "active"}
+          status={
+            assetData.status as "pending" | "approved" | "active" | "rejected"
+          }
           imageUrl={assetData?.media?.imageURL}
           stage={assetData.stage}
           onRequestUpdate={handleRequestUpdate}
           onApprove={handleApproveClick}
-          approveDisabled={ isApproving}
+          approveDisabled={isApproving}
           canApprove={canDoAction}
           isAlreadyApproved={isAlreadyApproved}
+          onReject={() => setIsRejectDialogOpen(true)}
         />
+        {assetData.status !== "pending" && (
+          <AssetStatus
+            status={
+              assetData.status as "pending" | "approved" | "active" | "rejected"
+            }
+            reason={assetData.rejectionReason}
+          />
+        )}
 
         <AssetApprovalDialog
           open={isApproveDialogOpen}
           onOpenChange={setIsApproveDialogOpen}
           onConfirmApprove={handleConfirmApprove}
           isLoading={isApproving || loading}
+          isError={isApproveError}
+          errorMessage={approveError?.message}
         />
 
         {/* Tabs for Different Sections */}
@@ -130,7 +177,7 @@ export default function AssetDetailPage() {
             >
               Overview
             </TabsTrigger>
-            
+
             <TabsTrigger
               value="financial"
               className="text-black  font-medium data-[state=active]:text-black data-[state=active]:font-medium"
@@ -206,6 +253,15 @@ export default function AssetDetailPage() {
           </TabsContent>
         </Tabs>
       </div>
+
+      <RejectApprovalDialog
+        open={isRejectDialogOpen}
+        setOpen={setIsRejectDialogOpen}
+        onReject={(reason) => handleReject(reason)}
+        isLoading={isApproving}
+         isError={isApproveError}
+          errorMessage={approveError?.message}
+      />
     </main>
   );
 }
