@@ -21,4 +21,5 @@ export type OrderListTableProps = {
     lastName: string;
     email: string;
   };
+  numberOfTokens: number;
 };

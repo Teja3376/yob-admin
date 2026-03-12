@@ -19,6 +19,11 @@ export interface OrderDetail {
     createdAt: string;
     updatedAt: string;
     usertokenPrice: number;
+    ownership:{
+    percentage: number;
+    tokensOwned: number;
+    totalTokens: number;
+    }
     __v: number;
     asset: Asset;
     issuer: Issuer;

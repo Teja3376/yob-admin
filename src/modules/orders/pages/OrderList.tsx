@@ -19,13 +19,14 @@ import Pagination from "@/components/common/Pagination";
 
 
 
-import { ClipboardCheck, Clock4, ShoppingCartIcon, XIcon } from "lucide-react";
+import { Banknote, ClipboardCheck, Clock4, ShoppingCartIcon, XIcon } from "lucide-react";
 
 import { useDebounce } from "@/config/useDebounce";
 import { useOrderCount } from "../hooks/useOrderCount";
 import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
 import PageTitle from "@/components/PageTitle";
 import clsx from "clsx";
+import { formatCurrencyWithLocale } from "@/lib/formatCurrency";
 
 const OrderList = () => {
   const router = useRouter();
@@ -130,12 +131,19 @@ const OrderList = () => {
       <h1 className="text-2xl font-semibold">Orders</h1>
 
       {/* Dashboard Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <DashboardCard
           title="Total Orders"
           value={orderCount?.totalOrders || "0"}
           rightIcon={<ShoppingCartIcon className="w-6 h-6 text-blue-500" />}
           rightIconClassName="border-2 border-blue-200 rounded-full p-2 bg-blue-100"
+          containerClassName="rounded-lg"
+        />
+        <DashboardCard
+          title="Total Investment"
+          value={formatCurrencyWithLocale(orderCount?.totalInvestment) || "0"}
+          rightIcon={<Banknote className="w-6 h-6 text-pink-500" />}
+          rightIconClassName="border-2 border-pink-200 rounded-full p-2 bg-pink-100"
           containerClassName="rounded-lg"
         />
         <DashboardCard
