@@ -23,6 +23,7 @@ export type AssetApprovalListItem = {
   issuerComments?: string;
   createdAt: string;
   updatedAt: string;
+  rejectionReason?: string;
   __v: number;
 };
 
