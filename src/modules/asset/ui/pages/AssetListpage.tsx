@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import TableComponent from "@/components/common/TableComponent";
-import { LoaderCircle, Search, ChevronLeft, ChevronRight, X, FileText } from "lucide-react";
+import { Search, X, FileText, Check, Clock } from "lucide-react";
 import { useGetAllAsset } from "../../hooks/useGetAllAsset";
 import { assetTableCols } from "../../schema/assetTableSchema";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -57,13 +57,13 @@ const AssetListpage = () => {
     setPage(1);
   };
 
-  // if (isLoading) {
-  //   return (
-  //     <div className="flex items-center justify-center mt-20">
-  //       <LoaderCircle size={40} className="animate-spin text-primary" />
-  //     </div>
-  //   );
-  // }
+  if (isLoading && isFetchingAssetCount) {
+    return (
+      <div className="flex items-center justify-center mt-20">
+        <Loading message="Loading Asset List and Count..." />
+      </div>
+    );
+  }
 
   if (isError) {
     return (
@@ -92,16 +92,16 @@ const AssetListpage = () => {
 <DashboardCard
   title="Approved Assets"
   value={`${assetCount?.approved || "0"}`}
-  rightIcon={<FileText size={20} className="text-green-500" />}
-  rightIconClassName="border-2 border-primary rounded-full p-2 bg-primary/10"
+  rightIcon={<Check size={20} className="text-green-500" />}
+  rightIconClassName="border-2 border-green-500 rounded-full p-2 bg-green-100"
   containerClassName="rounded-lg"
 />
 
 <DashboardCard
   title="Pending Assets"
   value={`${assetCount?.pending || "0"}`}
-  rightIcon={<FileText size={20} className="text-yellow-500" />}
-  rightIconClassName="border-2 border-primary rounded-full p-2 bg-primary/10"
+  rightIcon={<Clock size={20} className="text-yellow-500" />}
+  rightIconClassName="border-2 border-yellow-500 rounded-full p-2 bg-yellow-100"
   containerClassName="rounded-lg"
 />
 
@@ -109,7 +109,7 @@ const AssetListpage = () => {
     title="Rejected Assets"
   value={`${assetCount?.rejected || "0"}`}
   rightIcon={<X size={20} className="text-red-500" />}
-  rightIconClassName="border-2 border-primary rounded-full p-2 bg-primary/10"
+  rightIconClassName="border-2 border-red-500 rounded-full p-2 bg-red-100"
   containerClassName="rounded-lg"
 />
 </div>  
