@@ -134,7 +134,7 @@ export const assetTableCols = (
       header: "Rejection Reason",
       accessorKey: "rejectionReason",
       cell: ({ row }) => (
-        <span className="text-xs text-gray-700 truncate">
+        <span className="text-xs text-red-700 truncate">
           {row.original.rejectionReason || "N/A"}
         </span>
       ),
