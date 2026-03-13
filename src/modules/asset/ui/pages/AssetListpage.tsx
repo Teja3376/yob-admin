@@ -71,7 +71,7 @@ const AssetListpage = () => {
     );
   }
 
-  if (isError&&!data) {
+  if (isError && !data) {
     return (
       <ErrorPage
         title="Error Gathering Asset List"
@@ -79,7 +79,7 @@ const AssetListpage = () => {
       />
     );
   }
-  if (isAssetCountError&&!assetCount) {
+  if (isAssetCountError && !assetCount) {
     return (
       <ErrorPage
         title="Error Gathering Assets Stats"

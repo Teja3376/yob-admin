@@ -35,7 +35,7 @@ const IdCell = ({ value }: { value: string }) => (
 );
 
 const RejectionBadge = ({ reason }: { reason?: string }) => (
-  <Badge className="bg-red-100 text-red-700 font-medium">{reason || "—"}</Badge>
+  <p className=" text-red-700 text-xs">{reason || "—"}</p>
 );
 
 const ViewAction = (router: any, canView: boolean): ColumnDef<IssuerRow> => ({

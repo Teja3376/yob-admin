@@ -24,6 +24,7 @@ type SpvRow = {
   aum: number;
   createdAt: string;
   updatedAt?: string;
+  rejectionReason?: string;
 };
 
 export const spvTableCols = (
@@ -128,6 +129,19 @@ export const spvTableCols = (
         },
       },
     );
+  }
+
+  if (status === "Rejected") {
+    columns.push({
+      accessorKey: "rejectionReason",
+      header: "Rejection Reason",
+      size: 240,
+      cell: ({ row }) => (
+        <span className="text-xs text-red-700 truncate">
+          {row.original.rejectionReason || "N/A"}
+        </span>
+      ),
+    });
   }
 
   columns.push(
