@@ -1,8 +1,7 @@
 "use client";
-
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, LoaderCircle } from "lucide-react";
+import { ArrowLeft, ArrowRight, LoaderCircle } from "lucide-react";
 import SpvBasicInfo from "@/modules/spv/ui/components/SpvBasicInfo";
 import SpvMemoTerms from "@/modules/spv/ui/components/SpvMemoTerms";
 import SpvEscrowBankDetails from "@/modules/spv/ui/components/SpvEscrowBankDetails";
@@ -19,6 +18,9 @@ import { useDeploySpv } from "../../hooks/useDeploySpv";
 import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
 import PageTitle from "@/components/PageTitle";
 import { Button } from "@/components/ui/button";
+import RejectApprovalDialog from "../components/RejectionDialog";
+import SpvStatus from "../components/SpvStatus";
+import ErrorPage from "@/components/Error";
 
 const SpvPage = () => {
   const router = useRouter();
@@ -34,8 +36,14 @@ const SpvPage = () => {
     error,
     refetch,
   } = useGetSpvById(spvId as string);
-  const { mutate: approveSpv, isPending: approvalPending } = useApproveSpvApi();
+  const {
+    mutate: approveSpv,
+    isPending: approvalPending,
+    isError: isApprovalError,
+    error: approvalError,
+  } = useApproveSpvApi();
   const [isApproveDialogOpen, setIsApproveDialogOpen] = useState(false);
+  const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
   const { handleDeploySpv } = useDeploySpv();
   const [loading, setIsLoading] = useState(false);
 
@@ -76,6 +84,22 @@ const SpvPage = () => {
     );
   };
 
+  const handleReject = (reason: string) => {
+    approveSpv(
+      { spvId: spvId as string, status: "Rejected", rejectionReason: reason },
+      {
+        onSuccess: () => {
+          toast.success("SPV rejected successfully");
+          setIsRejectDialogOpen(false);
+          refetch();
+        },
+        onError: () => {
+          toast.error("Failed to reject SPV");
+        },
+      },
+    );
+  };
+
   const getStatusBadge = (status: string) => {
     const statusLower = status?.toLowerCase() || "";
 
@@ -110,13 +134,12 @@ const SpvPage = () => {
     );
   }
 
-  if (isError || !spvData) {
+  if (isError && !spvData) {
     return (
-      <div className="flex items-center justify-center mt-20">
-        <p className="text-red-500">
-          Error loading SPV details: {error?.message || "SPV not found"}
-        </p>
-      </div>
+      <ErrorPage
+        title="Error Gathering Spv Data"
+        errorMessage={error?.message || "Unknown error"}
+      />
     );
   }
 
@@ -134,17 +157,23 @@ const SpvPage = () => {
           <h1 className="text-xl font-medium">{spvData.name}</h1>
           {getStatusBadge(spvData.status)}
         </div>
-        {spvData.status === "Active" && canDoReview && (
-          <Button
-            variant="outline"
-            onClick={() => router.push(`/spv-list/${spvId}/overview`)}
-          >
-            Dashboard
-          </Button>
-        )}
+        {spvData.status === "Active" &&
+          canDoReview &&
+          spvData.isAssetLinked && (
+            <Button
+              variant="outline"
+              className="hover:underline"
+              onClick={() => router.push(`/spv-list/${spvId}/overview`)}
+            >
+              Go To Dashboard <ArrowRight size={16} className="ml-1" />
+            </Button>
+          )}
       </div>
 
       {/* Basic Information */}
+      {(spvData.status === "Active" || spvData.status === "Rejected") && (
+        <SpvStatus status={spvData.status} reason={spvData?.rejectionReason} />
+      )}
       <SpvBasicInfo
         name={spvData.name}
         type={spvData.type}
@@ -170,10 +199,11 @@ const SpvPage = () => {
 
       {/* Action Buttons */}
       <SpvActionButtons
-        onRequestUpdate={handleRequestUpdate}
         onApprove={handleApprove}
-        isApproved={spvData.status === "Active"}
+        status={spvData.status}
+        reason={spvData?.rejectionReason}
         canDoAction={canDoAction}
+        onReject={() => setIsRejectDialogOpen(true)}
       />
 
       {/* Approve Dialog */}
@@ -182,6 +212,16 @@ const SpvPage = () => {
         onOpenChange={setIsApproveDialogOpen}
         onConfirmApprove={handleConfirmApprove}
         isLoading={approvalPending || loading}
+        isError={isApprovalError}
+        errorMessage={approvalError?.message || "Unknown error during approval"}
+      />
+      <RejectApprovalDialog
+        open={isRejectDialogOpen}
+        setOpen={setIsRejectDialogOpen}
+        onReject={(reason) => handleReject(reason)}
+        isLoading={approvalPending}
+         isError={isApprovalError}
+        errorMessage={approvalError?.message || "Unknown error during approval"}
       />
     </div>
   );

@@ -16,7 +16,7 @@ export type IssuerRow = {
   rejectionReason?: string;
   spvCount?: number;
   assetCount?: number;
-  totalInvestors?: number;
+  investorCount?: number;
 };
 
 type IssuerTab = "pending" | "rejected" | "approved";
@@ -35,7 +35,7 @@ const IdCell = ({ value }: { value: string }) => (
 );
 
 const RejectionBadge = ({ reason }: { reason?: string }) => (
-  <Badge className="bg-red-100 text-red-700 font-medium">{reason || "—"}</Badge>
+  <p className=" text-red-700 text-xs">{reason || "—"}</p>
 );
 
 const ViewAction = (router: any, canView: boolean): ColumnDef<IssuerRow> => ({
@@ -99,10 +99,10 @@ export const issuerTableCols = (
         cell: ({ row }) => <p className="text-sm">{row.original.assetCount ?? 0}</p>,
       },
       {
-        accessorKey: "totalInvestors",
+        accessorKey: "investorCount",
         header: "Total Investors",
         size: 140,
-        cell: ({ row }) => <p className="text-sm">{row.original.totalInvestors ?? 0}</p>,
+        cell: ({ row }) => <p className="text-sm">{row.original.investorCount ?? 0}</p>,
       },
       ViewAction(router, canView),
     ];

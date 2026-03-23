@@ -222,7 +222,10 @@ export default function AddRoleDialog({
   );
 
   const handleClose = () => {
-    form.reset();
+    form.reset({
+      name: "",
+      description: "",
+    });
     setOpen(false);
   };
 

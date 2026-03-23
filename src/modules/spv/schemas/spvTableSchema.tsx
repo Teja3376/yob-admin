@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { formatCurrencyWithLocale } from "@/lib/formatCurrency";
 import { handleCopy, handleViewOnBlockchain } from "@/utils/globalFunctions";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpRight, Copy, Eye } from "lucide-react";
@@ -10,6 +11,7 @@ type SpvRow = {
   issuerId: string;
   spvId: {
     _id: string;
+    currency: string;
     blockchain?: {
       spvAddress?: string;
     };
@@ -18,8 +20,11 @@ type SpvRow = {
   spvname: string;
   type?: string;
   status: string;
+  investorCount: number;
+  aum: number;
   createdAt: string;
   updatedAt?: string;
+  rejectionReason?: string;
 };
 
 export const spvTableCols = (
@@ -71,35 +76,71 @@ export const spvTableCols = (
   ];
 
   if (status === "Active") {
-    columns.push({
-      header: "Onchain Address",
-      accessorKey: "blockchain",
-      cell: ({ row }) => {
-        const onChainAddress = row.original.spvId?.blockchain?.spvAddress;
-        const formattedAddress = onChainAddress
-          ? `${onChainAddress.slice(0, 6)}...${onChainAddress.slice(-4)}`
-          : "-";
-
-        return (
-          <div className=" group flex items-center gap-2">
-            <span className="group-hover:underline font-medium text-gray-900 cursor-pointer">
-              {formattedAddress}
-            </span>
-            {onChainAddress && (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-6 w-6 cursor-pointer"
-                onClick={() =>
-                  handleViewOnBlockchain(onChainAddress || "-", "spv")
-                }
-              >
-                <ArrowUpRight size={14} />
-              </Button>
-            )}
-          </div>
-        );
+    columns.push(
+      {
+        header: "Investors",
+        accessorKey: "investorCount",
+        cell: ({ row }) => (
+          <span className="font-medium text-gray-900">
+            {row.original.investorCount}
+          </span>
+        ),
       },
+      {
+        header: "Total Aum",
+        accessorKey: "aum",
+        cell: ({ row }) => (
+          <span className="font-medium text-gray-900">
+            {formatCurrencyWithLocale(
+              row.original.aum,
+              row.original.spvId?.currency,
+            )}
+          </span>
+        ),
+      },
+      {
+        header: "Onchain Address",
+        accessorKey: "blockchain",
+        cell: ({ row }) => {
+          const onChainAddress = row.original.spvId?.blockchain?.spvAddress;
+          const formattedAddress = onChainAddress
+            ? `${onChainAddress.slice(0, 6)}...${onChainAddress.slice(-4)}`
+            : "-";
+
+          return (
+            <div className=" group flex items-center gap-2">
+              <span className="group-hover:underline font-medium text-gray-900 cursor-pointer">
+                {formattedAddress}
+              </span>
+              {onChainAddress && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6 cursor-pointer"
+                  onClick={() =>
+                    handleViewOnBlockchain(onChainAddress || "-", "spv")
+                  }
+                >
+                  <ArrowUpRight size={14} />
+                </Button>
+              )}
+            </div>
+          );
+        },
+      },
+    );
+  }
+
+  if (status === "Rejected") {
+    columns.push({
+      accessorKey: "rejectionReason",
+      header: "Rejection Reason",
+      size: 240,
+      cell: ({ row }) => (
+        <span className="text-xs text-red-700 truncate">
+          {row.original.rejectionReason || "N/A"}
+        </span>
+      ),
     });
   }
 

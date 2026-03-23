@@ -2,7 +2,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { OrderListTableProps } from "../types/OrderListTableProps";
 import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { CopyIcon, Eye } from "lucide-react";
+import { Coins, CopyIcon, Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { StatusBadge, type OrderStatus } from "@/lib/statusBadge";
@@ -48,15 +48,42 @@ export const orderListColumn = (
     },
   },
   {
-    header: "Investor ID",
-    accessorKey: "investorId",
+    header: "Investor",
+    accessorKey: "investor",
     cell: ({ row }) => {
       const investorId = row.original.investorId;
+      const firstName = row.original.investor.firstName;
+      const lastName = row.original.investor.lastName;
+      const email = row.original.investor.email;
       const shortId = investorId?.slice(-4)?.toUpperCase() || "";
       const investorIdFormatted = `INV-${shortId}`;
       return (
+        <div className="flex flex-col items-start gap-2">
+          <p className="text-gray-900">
+            {firstName} {lastName}
+          </p>
+          <p className="text-gray-500 text-sm">{email}</p>
+          <span className="text-gray-900 text-xs flex items-center gap-1">
+            {investorIdFormatted}{" "}
+            <CopyIcon
+              className="cursor-pointer"
+              size={16}
+              onClick={() => handleCopy(investorId)}
+            />
+          </span>
+        </div>
+      );
+    },
+  },
+  {
+    header: "Tokens",
+    accessorKey: "numberOfTokens",
+    cell: ({ row }) => {
+      const numberOfTokens = row.original.numberOfTokens;
+      return (
         <div className="flex items-center gap-2">
-          <span className="text-gray-900">{investorIdFormatted}</span>
+          <Coins size={16} className="text-primary" />
+          <p className="text-gray-900">{numberOfTokens}</p>
         </div>
       );
     },
@@ -64,30 +91,12 @@ export const orderListColumn = (
   {
     header: "Investment",
     cell: ({ row }) => {
-      const {
-        investorAmount,
-        investorPaidAmount,
-        investorCurrency,
-        fxRate,
-        asset,
-      } = row.original;
-
-      const assetCurrency = asset?.currency;
+      const usdAmount = row.original.usdAmount;
 
       return (
         <div className="flex flex-col leading-tight gap-1">
-          {/* Line 1 */}
-          <div className="font-semibold text-gray-900">
-            {formatCurrency(investorAmount, assetCurrency)}
-          </div>
-
-          {/* Line 2 */}
-          <div className="text-xs text-gray-500">
-            {formatCurrency(investorPaidAmount, investorCurrency)}
-            {" • FX: "}
-            {Number(fxRate).toFixed(4)}
-            {" • "}
-            {investorCurrency}
+          <div className="px-2 py-1">
+            {formatCurrency(usdAmount, "USD")}
           </div>
         </div>
       );

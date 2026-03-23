@@ -1,7 +1,6 @@
 "use client";
-import React, { useState } from "react";
-import IssuersTable from "../components/IssuersTable";
-import { IssuerRow, issuerTableCols } from "../../schemas/issuerTableCols";
+import { useState } from "react";
+import { issuerTableCols } from "../../schemas/issuerTableCols";
 import { useGetIssuerList } from "../../hooks/issuer.hook";
 import { Check, Clock, Search, Users, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -15,6 +14,8 @@ import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
 import PageTitle from "@/components/PageTitle";
 import DashboardCard from "@/modules/orders/ui/DashboardCard";
 import { useGetIssuerCount } from "../../hooks/useGetIssuerCount";
+import ErrorPage from "@/components/Error";
+import { is } from "date-fns/locale";
 
 type StatusTab = "pending" | "rejected" | "approved";
 
@@ -34,8 +35,12 @@ const IssuerListPage = () => {
     isError,
     error,
   } = useGetIssuerList(status, page, limit, searchTerm);
-  const { data: issuerCount, isFetching: isFetchingIssuerCount } = useGetIssuerCount();
-  console.log(issuerCount);
+  const {
+    data: issuerCount,
+    isFetching: isFetchingIssuerCount,
+    isError: isIssuerCountError,
+    error: issuerCountError,
+  } = useGetIssuerCount();
   const pagination = issuerList?.pagination;
 
   const cols = issuerTableCols(router, canView, status);
@@ -44,7 +49,7 @@ const IssuerListPage = () => {
     setPage(1);
   };
 
-  const onPageChange = (newPage: number) => { 
+  const onPageChange = (newPage: number) => {
     setPage(newPage);
   };
 
@@ -60,13 +65,20 @@ const IssuerListPage = () => {
     );
   }
 
-  if (isError) {
+  if (isError&&!issuerList) {
     return (
-      <div className="flex items-center justify-center mt-20">
-        <p className="text-red-500">
-          Error loading Issuer list: {error?.message || "Unknown error"}
-        </p>
-      </div>
+      <ErrorPage
+        title="Error Gathering Issuer List"
+        errorMessage={error?.message || "Unknown error"}
+      />
+    );
+  }
+  if (isIssuerCountError&&!issuerCount) {
+    return (
+      <ErrorPage
+        title="Error Gathering Issuer Count"
+        errorMessage={issuerCountError?.message || "Unknown error"}
+      />
     );
   }
 
@@ -101,12 +113,8 @@ const IssuerListPage = () => {
           rightIconClassName="border-2 border-red-500 rounded-full p-2 bg-red-100"
           containerClassName="rounded-lg"
         />
-
       </div>
-      <PageTitle
-        title={"List of Issuers"}
-        suffix="Issuers"
-      />
+      <PageTitle title={"List of Issuers"} suffix="Issuers" />
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-gray-900">Issuer List</h1>
         <div className="relative flex-1 max-w-md">
@@ -142,7 +150,6 @@ const IssuerListPage = () => {
           >
             Rejected
           </TabsTrigger>
-
         </TabsList>
 
         <TabsContent value={status} className="mt-6 space-y-4">

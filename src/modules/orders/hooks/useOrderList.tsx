@@ -9,8 +9,7 @@ export interface OrderFilters {
   search?: string;
   fromDate?: string;
   toDate?: string;
-  minAmount?: number;
-  maxAmount?: number;
+
   status?: string;
 }
 
@@ -19,8 +18,18 @@ interface ErrorResponse {
 }
 
 export const useOrderList = (filters: OrderFilters) => {
+ 
+
   return useQuery({
-    queryKey: ["order-list", filters],
+    queryKey: [
+      "order-list",
+      filters.page,
+      filters.limit,
+      filters.status,
+      filters.search,
+      filters.fromDate,
+      filters.toDate,
+    ],
     queryFn: async () => {
       const res = await api.get("/orders", {
         params: filters,

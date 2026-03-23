@@ -94,6 +94,7 @@ export default function AddMemberDialog({
   const isEdit = !!member;
   const form = useForm<CreateMemberFormValues>({
     resolver: zodResolver(createMemberSchema),
+
     values: member
       ? {
           firstName: member.firstName,
@@ -186,9 +187,15 @@ export default function AddMemberDialog({
   };
 
   const handleClose = () => {
-    form.reset();
+    form.reset({
+      firstName: "",
+      lastName: "",
+      email: "",
+      role: "",
+    });
     setOpen(false);
   };
+
   if (isCreating) {
     return (
       <Dialog open={open} onOpenChange={handleClose}>

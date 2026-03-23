@@ -123,30 +123,39 @@ export const assetTableCols = (
     });
   }
 
-  // Step 3: remaining columns
-  columns.push(
-    {
-      header: "Status",
-      accessorKey: "status",
-      cell: ({ row }) => <StatusBadge status={row.original.status} />,
-    },
-    {
-      header: "Action",
-      accessorKey: "action",
+  columns.push({
+    header: "Status",
+    accessorKey: "status",
+    cell: ({ row }) => <StatusBadge status={row.original.status} />,
+  });
+
+  if (status === "rejected") {
+    columns.push({
+      header: "Rejection Reason",
+      accessorKey: "rejectionReason",
       cell: ({ row }) => (
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() =>
-            router.push(`/asset-list/${row.original.assetId?._id}`)
-          }
-          disabled={!canView}
-        >
-          <Eye size={14} />
-        </Button>
+        <span className="text-xs text-red-700 truncate">
+          {row.original.rejectionReason || "N/A"}
+        </span>
       ),
-    },
-  );
+    });
+  }
+
+  // Step 3: remaining columns
+  columns.push({
+    header: "Action",
+    accessorKey: "action",
+    cell: ({ row }) => (
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => router.push(`/asset-list/${row.original.assetId?._id}`)}
+        disabled={!canView}
+      >
+        <Eye size={14} />
+      </Button>
+    ),
+  });
 
   return columns;
 };

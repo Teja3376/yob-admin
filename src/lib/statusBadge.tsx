@@ -5,15 +5,19 @@ export type OrderStatus =
   | "In Progress"
   | "Completed"
   | "Signature Pending"
+  | "Payment Failed"
   | "Failed"
-  | "Order Failed";
+  | "Order Failed"
+  | "Payment Pending";
 
 const normalizeOrderStatus = (status: string): OrderStatus => {
   if (status === "order_failed") return "Order Failed";
   if (status === "initiated") return "Initiated";
+  if (status === "payment_pending") return "Payment Pending";
   if (status === "in progress") return "In Progress";
   if (status === "signature_pending") return "Signature Pending";
   if (status === "completed") return "Completed";
+  if (status === "payment_failed") return "Payment Failed";
   return status as OrderStatus;
 };
 
@@ -28,8 +32,10 @@ export const StatusBadge = ({ status }: { status: string }) => {
     "In Progress": "bg-yellow-50 text-yellow-500 border border-yellow-200",
     Completed: "bg-green-50 text-green-500 border border-green-200",
     Failed: "bg-red-50 text-red-500 border border-red-200",
+    "Payment Failed": "bg-red-50 text-red-500 border border-red-200",
     "Order Failed": "bg-red-50 text-red-500 border border-red-200",
-      "Signature Pending": "bg-blue-50 text-blue-500 border border-blue-200",
+    "Payment Pending": "bg-blue-50 text-blue-500 border border-blue-200",
+    "Signature Pending": "bg-blue-50 text-blue-500 border border-blue-200",
   };
 
   return (

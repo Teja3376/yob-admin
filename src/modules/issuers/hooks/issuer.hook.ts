@@ -39,14 +39,28 @@ export const useGetIssuerById = (issuerId: string) => {
 
 export const useUpdateIssuerStatus = (issuerId: string) => {
   const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: async (status: string) => {
-      const res = await api.patch(`/issuers/${issuerId}/status`, { status });
+    mutationFn: async ({
+      status,
+      rejectionReason,
+    }: {
+      status: "approved" | "rejected";
+      rejectionReason?: string;
+    }) => {
+      const res = await api.patch(`/issuers/${issuerId}/status`, {
+        status,
+        rejectionReason,
+      });
+
       return res.data.data;
     },
-    mutationKey: ["update-issuer-status", "issuer-list", issuerId],
+
+    mutationKey: ["update-issuer-status", issuerId],
+
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["issuer-details", issuerId] });
+      queryClient.invalidateQueries({ queryKey: ["issuer-list"] });
     },
   });
 };
