@@ -4,4 +4,5 @@ export type InvestorListProps = {
     email: string;
     assetCount: number;
     createdAt: string;
+    kycVerified: boolean;
 }

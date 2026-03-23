@@ -57,6 +57,19 @@ export const investorColumns = (
     },
   },
   {
+    header: "KYC Status",
+    accessorKey: "isKycVerified",
+    cell: ({ row }) => {
+      const isKycVerified = row.original.kycVerified;
+      console.log(isKycVerified ,"isKycVerified");
+      return (
+        <div className="flex items-center gap-2">
+          <span className="text-gray-900">{isKycVerified ? "Not Verified" : "Verified"}</span>
+        </div>
+      );
+    },
+  },
+  {
     header: "Account Created At",
     accessorKey: "createdAt",
     cell: ({ row }) => {
