@@ -12,15 +12,15 @@ import TBody from "./TBody";
 import THeader from "./THeader";
 
 interface TableComponentProps<TData> {
-  columns: ColumnDef<any, any>[];
-  data: any[];
+  columns: ColumnDef<TData, unknown>[];
+  data: TData[];
   model?: string;
 }
 
 function TableComponent<TData>({ columns, data, model }: TableComponentProps<TData>) {
   const [columnSizing, setColumnSizing] = React.useState({});
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const table = useReactTable({
+  const table = useReactTable<TData>({
     data: data,
     columns,
     state: {
