@@ -42,7 +42,7 @@ export function MintingFeeDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md rounded-2xl px-0 py-4">
+      <DialogContent className="sm:max-w-md rounded-md px-0 py-4">
         <DialogHeader className="px-3">
           <DialogTitle className="text-lg font-semibold">
             Request Token Minting Fee
