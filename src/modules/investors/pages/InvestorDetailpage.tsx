@@ -31,8 +31,8 @@ const InvestorDetailpage = () => {
     error,
   } = useInvestorDetail(investorId as string);
   const initals =
-    investorDetail?.investor?.firstName?.charAt(0) +
-    investorDetail?.investor?.lastName?.charAt(0);
+    investorDetail?.investor?.firstName?.toUpperCase()?.charAt(0) +
+    investorDetail?.investor?.lastName?.toUpperCase()?.charAt(0);
   const investedId = `INV-${investorDetail?.investor?._id?.slice(-4)?.toUpperCase() || ""}`;
 
   if (isFetching) {
@@ -105,21 +105,21 @@ const InvestorDetailpage = () => {
               value={formatCurrency(
                 investorDetail?.totalPaidAmount,
                 investorDetail?.assets?.[0]?.investorPaidCurrency,
-              )}
+              ) || "0"}
             />
             <DashboardCard
               leftIcon={<Wallet className="text-primary" size={25} />}
               title="Invested Amount in USD"
-              value={formatCurrency(investorDetail?.totalPortfolioUSD)}
+              value={formatCurrency(investorDetail?.totalPortfolioUSD) || "0"}
             />
             <DashboardCard
               title="Total Assets"
-              value={investorDetail?.totalAssetCount}
+              value={investorDetail?.totalAssetCount || "0"}
               leftIcon={<Building className="text-primary" size={25} />}
             />
             <DashboardCard
               title="Total Tokens"
-              value={investorDetail?.totalTokenCount}
+              value={investorDetail?.totalTokenCount || "0"}
               leftIcon={<Coins className="text-primary" size={25} />}
             />
           </div>
