@@ -47,7 +47,7 @@ export const spvTableCols = (
               variant="ghost"
               size="icon"
               className="h-6 w-6"
-              onClick={() => handleCopy(spvIdFormatted)}
+              onClick={() => handleCopy(row.original.spvId?._id)}
             >
               <Copy size={14} />
             </Button>

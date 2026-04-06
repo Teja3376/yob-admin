@@ -27,6 +27,10 @@ import TenantsSection from "../components/AssetDetail/TenentsDetails";
 import Investment from "@/modules/spv/ui/components/overview/Investment";
 import InvestmentDetails from "../components/AssetDetail/InvestmentDetails";
 import DocumentDetails from "../components/AssetDetail/DocumentDetails";
+import { MintingFeeDialog } from "../components/MintingFeeDialog";
+import { Butterfly_Kids } from "next/font/google";
+import { Button } from "@/components/ui/button";
+import { MintingFeeBanner } from "../components/AssetDetail/MintingFeeBanner";
 
 export default function AssetDetailPage() {
   const { assetId } = useParams();
@@ -53,6 +57,7 @@ export default function AssetDetailPage() {
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+  const [isMintingFeeDialogOpen, setIsMintingFeeDialogOpen] = useState(false);
 
   const { handleDeployAsset } = useDeployAsset();
   const {
@@ -80,7 +85,10 @@ export default function AssetDetailPage() {
       // </div>
       <ErrorPage
         title="Error Gathering Asset Details"
-        errorMessage={error?.message || "Unknown error occurred while fetching asset details."}
+        errorMessage={
+          error?.message ||
+          "Unknown error occurred while fetching asset details."
+        }
       />
     );
   }
@@ -168,8 +176,13 @@ export default function AssetDetailPage() {
           canApprove={canDoAction}
           isAlreadyApproved={isAlreadyApproved}
           onReject={() => setIsRejectDialogOpen(true)}
+          setIsMintingFeeDialogOpen={setIsMintingFeeDialogOpen}
         />
-        {assetData.status !== "pending" && (
+
+        <MintingFeeBanner
+          onRequestClick={() => setIsMintingFeeDialogOpen(true)}
+        />
+        {assetData.status === "rejected" && (
           <AssetStatus
             status={
               assetData.status as "pending" | "approved" | "active" | "rejected" 
@@ -335,13 +348,26 @@ export default function AssetDetailPage() {
         </Tabs>
       </div>
 
+      <MintingFeeDialog
+        open={isMintingFeeDialogOpen}
+        onOpenChange={setIsMintingFeeDialogOpen}
+        assetName={assetData.name}
+        location={assetData.location}
+        totalAssetValue={assetData.totalPropertyValueAfterFees}
+        totalTokens={assetData.totalNumberOfSfts}
+        tier={assetData.tier ?? "MOCK"}
+        feePercent={assetData.mintingFeePercent ?? 0}
+        calculatedFee={assetData.calculatedMintingFee ?? 0}
+        onConfirm={() => {}}
+      />
+
       <RejectApprovalDialog
         open={isRejectDialogOpen}
         setOpen={setIsRejectDialogOpen}
         onReject={(reason) => handleReject(reason)}
         isLoading={isApproving}
-         isError={isApproveError}
-          errorMessage={approveError?.message}
+        isError={isApproveError}
+        errorMessage={approveError?.message}
       />
     </main>
   );

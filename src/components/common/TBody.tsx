@@ -1,13 +1,13 @@
-import { flexRender } from "@tanstack/react-table";
+import { flexRender, Row } from "@tanstack/react-table";
 import Empty from "./Empty";
 import { EMPTY_TABLE_DATA } from "@/config/global";
 
-interface TBodyProps {
-  data: any[];
+interface TBodyProps<TData> {
+  data: Row<TData>[];
   model?: string;
 }
 
-const TBody: React.FC<TBodyProps> = ({ data, model }) => {
+function TBody<TData>({ data, model }: TBodyProps<TData>) {
   const emptyData = EMPTY_TABLE_DATA.find((item) => item.id === model);
   if (!data || data.length === 0) {
     return (
@@ -28,9 +28,9 @@ const TBody: React.FC<TBodyProps> = ({ data, model }) => {
 
   return (
     <tbody>
-      {data.map((row: any) => (
+      {data.map((row) => (
         <tr key={row.id} className="hover:bg-gray-50">
-          {row.getVisibleCells().map((cell: any) => (
+          {row.getVisibleCells().map((cell) => (
             <td
               key={cell.id}
               className="p-2 border-b text-sm"

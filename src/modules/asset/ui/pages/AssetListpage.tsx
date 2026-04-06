@@ -17,6 +17,7 @@ import PageTitle from "@/components/PageTitle";
 import { useGetAssetCount } from "../../hooks/useGetAssetCount";
 import DashboardCard from "@/modules/orders/ui/DashboardCard";
 import ErrorPage from "@/components/Error";
+import { DashboardCardSkeleton } from "@/components/DashboardSkeleton";
 
 type StatusTab = "pending" | "rejected" | "approved";
 
@@ -93,37 +94,45 @@ const AssetListpage = () => {
   return (
     <div className="space-y-6">
       <div className="grid grif-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <DashboardCard
-          title="Total Assets"
-          value={`${assetCount?.total || "0"}`}
-          rightIcon={<FileText size={20} className="text-primary" />}
-          rightIconClassName="border-2 border-primary rounded-full p-2 bg-primary/10"
-          containerClassName="rounded-lg"
-        />
+        {isFetchingAssetCount ? (
+          Array.from({ length: 4 }).map((_, i) => (
+            <DashboardCardSkeleton key={i} />
+          ))
+        ) : (
+          <>
+            <DashboardCard
+              title="Total Assets"
+              value={`${assetCount?.total || "0"}`}
+              rightIcon={<FileText size={20} className="text-primary" />}
+              rightIconClassName="border-2 border-primary rounded-full p-2 bg-primary/10"
+              containerClassName="rounded-lg"
+            />
 
-        <DashboardCard
-          title="Approved Assets"
-          value={`${assetCount?.approved || "0"}`}
-          rightIcon={<Check size={20} className="text-green-500" />}
-          rightIconClassName="border-2 border-green-500 rounded-full p-2 bg-green-100"
-          containerClassName="rounded-lg"
-        />
+            <DashboardCard
+              title="Approved Assets"
+              value={`${assetCount?.approved || "0"}`}
+              rightIcon={<Check size={20} className="text-green-500" />}
+              rightIconClassName="border-2 border-green-500 rounded-full p-2 bg-green-100"
+              containerClassName="rounded-lg"
+            />
 
-        <DashboardCard
-          title="Pending Assets"
-          value={`${assetCount?.pending || "0"}`}
-          rightIcon={<Clock size={20} className="text-yellow-500" />}
-          rightIconClassName="border-2 border-yellow-500 rounded-full p-2 bg-yellow-100"
-          containerClassName="rounded-lg"
-        />
+            <DashboardCard
+              title="Pending Assets"
+              value={`${assetCount?.pending || "0"}`}
+              rightIcon={<Clock size={20} className="text-yellow-500" />}
+              rightIconClassName="border-2 border-yellow-500 rounded-full p-2 bg-yellow-100"
+              containerClassName="rounded-lg"
+            />
 
-        <DashboardCard
-          title="Rejected Assets"
-          value={`${assetCount?.rejected || "0"}`}
-          rightIcon={<X size={20} className="text-red-500" />}
-          rightIconClassName="border-2 border-red-500 rounded-full p-2 bg-red-100"
-          containerClassName="rounded-lg"
-        />
+            <DashboardCard
+              title="Rejected Assets"
+              value={`${assetCount?.rejected || "0"}`}
+              rightIcon={<X size={20} className="text-red-500" />}
+              rightIconClassName="border-2 border-red-500 rounded-full p-2 bg-red-100"
+              containerClassName="rounded-lg"
+            />
+          </>
+        )}
       </div>
       <PageTitle title={"List of Assets"} suffix="Assets" />
 

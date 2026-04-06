@@ -1,12 +1,10 @@
 "use client";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { formatCurrency, formatCurrencyWithLocale } from "@/lib/formatCurrency";
+import {  formatCurrencyWithLocale } from "@/lib/formatCurrency";
 import { handleCopy, handleViewOnBlockchain } from "@/utils/globalFunctions";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpRight, Copy, Eye } from "lucide-react";
-import { unique } from "next/dist/build/utils";
-import { useRouter } from "next/navigation";
+
 
 export type AssetRow = {
   assetName: string;
