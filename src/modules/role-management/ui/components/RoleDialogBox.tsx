@@ -31,8 +31,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import Loading from "@/components/Loader";
+import PermissionRow from "./PermissionsRow";
 
-type PermissionState = {
+export type PermissionState = {
   issuers: {
     view: boolean;
     review: boolean;
@@ -100,9 +101,16 @@ const defaultPermissions: PermissionState = {
   },
 };
 
+type RoleType = {
+  _id: string;
+  name: string;
+  description: string;
+  permissions: PermissionState;
+};
+
 type Props = {
   open: boolean;
-  role?: any | null;
+  role?: RoleType | null;
   setOpen: (v: boolean) => void;
   onCreate: (data: {
     name: string;
@@ -186,40 +194,9 @@ export default function AddRoleDialog({
         description: role.description,
       });
 
-      setPermissions(role.permissions || defaultPermissions);
+      setPermissions(role.permissions ?? defaultPermissions);
     }
-  }, [role]);
-
-  const PermissionRow = ({
-    module,
-    actions,
-  }: {
-    module: keyof PermissionState;
-    actions: string[];
-  }) => (
-    <AccordionItem value={module} className="border rounded-md px-4">
-      <AccordionTrigger className="font-medium capitalize">
-        {module}
-      </AccordionTrigger>
-
-      <AccordionContent>
-        <div className="flex flex-wrap gap-6 pt-2">
-          {actions.map((action) => (
-            <div key={action} className="flex items-center space-x-2">
-              <Checkbox
-                checked={(permissions as any)[module][action]}
-                onCheckedChange={(checked) =>
-                  updatePermission(module, action, Boolean(checked))
-                }
-                className="cursor-pointer"
-              />
-              <Label className="capitalize">{action}</Label>
-            </div>
-          ))}
-        </div>
-      </AccordionContent>
-    </AccordionItem>
-  );
+  }, [role,form]);
 
   const handleClose = () => {
     form.reset({
@@ -281,24 +258,50 @@ export default function AddRoleDialog({
               <PermissionRow
                 module="issuers"
                 actions={["view", "review", "action"]}
+                permissions={permissions}
+                updatePermission={updatePermission}
               />
 
               <PermissionRow
                 module="spvs"
                 actions={["view", "review", "action"]}
+                permissions={permissions}
+                updatePermission={updatePermission}
               />
 
               <PermissionRow
                 module="assets"
                 actions={["view", "review", "action"]}
+                permissions={permissions}
+                updatePermission={updatePermission}
               />
 
-              <PermissionRow module="orders" actions={["view", "review"]} />
+              <PermissionRow
+                module="orders"
+                actions={["view", "review"]}
+                permissions={permissions}
+                updatePermission={updatePermission}
+              />
 
-              <PermissionRow module="investors" actions={["view", "review"]} />
+              <PermissionRow
+                module="investors"
+                actions={["view", "review"]}
+                permissions={permissions}
+                updatePermission={updatePermission}
+              />
 
-              <PermissionRow module="roles" actions={["view", "action"]} />
-              <PermissionRow module="members" actions={["view", "action"]} />
+              <PermissionRow
+                module="roles"
+                actions={["view", "action"]}
+                permissions={permissions}
+                updatePermission={updatePermission}
+              />
+              <PermissionRow
+                module="members"
+                actions={["view", "action"]}
+                permissions={permissions}
+                updatePermission={updatePermission}
+              />
             </Accordion>
             <DialogFooter>
               <Button variant="outline" onClick={() => setOpen(false)}>

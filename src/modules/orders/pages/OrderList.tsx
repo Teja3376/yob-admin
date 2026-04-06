@@ -32,6 +32,7 @@ import PageTitle from "@/components/PageTitle";
 import clsx from "clsx";
 import { formatCurrencyWithLocale } from "@/lib/formatCurrency";
 import ErrorPage from "@/components/Error";
+import { DashboardCardSkeleton } from "@/components/DashboardSkeleton";
 
 const OrderList = () => {
   const router = useRouter();
@@ -143,41 +144,51 @@ const OrderList = () => {
 
       {/* Dashboard Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <DashboardCard
-          title="Total Orders"
-          value={orderCount?.totalOrders || "0"}
-          rightIcon={<ShoppingCartIcon className="w-6 h-6 text-blue-500" />}
-          rightIconClassName="border-2 border-blue-200 rounded-full p-2 bg-blue-100"
-          containerClassName="rounded-lg"
-        />
-        <DashboardCard
-          title="Total Investment"
-          value={formatCurrencyWithLocale(orderCount?.totalInvestment) || "0"}
-          rightIcon={<Banknote className="w-6 h-6 text-pink-500" />}
-          rightIconClassName="border-2 border-pink-200 rounded-full p-2 bg-pink-100"
-          containerClassName="rounded-lg"
-        />
-        <DashboardCard
-          title="Orders Completed"
-          value={orderCount?.completed || "0"}
-          rightIcon={<ClipboardCheck className="w-6 h-6 text-green-500" />}
-          rightIconClassName="border-2 border-green-200 rounded-full p-2 bg-green-100"
-          containerClassName="rounded-lg"
-        />
-        <DashboardCard
-          title="Order In Progress"
-          value={orderCount?.order_pending || "0"}
-          rightIcon={<Clock4 className="w-6 h-6 text-yellow-500" />}
-          rightIconClassName="border-2 border-yellow-200 rounded-full p-2 bg-yellow-100"
-          containerClassName="rounded-lg"
-        />
-        <DashboardCard
-          title="Orders Failed"
-          value={orderCount?.order_failed || "0"}
-          rightIcon={<XIcon className="w-6 h-6 text-red-500" />}
-          rightIconClassName="border-2 border-red-200 rounded-full p-2 bg-red-100"
-          containerClassName="rounded-lg"
-        />
+        {isFetchingOrderCount ? (
+          Array.from({ length: 5 }).map((_, i) => (
+            <DashboardCardSkeleton key={i} />
+          ))
+        ) : (
+          <>
+            <DashboardCard
+              title="Total Orders"
+              value={orderCount?.totalOrders || "0"}
+              rightIcon={<ShoppingCartIcon className="w-6 h-6 text-blue-500" />}
+              rightIconClassName="border-2 border-blue-200 rounded-full p-2 bg-blue-100"
+              containerClassName="rounded-lg"
+            />
+            <DashboardCard
+              title="Total Investment"
+              value={
+                formatCurrencyWithLocale(orderCount?.totalInvestment) || "0"
+              }
+              rightIcon={<Banknote className="w-6 h-6 text-pink-500" />}
+              rightIconClassName="border-2 border-pink-200 rounded-full p-2 bg-pink-100"
+              containerClassName="rounded-lg"
+            />
+            <DashboardCard
+              title="Orders Completed"
+              value={orderCount?.completed || "0"}
+              rightIcon={<ClipboardCheck className="w-6 h-6 text-green-500" />}
+              rightIconClassName="border-2 border-green-200 rounded-full p-2 bg-green-100"
+              containerClassName="rounded-lg"
+            />
+            <DashboardCard
+              title="Order In Progress"
+              value={orderCount?.order_pending || "0"}
+              rightIcon={<Clock4 className="w-6 h-6 text-yellow-500" />}
+              rightIconClassName="border-2 border-yellow-200 rounded-full p-2 bg-yellow-100"
+              containerClassName="rounded-lg"
+            />
+            <DashboardCard
+              title="Orders Failed"
+              value={orderCount?.order_failed || "0"}
+              rightIcon={<XIcon className="w-6 h-6 text-red-500" />}
+              rightIconClassName="border-2 border-red-200 rounded-full p-2 bg-red-100"
+              containerClassName="rounded-lg"
+            />
+          </>
+        )}
       </div>
 
       <h2 className="text-xl font-semibold">Orders List</h2>

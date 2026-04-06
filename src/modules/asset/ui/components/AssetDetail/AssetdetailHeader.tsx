@@ -29,6 +29,7 @@ interface AssetDetailHeaderProps {
   canApprove?: boolean;
   companyId?: string;
   isAlreadyApproved?: boolean;
+  setIsMintingFeeDialogOpen: (open: boolean) => void;
 }
 
 export function AssetDetailHeader(props: AssetDetailHeaderProps) {
@@ -46,6 +47,7 @@ export function AssetDetailHeader(props: AssetDetailHeaderProps) {
     canApprove,
     companyId,
     isAlreadyApproved,
+    setIsMintingFeeDialogOpen,
   } = props;
   const statusConfig = {
     pending: {
@@ -94,7 +96,7 @@ export function AssetDetailHeader(props: AssetDetailHeaderProps) {
       {/* Pending Notice */}
       {canApprove &&  status === "pending" && (
         <div className={clsx("flex gap-2 mt-4")}>
-          <Button
+          {/* <Button
             variant="primary"
             className="text-white gap-2"
             onClick={onRequestUpdate}
@@ -102,7 +104,10 @@ export function AssetDetailHeader(props: AssetDetailHeaderProps) {
           >
             <Edit2 className="h-4 w-4" />
             Request to update
-          </Button>
+          </Button> */}
+          {/* <Button onClick={() => setIsMintingFeeDialogOpen(true)}>
+          Request Minting Fee
+        </Button> */}
 
           <Button
             variant="outline"
@@ -132,14 +137,19 @@ export function AssetDetailHeader(props: AssetDetailHeaderProps) {
         </div>
       )}
       {isAlreadyApproved && (
+        <div className="flex items-center gap-2 mt-2">
         <Button
           variant="outline"
-          className="text-black gap-2 mt-2 "
+          className="text-black gap-2  "
           onClick={() => router.push(`/spv-list/${companyId}/overview`)}
         >
           Go to DashBoard
           <ArrowRight className="h-4 w-4" />
         </Button>
+        {/* <Button onClick={() => setIsMintingFeeDialogOpen(true)}>
+          Request Minting Fee
+        </Button> */}
+        </div>
       )}
     </div>
   );
