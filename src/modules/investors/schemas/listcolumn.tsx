@@ -58,13 +58,19 @@ export const investorColumns = (
   },
   {
     header: "KYC Status",
-    accessorKey: "isKycVerified",
+    accessorKey: "kycStatus",
     cell: ({ row }) => {
-      const isKycVerified = row.original.kycVerified;
-      console.log(isKycVerified ,"isKycVerified");
+      const kycStatus = row.original.kycStatus;
+      const normalizedKycStatus = kycStatus?.toLowerCase();
+      const kycLabel =
+        normalizedKycStatus === "approved"
+          ? "Verified"
+          : normalizedKycStatus === "pending"
+            ? "KYC Pending"
+            : "Not Verified";
       return (
         <div className="flex items-center gap-2">
-          <span className="text-gray-900">{isKycVerified ? "Verified" : "Not Verified"}</span>
+          <span className="text-gray-900">{kycLabel}</span>
         </div>
       );
     },
