@@ -24,6 +24,7 @@ import PageTitle from "@/components/PageTitle";
 import DashboardCard from "@/modules/orders/ui/DashboardCard";
 import { useGetSpvCount } from "../../hooks/useGetSpvCount";
 import ErrorPage from "@/components/Error";
+import { DashboardCardSkeleton } from "@/components/DashboardSkeleton";
 
 type StatusTab = "Active" | "Rejected" | "Pending";
 
@@ -94,7 +95,7 @@ const SpvListPage = () => {
       />
     );
   }
-  if (isSpvCountError&& !spvCount) {
+  if (isSpvCountError && !spvCount) {
     return (
       <ErrorPage
         title="Error Gathering SPV Count"
@@ -108,37 +109,45 @@ const SpvListPage = () => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <DashboardCard
-          title="Total SPVs"
-          value={`${spvCount?.total || "0"}`}
-          rightIcon={<FileText size={20} className="text-primary" />}
-          rightIconClassName=" rounded-full p-2 bg-primary/10"
-          containerClassName="rounded-lg"
-        />
+        {isFetchingSpvCount ? (
+          Array.from({ length: 4 }).map((_, i) => (
+            <DashboardCardSkeleton key={i} />
+          ))
+        ) : (
+          <>
+            <DashboardCard
+              title="Total SPVs"
+              value={`${spvCount?.total || "0"}`}
+              rightIcon={<FileText size={20} className="text-primary" />}
+              rightIconClassName=" rounded-full p-2 bg-primary/10"
+              containerClassName="rounded-lg"
+            />
 
-        <DashboardCard
-          title="Active SPVs"
-          value={`${spvCount?.active || "0"}`}
-          rightIcon={<ShieldCheck size={20} className="text-green-500" />}
-          rightIconClassName=" rounded-full p-2 bg-green-100"
-          containerClassName="rounded-lg"
-        />
+            <DashboardCard
+              title="Active SPVs"
+              value={`${spvCount?.active || "0"}`}
+              rightIcon={<ShieldCheck size={20} className="text-green-500" />}
+              rightIconClassName=" rounded-full p-2 bg-green-100"
+              containerClassName="rounded-lg"
+            />
 
-        <DashboardCard
-          title="Pending SPVs"
-          value={`${spvCount?.pending || "0"}`}
-          rightIcon={<Clock size={20} className="text-yellow-500" />}
-          rightIconClassName=" rounded-full p-2 bg-yellow-100"
-          containerClassName="rounded-lg"
-        />
+            <DashboardCard
+              title="Pending SPVs"
+              value={`${spvCount?.pending || "0"}`}
+              rightIcon={<Clock size={20} className="text-yellow-500" />}
+              rightIconClassName=" rounded-full p-2 bg-yellow-100"
+              containerClassName="rounded-lg"
+            />
 
-        <DashboardCard
-          title="Rejected SPVs"
-          value={`${spvCount?.rejected || "0"}`}
-          rightIcon={<X size={20} className="text-red-500" />}
-          rightIconClassName=" rounded-full p-2 bg-red-100"
-          containerClassName="rounded-lg"
-        />
+            <DashboardCard
+              title="Rejected SPVs"
+              value={`${spvCount?.rejected || "0"}`}
+              rightIcon={<X size={20} className="text-red-500" />}
+              rightIconClassName=" rounded-full p-2 bg-red-100"
+              containerClassName="rounded-lg"
+            />
+          </>
+        )}
       </div>
 
       {/* Header */}
@@ -191,7 +200,7 @@ const SpvListPage = () => {
             </div>
           ) : (
             <TableComponent
-              data={data?.data || []}
+              data={data?.data as any || []}
               columns={cols}
               model="spv"
             />
