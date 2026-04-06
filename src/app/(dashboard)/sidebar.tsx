@@ -18,7 +18,7 @@ const Sidebar = () => {
   const isRolesAllowed = hasPermission("roles", "view") || hasPermission("members", "view");
   const navLinks = [
     { label: "Issuers", href: "/issuers", allowed: isIssuersAllowed },
-    { label: "Spv's", href: "/spv-list", allowed: isSpvsAllowed },
+    { label: "SPVs", href: "/spv-list", allowed: isSpvsAllowed },
     { label: "Assets", href: "/asset-list", allowed: isAssetsAllowed },
     { label: "Orders", href: "/orders", allowed: isOrdersAllowed },
     { label: "Investors", href: "/investors", allowed: isInvestorsAllowed },

@@ -1,8 +1,15 @@
-'use client';
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { formatCurrency } from '@/lib/formatCurrency';
-import { TrendingUp, Percent, Calendar } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatCurrency, formatCurrencyWithLocale } from "@/lib/formatCurrency";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
+} from "recharts";
+
 
 interface FinancialDetailsProps {
   investmentPerformance: {
@@ -11,7 +18,6 @@ interface FinancialDetailsProps {
     netRentalYield: number;
     grossRentalYield: number;
     targetCapitalAppreciation: number;
-    estimatedReturnsAsPerLockInPeriod: number;
   };
   rentalInformation: {
     rentPerSft: number;
@@ -21,162 +27,176 @@ interface FinancialDetailsProps {
     netAnnualRent: number;
     vacancyRate: number;
   };
-  investorRequirementsAndTimeline: {
-    lockupPeriod: number;
-    lockupPeriodType: string;
-    distributionStartDate: string;
-    distributionEndDate: string;
-  };
   currency: string;
+  data: any;
 }
 
 export function FinancialDetails({
-  investmentPerformance,
   rentalInformation,
-  investorRequirementsAndTimeline,
   currency,
+  data,
 }: FinancialDetailsProps) {
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
-  };
+  const asset = data;
+
+  const valuationData = [
+    {
+      name: "Base Value",
+      value: asset?.basePropertyValue || 0,
+    },
+    {
+      name: "Fees & Taxes",
+      value:
+        (asset?.totalPropertyValueAfterFees || 0) -
+        (asset?.basePropertyValue || 0),  
+    },
+    {
+      name: "Total Value",
+      value: asset?.totalPropertyValueAfterFees || 0,
+    }
+  ];
+
+  const COLORS = ["#f97316", "#6b7280", "#10b981"];
 
   return (
     <div className="space-y-6">
-        <h2 className="text-xl font-medium mb-4">Financial Performance</h2>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <Card className="rounded-2xl shadow-sm">
+          <CardHeader>
+            <CardTitle>Valuation Breakdown</CardTitle>
+          </CardHeader>
 
-      {/* Key Returns */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <Card>
-          <CardContent className="">
-            <div className="flex items-start gap-4">
-              <div className="rounded-lg bg-green-100 p-3">
-                <TrendingUp className="h-6 w-6 text-green-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Internal Rate of Return (IRR)</p>
-                <p className="mt-1 text-sm font-semibold  text-green-600">
-                  {investmentPerformance.irr.toFixed(2)}%
-                </p>
-              </div>
+          <CardContent className="flex flex-col items-center gap-6">
+            <div className="w-48 h-48">
+              <ResponsiveContainer>
+                <PieChart>
+                  <Pie
+                    data={valuationData}
+                    innerRadius={60}
+                    outerRadius={80}
+                    dataKey="value"
+                  >
+                    {valuationData.map((_, i) => (
+                      <Cell key={i} fill={COLORS[i]} />
+                    ))}
+                  </Pie>
+                  <Tooltip content={<CustomTooltip />} />
+                  
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="w-full space-y-2 text-sm">
+              {valuationData.map((item, i) => (
+                <div key={i} className="flex justify-between">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="w-3 h-3 rounded-full"
+                      style={{ backgroundColor: COLORS[i] }}
+                    />
+                    <span className="text-gray-600">{item.name}</span>
+                  </div>
+
+                  <span className="font-medium">
+                    {formatCurrencyWithLocale(item.value, currency)}
+                  </span>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="">
-            <div className="flex items-start gap-4">
-              <div className="rounded-lg bg-purple-100 p-3">
-                <Percent className="h-6 w-6 text-green-600" />
-              </div>
+        <Card className="rounded-2xl shadow-sm">
+          <CardHeader>
+            <CardTitle>Investment Returns</CardTitle>
+          </CardHeader>
+
+          <CardContent className="space-y-6">
+            <div className="bg-gray-100 rounded-xl p-4">
+              <p className="text-xs text-gray-500 uppercase">
+                Target Appreciation
+              </p>
+              <p className="text-2xl font-bold text-orange-500">
+                {asset?.investmentPerformance?.targetCapitalAppreciation || 0}%
+              </p>
+            </div>
+
+            <div className="flex justify-between">
               <div>
-                <p className="text-sm text-gray-600">Multiple on Invested Capital (MOIC)</p>
-                <p className="mt-1 text-sm font-semibold text-purple-600">
-                  {investmentPerformance.moic.toFixed(2)}x
+                <p className="text-xs text-gray-500">Equity Multiple</p>
+                <p className="font-semibold">
+                  {asset?.investmentPerformance?.moic?.toFixed(1)}x
+                </p>
+              </div>
+
+              <div>
+                <p className="text-xs text-gray-500">IRR (Projected)</p>
+                <p className="font-semibold text-green-600 ">
+                  {asset?.investmentPerformance?.irr?.toFixed(2)}%
                 </p>
               </div>
             </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="">
-            <div className="flex items-start gap-4">
-              <div className="rounded-lg bg-blue-100 p-3">
-                <Calendar className="h-6 w-6 text-blue-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Net Rental Yield</p>
-                <p className="mt-1 text-sm font-semibold text-blue-600">
-                  {investmentPerformance.netRentalYield.toFixed(2)}%
-                </p>
-              </div>
+            <div>
+              <p className="text-xs text-gray-500">MOIC</p>
+              <p className="font-semibold text-black-600 ">{asset?.investmentPerformance?.moic?.toFixed(1)}</p>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Rental Information */}
-      <Card>
+      <Card className="rounded-2xl shadow-sm">
         <CardHeader>
-          <CardTitle className="text-xl font-medium">Rental Information</CardTitle>
+          <CardTitle className="text-lg font-semibold">
+            Rental Information
+          </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <div className="space-y-4">
-              <div>
-                <p className="text-sm text-gray-600">Rent per SFT</p>
-                <p className="text-md font-semibold">
-                  {currency} {rentalInformation.rentPerSft.toLocaleString()}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Vacancy Rate</p>
-                <p className="text-md font-semibold">{rentalInformation.vacancyRate}%</p>
-              </div>
-            </div>
-            <div className="space-y-4">
-              <div>
-                <p className="text-sm text-gray-600">Gross Monthly Rent</p>
-                <p className="text-md font-semibold">
-                  {formatCurrency(rentalInformation.grossMonthlyRent, currency)}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Net Monthly Rent</p>
-                <p className="text-md font-semibold text-green-600">
-                  {formatCurrency(rentalInformation.netMonthlyRent, currency)}
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="mt-6 ">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-gray-600">Gross Annual Rent</p>
-                <p className="mt-1 text-md font-semibold">
-                  {formatCurrency(rentalInformation.grossAnnualRent, currency)}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Net Annual Rent</p>
-                <p className="mt-1 text-md font-semibold text-green-600">
-                  {formatCurrency(rentalInformation.netAnnualRent, currency)}
-                </p>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
 
-      {/* Investment Timeline */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Investment Timeline</CardTitle>
-        </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-gray-600">Lock-up Period</span>
-              <span className="text-md font-medium">
-                {investorRequirementsAndTimeline.lockupPeriod}{' '}
-                {investorRequirementsAndTimeline.lockupPeriodType}
-              </span>
-            </div>
-            <div className="flex flex-col gap-2 border-t pt-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-gray-50 rounded-xl p-5 space-y-5">
               <div>
-                <p className="text-sm text-gray-600">Distribution Start Date</p>
-                  <p className="mt-1 text-md font-medium">
-                  {formatDate(investorRequirementsAndTimeline.distributionStartDate)}
+                <p className="text-sm text-gray-500">Rent per SFT</p>
+                <p className="text-lg font-semibold">
+                  {currency} {rentalInformation?.rentPerSft?.toLocaleString()}
                 </p>
               </div>
+
               <div>
-                <p className="text-sm text-gray-600">Distribution End Date</p>
-                <p className="mt-1 text-md font-medium">
-                  {formatDate(investorRequirementsAndTimeline.distributionEndDate)}
+                <p className="text-sm text-gray-500">Vacancy Rate</p>
+                <p className="text-lg font-semibold">
+                  {rentalInformation?.vacancyRate}%
+                </p>
+              </div>
+
+              <div>
+                <p className="text-sm text-gray-500">Gross Annual Rent</p>
+                <p className="text-lg font-semibold text-orange-500">
+                  {formatCurrency(rentalInformation?.grossAnnualRent, currency)}
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-gray-50 rounded-xl p-5 space-y-5">
+              <div>
+                <p className="text-sm text-gray-500">Gross Monthly Rent</p>
+                <p className="text-lg font-semibold">
+                  {formatCurrency(
+                    rentalInformation?.grossMonthlyRent,
+                    currency,
+                  )}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-sm text-gray-500">Net Monthly Rent</p>
+                <p className="text-lg font-semibold">
+                  {formatCurrency(rentalInformation?.netMonthlyRent, currency)}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-sm text-gray-500">Net Annual Rent</p>
+                <p className="text-lg font-semibold text-orange-500">
+                  {formatCurrency(rentalInformation?.netAnnualRent, currency)}
                 </p>
               </div>
             </div>
@@ -186,3 +206,18 @@ export function FinancialDetails({
     </div>
   );
 }
+
+
+const CustomTooltip = ({ active, payload, currency }: any) => {
+  if (active && payload && payload.length) {
+    const data = payload[0];
+
+    return (
+      <div className="bg-white p-2 rounded-md shadow border text-sm">
+        <p className="font-medium">{data.name}</p>
+        <p>{formatCurrencyWithLocale(data.value, currency)}</p>
+      </div>
+    );
+  }
+  return null;
+};

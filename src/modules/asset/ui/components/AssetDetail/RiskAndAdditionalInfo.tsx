@@ -1,8 +1,13 @@
-'use client';
+"use client";
 
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Card, CardContent } from '@/components/ui/card';
-import { AlertTriangle, HelpCircle, DollarSign } from 'lucide-react';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Card, CardContent } from "@/components/ui/card";
+import { AlertTriangle, HelpCircle, DollarSign } from "lucide-react";
 
 interface RiskFactor {
   _id: string;
@@ -44,7 +49,7 @@ export function RiskAndAdditionalInfo({
       {/* Risk Factors */}
       {riskFactors && riskFactors.length > 0 && (
         <div>
-          <h2 className="mb-4 flex items-center gap-2 text-md font-medium">
+          <h2 className="mb-4 flex items-center gap-2 text-md font-medium ml-1">
             <AlertTriangle className="h-6 w-6 text-red-600" />
             Risk Factors
           </h2>
@@ -53,7 +58,9 @@ export function RiskAndAdditionalInfo({
               <Card key={risk._id} className="border-red-100">
                 <CardContent className="">
                   <h3 className="font-semibold text-gray-900">{risk.name}</h3>
-                  <p className="mt-2 text-sm text-gray-600">{risk.description}</p>
+                  <p className="mt-2 text-sm text-gray-600">
+                    {risk.description}
+                  </p>
                 </CardContent>
               </Card>
             ))}
@@ -71,9 +78,16 @@ export function RiskAndAdditionalInfo({
           <div className="rounded-lg border border-red-200 bg-red-50 p-6">
             <div className="space-y-4">
               {riskDisclosures.map((disclosure) => (
-                <div key={disclosure._id} className="border-b border-red-100 pb-4 last:border-0">
-                  <h3 className="font-semibold text-red-900">{disclosure.name}</h3>
-                  <p className="mt-2 text-sm text-red-800">{disclosure.description}</p>
+                <div
+                  key={disclosure._id}
+                  className="border-b border-red-100 pb-4 last:border-0"
+                >
+                  <h3 className="font-semibold text-red-900">
+                    {disclosure.name}
+                  </h3>
+                  <p className="mt-2 text-sm text-red-800">
+                    {disclosure.description}
+                  </p>
                 </div>
               ))}
             </div>
@@ -92,9 +106,14 @@ export function RiskAndAdditionalInfo({
             <CardContent className="">
               <div className="space-y-3">
                 {additionalTaxes.map((tax) => (
-                  <div key={tax._id} className="flex items-center justify-between border-b last:border-0">
+                  <div
+                    key={tax._id}
+                    className="flex items-center justify-between border-b last:border-0"
+                  >
                     <span className="text-gray-600">{tax.name}</span>
-                    <span className="font-semibold text-gray-900">{tax.value}%</span>
+                    <span className="font-semibold text-gray-900">
+                      {tax.value}%
+                    </span>
                   </div>
                 ))}
               </div>
@@ -110,11 +129,17 @@ export function RiskAndAdditionalInfo({
             <HelpCircle className="h-6 w-6" />
             Frequently Asked Questions
           </h2>
-          <Accordion type="single" collapsible={true} className="space-y-4 border px-4 rounded-lg">
+          <Accordion
+            type="single"
+            collapsible={true}
+            className="space-y-4 border px-4 rounded-lg"
+          >
             {faqs.map((faq) => (
               <AccordionItem key={faq._id} value={faq._id}>
                 <AccordionTrigger className="pt-6">
-                  <h3 className="font-semibold text-gray-900">{faq.question}</h3>
+                  <h3 className="font-semibold text-gray-900">
+                    {faq.question}
+                  </h3>
                 </AccordionTrigger>
                 <AccordionContent className="mt-3 text-sm text-gray-600">
                   {faq.answer}
