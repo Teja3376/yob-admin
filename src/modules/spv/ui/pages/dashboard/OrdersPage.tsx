@@ -109,7 +109,7 @@ const OrdersPage = () => {
       <div>
         {!isOrdersLoading && assetorders && (
           <TableComponent
-            columns={columns(router)}
+            columns={columns(router) as any}
             data={assetorders?.orders || []}
             model="order"
           />
