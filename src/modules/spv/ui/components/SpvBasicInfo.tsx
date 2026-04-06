@@ -1,5 +1,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Briefcase, DollarSign, Globe } from "lucide-react";
+import Document from "next/document";
 
 type SpvBasicInfoProps = {
   name: string;
@@ -26,31 +28,55 @@ const SpvBasicInfo: React.FC<SpvBasicInfoProps> = ({
   formationDate,
 }) => {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Basic Information</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-2 gap-6">
-          <div>
-            <p className="text-sm text-muted-foreground mb-1">SPV/LLC Name</p>
-            <p className="font-medium">{name}</p>
+    <Card className="rounded-2xl shadow-sm p-5">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="p-3 rounded-xl bg-orange-100 text-orange-600">
+          <Briefcase size={20} />
+        </div>
+        <h2 className="text-lg font-semibold text-gray-900">
+          Basic Information
+        </h2>
+      </div>
+      <CardContent className="p-0">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
+          <div className="bg-gray-50 rounded-xl p-5 border border-gray-100">
+            <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+              SPV/LLC Name
+            </p>
+
+            <div className="flex items-center gap-2 mt-2">
+              <p className="font-semibold text-gray-900 text-sm">{name}</p>
+            </div>
           </div>
-          <div>
-            <p className="text-sm text-muted-foreground mb-1">SPV Type</p>
-            <p className="font-medium">{type}</p>
+
+          <div className="bg-gray-50 rounded-xl p-5 border border-gray-100">
+            <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+              SPV TYPE
+            </p>
+
+            <div className="flex items-center gap-2 mt-2">
+              <p className="font-semibold text-gray-900 text-sm">{type}</p>
+            </div>
           </div>
-          <div>
-            <p className="text-sm text-muted-foreground mb-1">Jurisdiction</p>
-            <p className="font-medium">{jurisdiction}</p>
+
+          <div className="bg-gray-50 rounded-xl p-5 border border-gray-100">
+            <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+            JURISDICTION
+            </p>
+
+            <div className="flex items-center gap-2 mt-2">
+              <p className="font-semibold text-gray-900 text-sm">{jurisdiction}</p>
+            </div>
           </div>
-          <div>
-            <p className="text-sm text-muted-foreground mb-1">Currency</p>
-            <p className="font-medium">{currency}</p>
-          </div>
-          <div>
-            <p className="text-sm text-muted-foreground mb-1">Formation Date</p>
-            <p className="font-medium">{formatDate(formationDate)}</p>
+
+          <div className="bg-gray-50 rounded-xl p-5 border border-gray-100">
+            <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+             CURRENCY
+            </p>
+
+            <div className="flex items-center gap-2 mt-2">
+              <p className="font-semibold text-gray-900 text-sm">{currency}</p>
+            </div>
           </div>
         </div>
       </CardContent>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AssetDetailHeader } from "../components/AssetDetail/AssetdetailHeader";
@@ -10,7 +10,7 @@ import { FinancialDetails } from "../components/AssetDetail/FinancialDetails";
 import { DocumentsAndTenants } from "../components/AssetDetail/DocumentsAndTenants";
 import { RiskAndAdditionalInfo } from "../components/AssetDetail/RiskAndAdditionalInfo";
 import { AmenitiesAndFeatures } from "../components/AssetDetail/AmenitiesAndFeatures";
-import { LoaderCircle } from "lucide-react";
+import { Building2, DollarSign, FileText, LoaderCircle, TrendingUp, User2, User2Icon, Users } from "lucide-react";
 import AssetApprovalDialog from "../components/AssetApprovalDialog";
 import { toast } from "sonner";
 import Loading from "@/components/Loader";
@@ -22,6 +22,11 @@ import PageTitle from "@/components/PageTitle";
 import RejectApprovalDialog from "../components/RejectionDialog";
 import AssetStatus from "../components/AssetDetail/AssetStatus";
 import ErrorPage from "@/components/Error";
+import Document from "next/document";
+import TenantsSection from "../components/AssetDetail/TenentsDetails";
+import Investment from "@/modules/spv/ui/components/overview/Investment";
+import InvestmentDetails from "../components/AssetDetail/InvestmentDetails";
+import DocumentDetails from "../components/AssetDetail/DocumentDetails";
 import { MintingFeeDialog } from "../components/MintingFeeDialog";
 import { Butterfly_Kids } from "next/font/google";
 import { Button } from "@/components/ui/button";
@@ -41,6 +46,17 @@ export default function AssetDetailPage() {
 
   const [isApproveDialogOpen, setIsApproveDialogOpen] = useState(false);
   const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
+  const [isTabsSticky, setIsTabsSticky] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsTabsSticky(window.scrollY > 260);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
   const [isMintingFeeDialogOpen, setIsMintingFeeDialogOpen] = useState(false);
 
   const { handleDeployAsset } = useDeployAsset();
@@ -149,7 +165,10 @@ export default function AssetDetailPage() {
           status={
             assetData.status as "pending" | "approved" | "active" | "rejected"
           }
-          imageUrl={assetData?.media?.imageURL}
+          images={[
+    ...(assetData.media?.imageURL ? [assetData.media.imageURL] : []),
+    ...(assetData.media?.gallery || [])
+  ]}
           stage={assetData.stage}
           onRequestUpdate={handleRequestUpdate}
           onApprove={handleApproveClick}
@@ -166,9 +185,10 @@ export default function AssetDetailPage() {
         {assetData.status === "rejected" && (
           <AssetStatus
             status={
-              assetData.status as "pending" | "approved" | "active" | "rejected"
+              assetData.status as "pending" | "approved" | "active" | "rejected" 
             }
             reason={assetData.rejectionReason}
+            date={assetData.updatedAt}
           />
         )}
 
@@ -183,31 +203,74 @@ export default function AssetDetailPage() {
 
         {/* Tabs for Different Sections */}
         <Tabs defaultValue="overview" className="mt-8">
-          <TabsList className="grid w-full grid-cols-4 lg:w-fit text-black ">
+          <TabsList className={`${isTabsSticky ? "sticky top-20 z-40 shadow-xl" : "relative"} inline-flex md:h-12 items-center justify-center text-muted-foreground w-full scrollbar-hidden backdrop-blur-lg bg-gray-100 mb-2 p-1 rounded-lg h-16`}>
+
             <TabsTrigger
               value="overview"
-              className="text-black font-medium   data-[state=active]:text-black data-[state=active]:font-medium "
+              className="data-[state=active]:bg-[#ffff] data-[state=active]:shadow-none data-[state=active]:text-primary  text-gray-500 text-base flex items-center gap-2 flex-1 min-w-0 py-2 m-0.5 transition-all duration-500 linear p-5 hover:bg-[#ffff] hover:text-black"
             >
-              Overview
+             <p className="flex items-center gap-2">
+                  <Building2 size={24} />
+                  <span className="">
+                    Overview
+                  </span>
+                </p>
             </TabsTrigger>
 
             <TabsTrigger
               value="financial"
-              className="text-black  font-medium data-[state=active]:text-black data-[state=active]:font-medium"
+              className="data-[state=active]:bg-[#ffff] data-[state=active]:shadow-none data-[state=active]:text-primary  text-gray-500 text-base flex items-center gap-2 flex-1 min-w-0 py-2 m-0.5 transition-all duration-500 linear p-5 hover:bg-[#ffff] hover:text-black"
             >
-              Financial
+             <p className="flex items-center gap-2">
+                  <DollarSign size={24} />
+                  <span className="">
+                   Financials
+                  </span>
+                </p>
             </TabsTrigger>
             <TabsTrigger
-              value="assets"
-              className="text-black font-medium  data-[state=active]:text-black data-[state=active]:font-medium"
+              value="tenants"
+              className="data-[state=active]:bg-[#ffff] data-[state=active]:shadow-none data-[state=active]:text-primary  text-gray-500 text-base flex items-center gap-2 flex-1 min-w-0 py-2 m-0.5 transition-all duration-500 linear p-5 hover:bg-[#ffff] hover:text-black"
             >
-              Assets
+             <p className="flex items-center gap-2">
+                  <Users size={24} />
+                  <span className="">
+                   Tenants
+                  </span>
+                </p>
             </TabsTrigger>
             <TabsTrigger
+              value="investments"
+              className="data-[state=active]:bg-[#ffff] data-[state=active]:shadow-none data-[state=active]:text-primary  text-gray-500 text-base flex items-center gap-2 flex-1 min-w-0 py-2 m-0.5 transition-all duration-500 linear p-5 hover:bg-[#ffff] hover:text-black"
+            >
+             <p className="flex items-center gap-2">
+                  <TrendingUp size={24} />
+                  <span className="">
+                    Investments
+                  </span>
+                </p>
+            </TabsTrigger>
+            <TabsTrigger
+              value="documents"
+              className="data-[state=active]:bg-[#ffff] data-[state=active]:shadow-none data-[state=active]:text-primary  text-gray-500 text-base flex items-center gap-2 flex-1 min-w-0 py-2 m-0.5 transition-all duration-500 linear p-5 hover:bg-[#ffff] hover:text-black"
+            >
+             <p className="flex items-center gap-2">
+                  <FileText size={24} />
+                  <span className="">
+                    Documents
+                  </span>
+                </p>
+            </TabsTrigger>
+           <TabsTrigger
               value="risk"
-              className="text-black font-medium  data-[state=active]:text-black data-[state=active]:font-medium"
+              className="data-[state=active]:bg-[#ffff] data-[state=active]:shadow-none data-[state=active]:text-primary  text-gray-500 text-base flex items-center gap-2 flex-1 min-w-0 py-2 m-0.5 transition-all duration-500 linear p-5 hover:bg-[#ffff] hover:text-black"
             >
-              Risk
+             <p className="flex items-center gap-2">
+                  <Building2 size={24} />
+                  <span className="">
+                    Risk
+                  </span>
+                </p>
             </TabsTrigger>
           </TabsList>
 
@@ -227,6 +290,11 @@ export default function AssetDetailPage() {
               totalPropertyValueAfterFees={
                 assetData.totalPropertyValueAfterFees
               }
+              description={assetData.description}
+              issuerName={assetData.company.name}
+              projectsCount={assetData.company.projectsCount}
+              estimatedReturnsAsPerLockInPeriod={assetData.investmentPerformance.estimatedReturnsAsPerLockInPeriod}
+
             />
           </TabsContent>
 
@@ -235,27 +303,40 @@ export default function AssetDetailPage() {
             <FinancialDetails
               investmentPerformance={assetData.investmentPerformance}
               rentalInformation={assetData.rentalInformation}
-              investorRequirementsAndTimeline={
-                assetData.investorRequirementsAndTimeline
-              }
               currency={assetData.currency}
+              data={assetData}
             />
           </TabsContent>
 
           {/* Assets Tab */}
-          <TabsContent value="assets" className="mt-8 space-y-8">
-            <AmenitiesAndFeatures
-              amenities={assetData.amenities || []}
-              features={assetData.features || []}
-            />
-            <DocumentsAndTenants
-              documents={assetData.documents || []}
+          <TabsContent value="tenants" className="mt-8 space-y-8">
+
+            <TenantsSection
               tenants={assetData.tenants || []}
-              currency={assetData.currency}
             />
           </TabsContent>
 
-          {/* Risk Tab */}
+          <TabsContent value="investments" className="mt-8 space-y-8">
+            <InvestmentDetails
+              data={{
+                tokenInformation: assetData.tokenInformation,
+                blockchain: assetData.blockchain,
+              }}
+            />
+          </TabsContent>
+
+          <TabsContent value="documents" className="mt-8 space-y-8">
+
+            <DocumentDetails
+              data={{
+                legalAdivisory: assetData.legalAdivisory,
+                assetManagementCompany: assetData.assetManagementCompany,
+                brokerage: assetData.brokerage,
+                documents: assetData.documents,
+              }}
+            />
+          </TabsContent>
+
           <TabsContent value="risk" className="mt-6">
             <RiskAndAdditionalInfo
               riskFactors={assetData.riskFactors || []}

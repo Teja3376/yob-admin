@@ -1,6 +1,16 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import {
+  ChartBarIncreasing,
+  ExternalLink,
+  Link,
+  Shield,
+  ShieldAlertIcon,
+  ShieldCheck,
+  Users,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 type VotingPeriod = {
   days: number | null;
@@ -14,7 +24,9 @@ type GovernanceRights = {
 };
 
 type DaoConfiguration = {
-  blockchain: string | null;
+  spvAddress: string;
+  orderManagerAddress: string | null;
+  txHash: string;
   governanceModel: string | null;
   proposalThresholdPercent: number | null;
   quorumPercent: number | null;
@@ -24,127 +36,75 @@ type DaoConfiguration = {
 };
 
 type SpvDaoDetailsProps = {
-  daoConfiguration: DaoConfiguration;
+  blockchain: DaoConfiguration;
 };
 
-const SpvDaoDetails: React.FC<SpvDaoDetailsProps> = ({ daoConfiguration }) => {
+const SpvDaoDetails: React.FC<SpvDaoDetailsProps> = ({ blockchain }) => {
+  const openOnExplorer = (
+    value?: string,
+    type: "address" | "tx" = "address",
+  ) => {
+    if (!value) return;
+
+    const base = "https://amoy.polygonscan.com/";
+
+    const url =
+      type === "tx" ? `${base}/tx/${value}` : `${base}/address/${value}`;
+
+    window.open(url, "_blank");
+  };
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>DAO Details</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {/* Blockchain Information */}
-        <div>
-          <h3 className="font-semibold mb-4">Blockchain Information</h3>
-          <div className="grid grid-cols-2 gap-6">
-            <div>
-              <p className="text-sm text-muted-foreground mb-1">
-                Blockchain Name
-              </p>
-              <p className="font-medium">
-                {daoConfiguration.blockchain || "N/A"}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground mb-1">
-                Governance Mode
-              </p>
-              <p className="font-medium">
-                {daoConfiguration.governanceModel || "N/A"}
-              </p>
-            </div>
+    <Card className="rounded-2xl shadow-sm">
+      <div className="flex items-center gap-3 mb-3 ml-6">
+        <div className="p-3 rounded-xl bg-orange-100 text-orange-600">
+          <Link size={20} />
+        </div>
+        <h2 className="text-lg font-semibold text-gray-900">Blockchain</h2>
+      </div>
+      <CardContent className="space-y-4 ">
+        <div className="bg-gray-100 rounded-xl p-4 flex items-center justify-between">
+          <div>
+            <p className="text-xs text-gray-500 uppercase">SPV Address</p>
+
+            <p className="text-xs text-orange-600 break-all">
+              {blockchain?.spvAddress
+                ? `${blockchain.spvAddress.slice(0, 6)}...${blockchain.spvAddress.slice(-4)}`
+                : "N/A"}
+            </p>
           </div>
+
+          <Button
+            className="text-gray-500 hover:text-black bg-gray-100 hover:bg-gray-100"
+            onClick={() => openOnExplorer(blockchain?.spvAddress)}
+          >
+            <ExternalLink size={16} />
+          </Button>
         </div>
 
-        {/* Governance Parameters */}
-        <div>
-          <h3 className="font-semibold mb-4">Governance Parameters</h3>
-          <div className="grid grid-cols-2 gap-6">
-            <div>
-              <p className="text-sm text-muted-foreground mb-1">
-                Proposal Threshold
-              </p>
-              <p className="font-medium">
-                {daoConfiguration.proposalThresholdPercent
-                  ? `${daoConfiguration.proposalThresholdPercent}%`
-                  : "N/A"}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground mb-1">Quorum</p>
-              <div className="flex items-center gap-2">
-                <p className="font-medium">
-                  {daoConfiguration.quorumPercent
-                    ? `${daoConfiguration.quorumPercent}%`
-                    : "N/A"}
-                </p>
-                {daoConfiguration.votingPeriod?.days && (
-                  <>
-                    <span className="text-muted-foreground">
-                      {daoConfiguration.votingPeriod.days} Days
-                    </span>
-                    <span className="text-muted-foreground">
-                      {daoConfiguration.votingPeriod.hours} Hours
-                    </span>
-                  </>
-                )}
-              </div>
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground mb-1">
-                Decision Type
-              </p>
-              <div className="flex items-center gap-2">
-                <p className="font-medium">
-                  {daoConfiguration.decisionType || "N/A"}
-                </p>
-              </div>
-            </div>
+        <div className="bg-gray-100 rounded-xl p-4 flex items-center justify-between">
+          <div>
+            <p className="text-xs text-gray-500 uppercase">Transaction Hash</p>
+
+            <p className="text-xs text-orange-600 break-all truncate">
+              {blockchain?.txHash
+                ? `${blockchain.txHash.slice(0, 6)}...${blockchain.txHash.slice(-4)}`
+                : "N/A"}
+            </p>
           </div>
+
+          <Button
+            className="text-gray-500 hover:text-black bg-gray-100 hover:bg-gray-100 "
+            onClick={() => openOnExplorer(blockchain?.txHash, "tx")}
+          >
+            <ExternalLink size={16} />
+          </Button>
         </div>
 
-        {/* Governance Rights */}
-        <div>
-          <h3 className="font-semibold mb-4">Governance Rights</h3>
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">Voting Rights:</span>
-              <Badge
-                variant={
-                  daoConfiguration.governanceRights.votingRights
-                    ? "default"
-                    : "outline"
-                }
-              >
-                {daoConfiguration.governanceRights.votingRights
-                  ? "Required"
-                  : "Not Required"}
-              </Badge>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">
-                Proposal Rights:
-              </span>
-              <Badge
-                variant={
-                  daoConfiguration.governanceRights.proposalCreation
-                    ? "default"
-                    : "outline"
-                }
-              >
-                {daoConfiguration.governanceRights.proposalCreation
-                  ? "Required"
-                  : "Not Required"}
-              </Badge>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">Veto Power:</span>
-              <p className="font-medium">
-                {daoConfiguration.governanceRights.adminVotePower ? "Yes" : "No"}
-              </p>
-            </div>
-          </div>
+        <div className="flex gap-2">
+          <ShieldCheck size={20} className="text-green-400 mb-2" />
+          <p className="text-gray-500 text-sm uppercase">
+            Verified on Polygon Testnet
+          </p>
         </div>
       </CardContent>
     </Card>

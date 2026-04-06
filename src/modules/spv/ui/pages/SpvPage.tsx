@@ -147,16 +147,16 @@ const SpvPage = () => {
     <div className="space-y-6">
       <PageTitle title={spvData.name || "Detailed view of spv"} suffix="SPV" />
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="">
         <div className="flex items-center gap-2">
           <ArrowLeft
             onClick={() => router.back()}
             className="cursor-pointer"
             size={20}
           />
-          <h1 className="text-xl font-medium">{spvData.name}</h1>
-          {getStatusBadge(spvData.status)}
+          <h1 className="text-xl font-semibold">{spvData.name}</h1>
         </div>
+        <p className="pl-6">{getStatusBadge(spvData.status)}</p>
         {spvData.status === "Active" &&
           canDoReview &&
           spvData.isAssetLinked && (
@@ -172,30 +172,33 @@ const SpvPage = () => {
 
       {/* Basic Information */}
       {(spvData.status === "Active" || spvData.status === "Rejected") && (
-        <SpvStatus status={spvData.status} reason={spvData?.rejectionReason} />
+        <SpvStatus 
+         data={spvData} />
       )}
-      <SpvBasicInfo
-        name={spvData.name}
-        type={spvData.type}
-        jurisdiction={spvData.jurisdiction}
-        currency={spvData.currency}
-        formationDate={spvData.formationDate}
-      />
+      <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
 
-      {/* Memo & Terms */}
-      <SpvMemoTerms memoAndTerms={spvData.memoAndTerms} />
+        <div className="lg:col-span-7 space-y-6">
+          <SpvBasicInfo
+            name={spvData.name}
+            type={spvData.type}
+            jurisdiction={spvData.jurisdiction}
+            currency={spvData.currency}
+            formationDate={spvData.formationDate}
+          />
 
-      {/* Escrow Bank Details */}
-      <SpvEscrowBankDetails escrowBankDetails={spvData.escrowBankDetails} />
+          <SpvMemoTerms memoAndTerms={spvData.memoAndTerms} />
 
-      {/* Legal Documents */}
-      <SpvLegalDocuments legalDocuments={spvData.legalDocuments} />
+          <SpvBoardMembers boardMembers={spvData.boardMembers} />
+        </div>
 
-      {/* Additional Board Members */}
-      <SpvBoardMembers boardMembers={spvData.boardMembers} />
+        <div className="lg:col-span-3 space-y-6">
+          <SpvEscrowBankDetails escrowBankDetails={spvData.escrowBankDetails} />
 
-      {/* DAO Details */}
-      <SpvDaoDetails daoConfiguration={spvData.daoConfiguration} />
+          <SpvLegalDocuments legalDocuments={spvData.legalDocuments} />
+
+          <SpvDaoDetails blockchain={spvData.blockchain} />
+        </div>
+      </div>
 
       {/* Action Buttons */}
       <SpvActionButtons
@@ -220,7 +223,7 @@ const SpvPage = () => {
         setOpen={setIsRejectDialogOpen}
         onReject={(reason) => handleReject(reason)}
         isLoading={approvalPending}
-         isError={isApprovalError}
+        isError={isApprovalError}
         errorMessage={approvalError?.message || "Unknown error during approval"}
       />
     </div>
