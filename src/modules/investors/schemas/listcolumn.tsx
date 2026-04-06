@@ -64,7 +64,7 @@ export const investorColumns = (
       console.log(isKycVerified ,"isKycVerified");
       return (
         <div className="flex items-center gap-2">
-          <span className="text-gray-900">{isKycVerified ? "Not Verified" : "Verified"}</span>
+          <span className="text-gray-900">{isKycVerified ? "Verified" : "Not Verified"}</span>
         </div>
       );
     },
