@@ -12,7 +12,6 @@ export type AssetRow = {
   assetName: string;
   assetId: string;
   spvName: string;
-
   uniqueInvestors?: number;
   totalPropertyValueAfterFees?: number;
 

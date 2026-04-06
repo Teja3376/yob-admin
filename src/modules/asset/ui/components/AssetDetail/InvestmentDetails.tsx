@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatCurrencyWithLocale } from "@/lib/formatCurrency";
 import { ExternalLink } from "lucide-react";
 
 type Props = {
@@ -27,14 +28,14 @@ export default function InvestmentDetails({ data }: Props) {
 
           <Row
             label="Token Price"
-            value={`₹${token?.tokenPrice?.toLocaleString()}`}
+            value={formatCurrencyWithLocale(token?.tokenPrice, token?.currency)}
           />
 
           <div className="border-t border-gray-200" />
 
           <Row
             label="Total Supply"
-            value={token?.tokenSupply?.toLocaleString()}
+            value={ token?.tokenSupply?.toLocaleString()}
           />
 
           <div className="border-t border-gray-200" />

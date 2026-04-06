@@ -8,12 +8,15 @@ import {
   MoveUpRightIcon,
   Send,
   Share2,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
+import { useRef, useState, useEffect } from "react";
 
 interface AssetDetailHeaderProps {
   assetId?: string;
@@ -21,7 +24,7 @@ interface AssetDetailHeaderProps {
   location?: string;
   status?: "pending" | "approved" | "active" | "rejected";
   stage?: string;
-  imageUrl?: string;
+  images?: string[];
   onRequestUpdate?: () => void;
   onApprove?: () => void;
   onReject?: () => void;
@@ -33,12 +36,17 @@ interface AssetDetailHeaderProps {
 
 export function AssetDetailHeader(props: AssetDetailHeaderProps) {
   const router = useRouter();
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const lastScrollY = useRef(0);
+  const imageRefs = useRef<(HTMLDivElement | null)[]>([]);
   const {
     assetId,
     name,
     location,
     status,
-    imageUrl,
+    images,
     onRequestUpdate,
     onApprove,
     onReject,
@@ -57,21 +65,136 @@ export function AssetDetailHeader(props: AssetDetailHeaderProps) {
     rejected: { label: "Rejected", color: "bg-red-100 text-red-800" },
   };
 
+  useEffect(() => {
+    imageRefs.current = imageRefs.current.slice(0, images?.length || 0);
+  }, [images]);
+
+  // Detect scroll direction and pause/resume auto-scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > lastScrollY.current) {
+        // Scrolling down
+        setIsPaused(true);
+      } else if (currentScrollY < lastScrollY.current) {
+        // Scrolling up
+        setIsPaused(false);
+      }
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Auto-scroll functionality
+  useEffect(() => {
+    if (!images || images.length <= 1 || isPaused) return;
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => {
+        const nextIndex = (prevIndex + 1) % images.length;
+        scrollToImage(nextIndex);
+        return nextIndex;
+      });
+    }, 3000); // Change image every 3 seconds
+
+    return () => clearInterval(interval);
+  }, [images, isPaused]);
+
   const safeStatus: keyof typeof statusConfig =
     status && status in statusConfig ? status : "pending";
   const config = statusConfig[safeStatus];
+
+  const scrollToImage = (index: number) => {
+    setCurrentIndex(index);
+  };
+
+  const nextImage = () => {
+    if (images?.length) {
+      const nextIndex = (currentIndex + 1) % images.length;
+      scrollToImage(nextIndex);
+    }
+  };
+
+  const prevImage = () => {
+    if (images?.length) {
+      const prevIndex =
+        currentIndex === 0 ? images.length - 1 : currentIndex - 1;
+      scrollToImage(prevIndex);
+    }
+  };
 
   return (
     <div className="relative w-full">
       {/* Hero Image */}
       <div className="relative h-96 w-full overflow-hidden rounded-lg bg-linear-to-b from-slate-200 to-slate-100">
-        <Image
-          src={imageUrl || "/placeholder.svg"}
-          alt={name || "Asset Image"}
-          className="h-full w-full object-cover"
-          width={1000}
-          height={1000}
-        />
+        <div
+          ref={carouselRef}
+          className="flex h-full w-full transition-transform duration-500 ease-in-out"
+          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          onWheel={(e) => e.preventDefault()}
+        >
+          {images?.length ? (
+            images.map((img, index) => (
+              <div
+                key={index}
+                ref={(el) => {
+                  imageRefs.current[index] = el;
+                }}
+                className="min-w-full h-full snap-center relative flex-shrink-0"
+              >
+                <Image
+                  src={img}
+                  alt={`Asset Image ${index}`}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            ))
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <span>No Image</span>
+            </div>
+          )}
+        </div>
+
+        {/* Navigation Buttons */}
+        {images && images.length > 1 && (
+          <>
+            <button
+              onClick={prevImage}
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors z-10"
+              aria-label="Previous image"
+            >
+              <ChevronLeft className="h-6 w-6" />
+            </button>
+            <button
+              onClick={nextImage}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors z-10"
+              aria-label="Next image"
+            >
+              <ChevronRight className="h-6 w-6" />
+            </button>
+
+            {/* Indicators */}
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
+              {images.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => scrollToImage(index)}
+                  className={`w-2 h-2 rounded-full transition-colors ${
+                    index === currentIndex ? "bg-white" : "bg-white/50"
+                  }`}
+                  aria-label={`Go to image ${index + 1}`}
+                />
+              ))}
+            </div>
+          </>
+        )}
+
         {/* Overlay */}
         <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent" />
 
@@ -92,7 +215,7 @@ export function AssetDetailHeader(props: AssetDetailHeaderProps) {
         </div>
       </div>
       {/* Pending Notice */}
-      {canApprove &&  status === "pending" && (
+      {canApprove && status === "pending" && (
         <div className={clsx("flex gap-2 mt-4")}>
           <Button
             variant="primary"

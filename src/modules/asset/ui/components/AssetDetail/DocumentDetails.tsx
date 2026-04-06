@@ -5,7 +5,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { Shield, Building2, FileText, ExternalLink, Link } from "lucide-react";
+import { Shield, Building2, FileText, ExternalLink} from "lucide-react";
+import Link from "next/link";
 
 interface DocumentDetailsProps {
   data: {

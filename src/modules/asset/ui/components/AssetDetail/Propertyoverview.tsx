@@ -30,7 +30,6 @@ interface PropertyOverviewProps {
   issuerName: string;
   projectsCount: number;
   estimatedReturnsAsPerLockInPeriod: number;
-  images?: string[];
 }
 
 export function PropertyOverview({
@@ -48,7 +47,6 @@ export function PropertyOverview({
   issuerName,
   projectsCount,
   estimatedReturnsAsPerLockInPeriod,
-  images,
 }: PropertyOverviewProps) {
 
   return (
@@ -169,7 +167,7 @@ export function PropertyOverview({
                       Lock-in Period
                     </p>
                     <p className="text-sm text-gray-600">
-                      {estimatedReturnsAsPerLockInPeriod || "_"}% estimated returns as per lock-in period.
+                      {estimatedReturnsAsPerLockInPeriod}% estimated returns as per lock-in period.
                     </p>
                   </div>
                 </div>
@@ -200,35 +198,6 @@ export function PropertyOverview({
           </Card>
         </div>
       </div>
-
-      <Card className="w-full rounded-2xl shadow-sm">
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-lg font-semibold">Gallery</CardTitle>
-
-          <Button className="text-orange-500 text-sm font-medium hover:underline bg-white hover:bg-white">
-            View All
-          </Button>
-        </CardHeader>
-
-        <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {images?.slice(0, 3).map((img, index) => (
-              <div
-                key={index}
-                className="w-full h-64 rounded-xl overflow-hidden bg-gray-100"
-              >
-                <Image
-                  src={img}
-                  alt={`Gallery ${index}`}
-                  width={200}
-                  height={200}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

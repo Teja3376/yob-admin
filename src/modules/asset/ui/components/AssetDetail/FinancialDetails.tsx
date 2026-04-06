@@ -1,19 +1,15 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatCurrency } from "@/lib/formatCurrency";
-import { TrendingUp, Percent, Calendar } from "lucide-react";
+import { formatCurrency, formatCurrencyWithLocale } from "@/lib/formatCurrency";
 import {
   PieChart,
   Pie,
   Cell,
-  ResponsiveContainer, // ✅ THIS WAS MISSING
-  AreaChart,
-  Area,
-  XAxis,
+  ResponsiveContainer,
   Tooltip,
 } from "recharts";
-import { ExpenseCard } from "./ExpenseCard";
+
 
 interface FinancialDetailsProps {
   investmentPerformance: {
@@ -22,7 +18,6 @@ interface FinancialDetailsProps {
     netRentalYield: number;
     grossRentalYield: number;
     targetCapitalAppreciation: number;
-    estimatedReturnsAsPerLockInPeriod: number;
   };
   rentalInformation: {
     rentPerSft: number;
@@ -32,20 +27,12 @@ interface FinancialDetailsProps {
     netAnnualRent: number;
     vacancyRate: number;
   };
-  investorRequirementsAndTimeline: {
-    lockupPeriod: number;
-    lockupPeriodType: string;
-    distributionStartDate: string;
-    distributionEndDate: string;
-  };
   currency: string;
   data: any;
 }
 
 export function FinancialDetails({
-  investmentPerformance,
   rentalInformation,
-  investorRequirementsAndTimeline,
   currency,
   data,
 }: FinancialDetailsProps) {
@@ -60,11 +47,15 @@ export function FinancialDetails({
       name: "Fees & Taxes",
       value:
         (asset?.totalPropertyValueAfterFees || 0) -
-        (asset?.basePropertyValue || 0),
+        (asset?.basePropertyValue || 0),  
     },
+    {
+      name: "Total Value",
+      value: asset?.totalPropertyValueAfterFees || 0,
+    }
   ];
 
-  const COLORS = ["#f97316", "#6b7280"];
+  const COLORS = ["#f97316", "#6b7280", "#10b981"];
 
   return (
     <div className="space-y-6">
@@ -88,6 +79,8 @@ export function FinancialDetails({
                       <Cell key={i} fill={COLORS[i]} />
                     ))}
                   </Pie>
+                  <Tooltip content={<CustomTooltip />} />
+                  
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -104,7 +97,7 @@ export function FinancialDetails({
                   </div>
 
                   <span className="font-medium">
-                    ₹{item.value.toLocaleString()}
+                    {formatCurrencyWithLocale(item.value, currency)}
                   </span>
                 </div>
               ))}
@@ -137,10 +130,14 @@ export function FinancialDetails({
 
               <div>
                 <p className="text-xs text-gray-500">IRR (Projected)</p>
-                <p className="font-semibold text-green-600">
-                  {asset?.investmentPerformance?.irr}%
+                <p className="font-semibold text-green-600 ">
+                  {asset?.investmentPerformance?.irr?.toFixed(2)}%
                 </p>
               </div>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">MOIC</p>
+              <p className="font-semibold text-black-600 ">{asset?.investmentPerformance?.moic?.toFixed(1)}</p>
             </div>
           </CardContent>
         </Card>
@@ -206,21 +203,21 @@ export function FinancialDetails({
           </div>
         </CardContent>
       </Card>
-
-      <Card className="rounded-2xl shadow-sm">
-        <CardHeader>
-          <CardTitle>Operating Expenses</CardTitle>
-        </CardHeader>
-
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <ExpenseCard label="Property Management" value="2.5%" />
-            <ExpenseCard label="Maintenance Reserve" value="1%" />
-            <ExpenseCard label="Insurance" value="0.5%" />
-            <ExpenseCard label="Property Taxes" value="1.2%" />
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }
+
+
+const CustomTooltip = ({ active, payload, currency }: any) => {
+  if (active && payload && payload.length) {
+    const data = payload[0];
+
+    return (
+      <div className="bg-white p-2 rounded-md shadow border text-sm">
+        <p className="font-medium">{data.name}</p>
+        <p>{formatCurrencyWithLocale(data.value, currency)}</p>
+      </div>
+    );
+  }
+  return null;
+};
