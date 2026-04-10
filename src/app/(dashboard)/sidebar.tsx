@@ -36,7 +36,7 @@ const Sidebar = () => {
     <div className="w-52 h-full border-r flex flex-col  bg-white pt-10">
       <nav className="px-4 space-y-3 flex-1">
         {navLinks.map((item) => {
-          const isActive = pathname === item.href;
+          const isActive = pathname.startsWith(item.href);
           const baseClass = `block rounded-md px-4 py-2 text-sm transition ${
             isActive
               ? "text-white font-medium bg-primary"
