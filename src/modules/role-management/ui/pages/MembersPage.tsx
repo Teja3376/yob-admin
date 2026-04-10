@@ -51,17 +51,17 @@ const MembersPage = () => {
   const { data: roles, isFetching: isRolesLoading } =
     useGetAllRoleNames(status);
 
-  const { data: role, isFetching: isRoleLoading } =
+  const { data: role, isFetching: isRoleLoading,isError: isRoleError ,error: roleError} =
     useGetRoleById(selectedRole);
 
-  const { data: member, isFetching: isMemberLoading } = useGetMemberById(
+  const { data: member, isFetching: isMemberLoading,isError: isMemberError ,error: memberError} = useGetMemberById(
     editingMemberId as string,
   );
-  const { mutate: createMember, isPending: isMemberCreating } =
+  const { mutate: createMember, isPending: isMemberCreating,isError: isMemberCreateError ,error: memberCreateError} =
     useCreateMember();
-  const { mutate: updateMember, isPending: isMemberUpdating } =
+  const { mutate: updateMember, isPending: isMemberUpdating,isError: isMemberUpdateError ,error: memberUpdateError} =
     useUpdateMember();
-  const { mutate: deleteMember, isPending: isMemberDeleting } =
+  const { mutate: deleteMember, isPending: isMemberDeleting,isError: isMemberDeleteError ,error: memberDeleteError} =
     useDeleteMember();
 
   const pagination = data?.pagination;
@@ -88,9 +88,9 @@ const MembersPage = () => {
         setIsMemberDialogOpen(false);
       },
       onError: (err) => {
-        toast.error(
-          `Error creating member: ${err?.message || "Unknown error occurred"}`,
-        );
+        // toast.error(
+        //   `Error creating member: ${err?.message || "Unknown error occurred"}`,
+        // );
       },
     });
   };
@@ -104,9 +104,9 @@ const MembersPage = () => {
           setIsMemberDialogOpen(false);
         },
         onError: (err) => {
-          toast.error(
-            `Error updating member: ${err?.message || "Unknown error occurred"}`,
-          );
+          // toast.error(
+          //   `Error updating member: ${err?.message || "Unknown error occurred"}`,
+          // );
         },
       },
     );
@@ -119,9 +119,9 @@ const MembersPage = () => {
         setIsDeleteDialogOpen(false);
       },
       onError: (err: any) => {
-        toast.error(
-          `Error deleting member: ${err?.message || "Unknown error occurred"}`,
-        );
+        // toast.error(
+        //   `Error deleting member: ${err?.message || "Unknown error occurred"}`,
+        // );
       },
     });
   };
@@ -204,6 +204,8 @@ const MembersPage = () => {
         onRoleChange={(id) => setSelectedRole(id)}
         isPermissionsLoading={isRoleLoading}
         isCreating={isMemberCreating || isMemberUpdating || isMemberLoading}
+        isError={isMemberCreateError || isMemberUpdateError || isMemberError||isRoleError}
+        error={memberCreateError?.message || memberUpdateError?.message || memberError?.message || roleError?.message || null}
       />
       <DeleteDialog
         open={isDeleteDialogOpen}
@@ -211,6 +213,8 @@ const MembersPage = () => {
         type="Member"
         onDelete={handleDeleteRoleFromDialog}
         isDeleting={isMemberDeleting}
+        error={isMemberDeleteError ? memberDeleteError.message : null}
+        isError={isMemberDeleteError}
       />
     </div>
   );
