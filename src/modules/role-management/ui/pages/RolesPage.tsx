@@ -46,9 +46,9 @@ const RolesPage = () => {
   } = useGetAllRoles(page, limit, searchQuery);
   const pagination = data?.pagination;
 
-  const { mutate: createRole, isPending: isRoleCreating } = useCreateRole();
-  const { mutate: updateRole, isPending: isRoleUpdating } = useUpdateRole();
-  const { mutate: deleteRole, isPending: isRoleDeleting } = useDeleteRole();
+  const { mutate: createRole, isPending: isRoleCreating,isError: isRoleCreateError ,error: roleCreateError} = useCreateRole();
+  const { mutate: updateRole, isPending: isRoleUpdating,isError: isRoleUpdateError ,error: roleUpdateError} = useUpdateRole();
+  const { mutate: deleteRole, isPending: isRoleDeleting ,isError: isRoleDeleteError ,error: roleDeleteError} = useDeleteRole();
 
   const onPageChange = (newPage: number) => {
     setPage(newPage);
@@ -81,9 +81,9 @@ const RolesPage = () => {
         setIsRoleDialogOpen(false);
       },
       onError: (err) => {
-        toast.error(
-          `Error creating role: ${err?.message || "Unknown error occurred"}`,
-        );
+        // toast.error(
+        //   `Error creating role: ${err?.message || "Unknown error occurred"}`,
+        // );
       },
     });
   };
@@ -96,9 +96,9 @@ const RolesPage = () => {
           setIsRoleDialogOpen(false);
         },
         onError: (err: any) => {
-          toast.error(
-            `Error updating role: ${err?.message || "Unknown error occurred"}`,
-          );
+          // toast.error(
+          //   `Error updating role: ${err?.message || "Unknown error occurred"}`,
+          // );
         },
       },
     );
@@ -111,9 +111,9 @@ const RolesPage = () => {
         setIsDeleteDialogOpen(false);
       },
       onError: (err: any) => {
-        toast.error(
-          `Error deleting role: ${err?.message || "Unknown error occurred"}`,
-        );
+        // toast.error(
+        //   `Error deleting role: ${err?.message || "Unknown error occurred"}`,
+        // );
       },
     });
   };
@@ -180,6 +180,8 @@ const RolesPage = () => {
         onCreate={handleCreateRole}
         onUpdate={handleUpdateRole}
         isLoading={isRoleCreating || isRoleUpdating || isRoleLoading}
+          isError={isRoleCreateError || isRoleUpdateError}
+          error={roleCreateError?.message || roleUpdateError?.message || null}
       />
       <DeleteDialog
         open={isDeleteDialogOpen}
@@ -187,6 +189,8 @@ const RolesPage = () => {
         type="Role"
         onDelete={handleDeleteRoleFromDialog}
         isDeleting={isRoleDeleting}
+        isError={isRoleDeleteError}
+        error={roleDeleteError?.message || null}
       />
     </div>
   );

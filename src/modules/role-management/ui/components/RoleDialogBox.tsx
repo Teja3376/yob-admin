@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/form";
 import Loading from "@/components/Loader";
 import PermissionRow from "./PermissionsRow";
+import { ShieldBan } from "lucide-react";
 
 export type PermissionState = {
   issuers: {
@@ -129,6 +130,8 @@ type Props = {
     };
   }) => void;
   isLoading: boolean;
+  isError: boolean;
+  error: string | null;
 };
 
 export default function AddRoleDialog({
@@ -138,6 +141,8 @@ export default function AddRoleDialog({
   onCreate,
   onUpdate,
   isLoading,
+  isError,
+  error,
 }: Props) {
   const isEdit = !!role;
   const [permissions, setPermissions] = useState(defaultPermissions);
@@ -196,7 +201,7 @@ export default function AddRoleDialog({
 
       setPermissions(role.permissions ?? defaultPermissions);
     }
-  }, [role,form]);
+  }, [role, form]);
 
   const handleClose = () => {
     form.reset({
@@ -211,6 +216,22 @@ export default function AddRoleDialog({
       <Dialog open={open} onOpenChange={handleClose}>
         <DialogContent className="max-w-2xl">
           <Loading message="Loading..." />
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  if (isError && error) {
+    return (
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-2xl flex flex-col items-center gap-3">
+          <div className="bg-red-500/10 border border-red-600 p-4 rounded-full">
+            <ShieldBan className="text-red-600" size={48} />
+          </div>
+          <DialogTitle className="text-red-600">
+            Error {isEdit ? "Updating" : "Creating"} Role
+          </DialogTitle>
+          <p className="text-muted-foreground text-sm">{error}</p>
         </DialogContent>
       </Dialog>
     );

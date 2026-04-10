@@ -39,6 +39,7 @@ import {
   createMemberSchema,
 } from "../../schemas/validation";
 import Loading from "@/components/Loader";
+import { ShieldBan } from "lucide-react";
 
 type Role = {
   _id: string;
@@ -75,6 +76,8 @@ type Props = {
 
   onSelectStatus: (status: any) => void;
   onRoleChange: (roleId: string) => void;
+  isError?: boolean;
+  error?: string | null;
 };
 
 export default function AddMemberDialog({
@@ -90,6 +93,8 @@ export default function AddMemberDialog({
   onUpdate,
   onSelectStatus,
   onRoleChange,
+  isError,
+  error,
 }: Props) {
   const isEdit = !!member;
   const form = useForm<CreateMemberFormValues>({
@@ -201,6 +206,21 @@ export default function AddMemberDialog({
       <Dialog open={open} onOpenChange={handleClose}>
         <DialogContent className="max-w-2xl">
           <Loading message={"Loading..."} />
+        </DialogContent>
+      </Dialog>
+    );
+  }
+  if (isError && error) {
+    return (
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-2xl flex flex-col items-center gap-3">
+          <div className="bg-red-500/10 border border-red-600 p-4 rounded-full">
+            <ShieldBan className="text-red-600" size={48} />
+          </div>
+          <DialogTitle className="text-red-600">
+            Error While {isEdit ? "Updating" : "Creating"} Member
+          </DialogTitle>
+          <p className="text-muted-foreground text-sm">{error}</p>
         </DialogContent>
       </Dialog>
     );
