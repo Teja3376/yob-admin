@@ -1,7 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowBigLeftDashIcon, Briefcase, DollarSign, FileText, Shield, ShieldCheck, TrendingUp } from "lucide-react";
 import Document from "next/document";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 type MemoAndTerms = {
   investmentMemorandum: string;
@@ -15,6 +22,13 @@ type SpvMemoTermsProps = {
 };
 
 const SpvMemoTerms: React.FC<SpvMemoTermsProps> = ({ memoAndTerms }) => {
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState<{ title: string; value: string } | null>(null);
+
+  const handleReadFull = (title: string, value: string) => {
+    setSelectedDocument({ title, value });
+    setDialogOpen(true);
+  };
   const items = [
           {
             title: "Investment Memorandum",
@@ -60,12 +74,25 @@ const SpvMemoTerms: React.FC<SpvMemoTermsProps> = ({ memoAndTerms }) => {
             <p className="text-sm text-muted-foreground line-clamp-3 mb-4">
               {item.value}
             </p>
-            <button className="text-sm font-semibold text-primary hover:text-orange-700">
+            <Button
+              className="bg-transparent text-sm font-semibold text-primary hover:text-primary hover:bg-transparent p-0 hover:underline"
+              onClick={() => handleReadFull(item.title, item.value)}
+            >
               Read Full Document
-            </button>
+            </Button>
           </div>
         ))}
       </CardContent>
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="w-[80%] max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{selectedDocument?.title}</DialogTitle>
+          </DialogHeader>
+          <div className="whitespace-pre-wrap text-sm text-gray-700">
+            {selectedDocument?.value}
+          </div>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 };
