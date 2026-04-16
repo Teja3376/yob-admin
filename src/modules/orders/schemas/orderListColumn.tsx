@@ -52,9 +52,9 @@ export const orderListColumn = (
     accessorKey: "investor",
     cell: ({ row }) => {
       const investorId = row.original.investorId;
-      const firstName = row.original.investor.firstName;
-      const lastName = row.original.investor.lastName;
-      const email = row.original.investor.email;
+      const firstName = row.original.investor?.firstName || "-";
+      const lastName = row.original.investor?.lastName || "-";
+      const email = row.original.investor?.email || "-";
       const shortId = investorId?.slice(-4)?.toUpperCase() || "";
       const investorIdFormatted = `INV-${shortId}`;
       return (

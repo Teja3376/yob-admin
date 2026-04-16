@@ -84,6 +84,7 @@ const RolesPage = () => {
         // toast.error(
         //   `Error creating role: ${err?.message || "Unknown error occurred"}`,
         // );
+        
       },
     });
   };
@@ -116,6 +117,11 @@ const RolesPage = () => {
         // );
       },
     });
+  };
+
+  const handleCloseRoleDialog = () => {
+    setIsRoleDialogOpen(false);
+    setEditingRoleId(null);
   };
 
   if (isError) {
@@ -180,8 +186,9 @@ const RolesPage = () => {
         onCreate={handleCreateRole}
         onUpdate={handleUpdateRole}
         isLoading={isRoleCreating || isRoleUpdating || isRoleLoading}
-          isError={isRoleCreateError || isRoleUpdateError}
-          error={roleCreateError?.message || roleUpdateError?.message || null}
+        isError={isRoleCreateError || isRoleUpdateError}
+        error={roleCreateError?.message || roleUpdateError?.message || null}
+        onClose={handleCloseRoleDialog}
       />
       <DeleteDialog
         open={isDeleteDialogOpen}
