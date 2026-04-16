@@ -132,6 +132,7 @@ type Props = {
   isLoading: boolean;
   isError: boolean;
   error: string | null;
+  onClose?: () => void;
 };
 
 export default function AddRoleDialog({
@@ -143,9 +144,12 @@ export default function AddRoleDialog({
   isLoading,
   isError,
   error,
+  onClose,
 }: Props) {
   const isEdit = !!role;
   const [permissions, setPermissions] = useState(defaultPermissions);
+  const [permissionError, setPermissionError] = useState<string | null>(null);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
   const form = useForm<RoleFormValues>({
     resolver: zodResolver(roleSchema),
     defaultValues: {
@@ -163,6 +167,7 @@ export default function AddRoleDialog({
     key: string,
     value: boolean,
   ) => {
+    setPermissionError(null);
     setPermissions((prev) => ({
       ...prev,
       [module]: {
@@ -172,7 +177,22 @@ export default function AddRoleDialog({
     }));
   };
 
+  const hasSelectedPermission = () => {
+    return Object.values(permissions).some((module) =>
+      Object.values(module).some((value) => value),
+    );
+  };
+
   const onSubmit = (values: RoleFormValues) => {
+    setHasSubmitted(true);
+
+    if (!hasSelectedPermission()) {
+      setPermissionError("Select at least one permission");
+      return;
+    }
+
+    setPermissionError(null);
+
     const payload = {
       name: values.name,
       description: values.description,
@@ -183,12 +203,6 @@ export default function AddRoleDialog({
       onUpdate({ id: role._id, data: payload });
     } else {
       onCreate(payload);
-    }
-
-    if (!isLoading) {
-      form.reset();
-      setPermissions(defaultPermissions);
-      setOpen(false);
     }
   };
 
@@ -208,7 +222,11 @@ export default function AddRoleDialog({
       name: "",
       description: "",
     });
+    setPermissions(defaultPermissions);
+    setPermissionError(null);
     setOpen(false);
+    onClose?.();
+    setHasSubmitted(false);
   };
 
   if (isLoading) {
@@ -221,9 +239,9 @@ export default function AddRoleDialog({
     );
   }
 
-  if (isError && error) {
+  if (hasSubmitted && isError && error) {
     return (
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={handleClose}>
         <DialogContent className="max-w-2xl flex flex-col items-center gap-3">
           <div className="bg-red-500/10 border border-red-600 p-4 rounded-full">
             <ShieldBan className="text-red-600" size={48} />
@@ -324,8 +342,11 @@ export default function AddRoleDialog({
                 updatePermission={updatePermission}
               />
             </Accordion>
+            {permissionError ? (
+              <p className="text-sm text-red-600">{permissionError}</p>
+            ) : null}
             <DialogFooter>
-              <Button variant="outline" onClick={() => setOpen(false)}>
+              <Button variant="outline" onClick={handleClose}>
                 Cancel
               </Button>
               <Button type="submit" disabled={!isDirty || !isValid}>
