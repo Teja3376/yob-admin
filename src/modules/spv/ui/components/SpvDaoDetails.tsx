@@ -100,12 +100,12 @@ const SpvDaoDetails: React.FC<SpvDaoDetailsProps> = ({ blockchain }) => {
           </Button>
         </div>
 
-        <div className="flex gap-2">
+        {/* <div className="flex gap-2">
           <ShieldCheck size={20} className="text-green-400 mb-2" />
           <p className="text-gray-500 text-sm uppercase">
-            Verified on Polygon Testnet
+            
           </p>
-        </div>
+        </div> */}
       </CardContent>
     </Card>
   );

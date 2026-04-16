@@ -201,13 +201,14 @@ const SpvPage = () => {
       </div>
 
       {/* Action Buttons */}
-      <SpvActionButtons
+      { spvData.status == "Approved" || spvData.status == "Rejected" && <SpvActionButtons
+      
         onApprove={handleApprove}
         status={spvData.status}
         reason={spvData?.rejectionReason}
         canDoAction={canDoAction}
         onReject={() => setIsRejectDialogOpen(true)}
-      />
+      />}
 
       {/* Approve Dialog */}
       <ApprovalDialog
