@@ -171,7 +171,7 @@ const SpvPage = () => {
       </div>
 
       {/* Basic Information */}
-      {(spvData.status === "Active" || spvData.status === "Rejected") && (
+      {(spvData.status === "Pending") && (
         <SpvStatus 
          data={spvData} />
       )}
