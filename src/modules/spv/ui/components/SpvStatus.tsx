@@ -1,5 +1,5 @@
 import { formatDate } from "@/lib/utils";
-import { Building2, CheckCircle, XCircle } from "lucide-react";
+import { Building, Building2, CheckCircle, CircleAlert, XCircle } from "lucide-react";
 
 type SpvStatusProps = {
   data: any;
@@ -9,11 +9,19 @@ const SpvStatus = ({ data }: SpvStatusProps) => {
   return (
     <div className="relative">
       <div className="h-24 bg-slate-900 rounded-t-3xl relative">
-        {data?.status === "Active" ? (
+
+        {data?.status === "Pending" && (
+          <div className="flex gap-3 absolute top-3 right-3 px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 text-md font-medium">
+            <CircleAlert /> SPV Pending
+          </div>
+        )}
+        {data?.status === "Active" && (
           <div className="flex gap-3 absolute top-3 right-3 px-3 py-1 rounded-full bg-green-100 text-green-800 text-md font-medium">
             <CheckCircle /> SPV Approved
           </div>
-        ) : (
+        )}
+        {data?.status === "Rejected" && (
+
           <div className="flex gap-3 absolute top-3 right-3 px-3 py-1 rounded-full bg-red-100 text-red-800 text-md font-medium">
             <XCircle /> SPV Rejected
           </div>
