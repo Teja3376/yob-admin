@@ -171,7 +171,7 @@ const SpvPage = () => {
       </div>
 
       {/* Basic Information */}
-      {(spvData.status === "Pending") && (
+      {(spvData.status === "Pending" || spvData.status === "Rejected" || spvData.status === "Active") && (
         <SpvStatus 
          data={spvData} />
       )}
@@ -201,7 +201,7 @@ const SpvPage = () => {
       </div>
 
       {/* Action Buttons */}
-      { spvData.status == "Approved" || spvData.status == "Rejected" && <SpvActionButtons
+      { spvData.status == "Pending" && <SpvActionButtons
       
         onApprove={handleApprove}
         status={spvData.status}
