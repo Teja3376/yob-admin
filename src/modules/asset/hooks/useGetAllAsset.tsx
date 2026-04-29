@@ -15,6 +15,7 @@ export type AssetApprovalListItem = {
           assetManagerAddress: string;
           orderManagerAddress: string;
         };
+        status:string
       };
 
   issuername: string;

@@ -65,6 +65,8 @@ export function AssetDetailHeader(props: AssetDetailHeaderProps) {
     approved: { label: "Approved", color: "bg-green-100 text-green-800" },
     active: { label: "Active", color: "bg-blue-100 text-blue-800" },
     rejected: { label: "Rejected", color: "bg-red-100 text-red-800" },
+    "listing-ended":{label:"listing-ended", color:"bg-gray-100 text-gray-800"},
+    "fully-funded": {label: "Fully Funded",color: "bg-purple-100 text-purple-800"},
   };
 
   useEffect(() => {

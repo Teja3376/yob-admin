@@ -163,7 +163,7 @@ export default function AssetDetailPage() {
           assetId={assetId as string}
           location={location}
           status={
-            assetData.status as "pending" | "approved" | "active" | "rejected"
+            assetData.status
           }
           images={[
     ...(assetData.media?.imageURL ? [assetData.media.imageURL] : []),
