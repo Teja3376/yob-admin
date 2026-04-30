@@ -18,13 +18,22 @@ import { useGetAssetCount } from "../../hooks/useGetAssetCount";
 import DashboardCard from "@/modules/orders/ui/DashboardCard";
 import ErrorPage from "@/components/Error";
 import { DashboardCardSkeleton } from "@/components/DashboardSkeleton";
+import { Button } from "@/components/ui/button";
 
 type StatusTab = "pending" | "rejected" | "approved";
+
+const FILTER_STATUS_OPTIONS = [
+  { label: "All", value: "all" },
+  { label: "Active", value: "active" },
+  { label: "Listing Ended", value: "listing-ended" },
+  { label: "Fully Funded", value: "fully-funded" },
+];
 
 const AssetListpage = () => {
   const router = useRouter();
   const { hasPermission } = useAuthStore1();
   const [status, setStatus] = useState<StatusTab>("approved");
+  const [issuerStatus, setIssuerStatus] = useState<string>("all");
   const {
     data: assetCount,
     isFetching: isFetchingAssetCount,
@@ -48,10 +57,12 @@ const AssetListpage = () => {
     limit,
     status,
     search: searchTerm,
+    issuerStatus,
   });
 
   const handleTabChange = (value: string) => {
     setStatus(value as StatusTab);
+    setIssuerStatus("all");
     setPage(1); // Reset to first page when changing tabs
   };
 
@@ -177,6 +188,28 @@ const AssetListpage = () => {
             Rejected
           </TabsTrigger>
         </TabsList>
+
+        {status=== "approved" && 
+        <div className="flex items-center gap-2 mt-4">
+          <span className="text-sm text-gray-500">FILTER STATUS:</span>
+
+          {FILTER_STATUS_OPTIONS.map((item) => (
+            <Button
+              key={item.value}
+              onClick={() => {
+                setIssuerStatus(item.value);
+                setPage(1);
+              }}
+              className={`px-3 rounded-full text-sm ${
+                issuerStatus === item.value
+                  ? "bg-blue-100 text-blue-800 hover:text-blue-800 hover:bg-blue-100"
+                  : "bg-gray-100 text-gray-600 hover:text-blue-800 hover:bg-blue-100"
+              }`}
+            >
+              {item.label}
+            </Button>
+          ))}
+        </div>}
 
         <TabsContent value={status} className="mt-6 space-y-4">
           {isLoading && !data ? (

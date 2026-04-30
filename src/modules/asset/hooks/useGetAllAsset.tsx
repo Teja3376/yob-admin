@@ -49,12 +49,13 @@ export type UseGetAllAssetParams = {
   limit?: number;
   status?: AssetApprovalStatus;
   search?: string;
+  issuerStatus?: string;
 };
 
 export const useGetAllAsset = (params: UseGetAllAssetParams = {}) => {
-  const { page = 1, limit = 10, status = "pending", search = "" } = params;
+  const { page = 1, limit = 10, status = "pending", search = "", issuerStatus } = params;
   return useQuery({
-    queryKey: ["asset-approval-list", page, limit, status, search],
+    queryKey: ["asset-approval-list", page, limit, status, search,issuerStatus],
     queryFn: async () => {
       const res = await api.get<AssetApprovalListResponse>(
         "/asset-approval/list",
@@ -64,6 +65,7 @@ export const useGetAllAsset = (params: UseGetAllAssetParams = {}) => {
             limit,
             status,
             ...(search ? { search } : {}),
+            ...(issuerStatus && issuerStatus !== "all" ? { issuerStatus } : {}),
           },
         },
       );

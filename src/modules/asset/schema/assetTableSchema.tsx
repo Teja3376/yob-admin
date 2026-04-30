@@ -55,7 +55,7 @@ const currentStatusConfig: Record<
 };
 
 const CurrentStatusBadge = ({ status }: { status: string }) => {
-  const s = (status || "").toLowerCase();
+  const s = (status || "");
 
   const config = currentStatusConfig[s] || {
     label: "N/A",
@@ -64,7 +64,6 @@ const CurrentStatusBadge = ({ status }: { status: string }) => {
 
   return <Badge className={config.color}>{config.label}</Badge>;
 };
-
 
 export const assetTableCols = (
   router: ReturnType<typeof useRouter>,
@@ -175,15 +174,19 @@ export const assetTableCols = (
     });
   }
 
-  if (status === "approved") {
-    columns.push({
-      header: "Current Status",
-      accessorKey: "currentStatus",
-      cell: ({ row }) => (
+if (status === "approved") {
+  columns.push({
+    header: "Current Status",
+    accessorKey: "currentStatus",
+    cell: ({ row }) => {
+      console.log("STATUS VALUE:", row.original.assetId?.status);
+
+      return (
         <CurrentStatusBadge status={row.original.assetId?.status} />
-      ),
-    });
-  }
+      );
+    },
+  });
+}
 
   // Step 3: remaining columns
   columns.push({
