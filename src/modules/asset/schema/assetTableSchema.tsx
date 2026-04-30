@@ -179,7 +179,6 @@ if (status === "approved") {
     header: "Current Status",
     accessorKey: "currentStatus",
     cell: ({ row }) => {
-      console.log("STATUS VALUE:", row.original.assetId?.status);
 
       return (
         <CurrentStatusBadge status={row.original.assetId?.status} />
