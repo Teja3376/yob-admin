@@ -32,6 +32,39 @@ const StatusBadge = ({ status }: { status: string }) => {
   );
 };
 
+const currentStatusConfig: Record<
+  string,
+  { label: string; color: string }
+> = {
+  active: {
+    label: "Active",
+    color: "bg-blue-100 text-blue-800 hover:bg-blue-200 uppercase",
+  },
+  "fully-funded": {
+    label: "Fully Funded",
+    color: "bg-purple-100 text-purple-800 hover:bg-purple-200 uppercase",
+  },
+  "listing-ended": {
+    label: "Listing Ended",
+    color: "bg-gray-100 text-gray-800 hover:bg-gray-200 uppercase",
+  },
+  waitlist: {
+    label: "Waitlist",
+    color: "bg-yellow-100 text-yellow-800 hover:bg-yellow-200 uppercase",
+  },
+};
+
+const CurrentStatusBadge = ({ status }: { status: string }) => {
+  const s = (status || "");
+
+  const config = currentStatusConfig[s] || {
+    label: "N/A",
+    color: "bg-gray-400 text-white",
+  };
+
+  return <Badge className={config.color}>{config.label}</Badge>;
+};
+
 export const assetTableCols = (
   router: ReturnType<typeof useRouter>,
   status: string,
@@ -140,6 +173,19 @@ export const assetTableCols = (
       ),
     });
   }
+
+if (status === "approved") {
+  columns.push({
+    header: "Current Status",
+    accessorKey: "currentStatus",
+    cell: ({ row }) => {
+
+      return (
+        <CurrentStatusBadge status={row.original.assetId?.status} />
+      );
+    },
+  });
+}
 
   // Step 3: remaining columns
   columns.push({

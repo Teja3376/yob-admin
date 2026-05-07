@@ -47,7 +47,6 @@ const OrdersPage = () => {
     total: 0,
     pages: 1,
   };
-  console.log("ordersCount", pagination);
   const onPageSizeChange = (pageSize: number) => {
     setLimit(pageSize);
   };
