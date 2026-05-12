@@ -2,14 +2,13 @@
 
 import React, { useState } from "react";
 import TableComponent from "@/components/common/TableComponent";
-import { Search, X, FileText, Check, Clock } from "lucide-react";
-import { useGetAllAsset } from "../../hooks/useGetAllAsset";
-import { assetTableCols } from "../../schema/assetTableSchema";
+import { Search, X, FileText, Check, Clock, Building, Car } from "lucide-react";
+import { assetTableCols, vehicleTableCols } from "../../schema/assetTableSchema";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 
 import Pagination from "@/components/common/Pagination";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useDebounce } from "@/config/useDebounce";
 import Loading from "@/components/Loader";
 import { useAuthStore1 } from "@/modules/adminauth/state/adminAuthStore";
@@ -18,20 +17,67 @@ import { useGetAssetCount } from "../../hooks/useGetAssetCount";
 import DashboardCard from "@/modules/orders/ui/DashboardCard";
 import ErrorPage from "@/components/Error";
 import { DashboardCardSkeleton } from "@/components/DashboardSkeleton";
+import queryString from "query-string";
+
 import { Button } from "@/components/ui/button";
+import { useGetVehicleApprovalList } from "../../hooks/vehicles/useGetVehicleApprovalList";
+import { useGetAllAsset } from "../../hooks/useGetAllAsset";
 
 type StatusTab = "pending" | "rejected" | "approved";
 
+export const Classes = [
+  {
+    name: "Real Estate",
+    href: "real-estate",
+    icon: Building,
+  },
+  {
+    name: "Luxury Vehicles",
+    href: "vehicles",
+    icon: Car,
+  },
+];
+
 const FILTER_STATUS_OPTIONS = [
-  { label: "All", value: "all" },
-  { label: "Active", value: "active" },
-  { label: "Listing Ended", value: "listing-ended" },
-  { label: "Fully Funded", value: "fully-funded" },
+  // { label: "All", value: "all" },
+  {
+    label: "Active",
+    value: "active",
+    className:
+      "bg-blue-100 text-blue-800 hover:text-blue-800 hover:bg-blue-200 border border-blue-300",
+    active: "bg-blue-500 text-white",
+  },
+  {
+    label: "Listing Ended",
+    value: "listing-ended",
+    className:
+      "bg-gray-100 text-gray-800 hover:bg-gray-200  border border-gray-300",
+    active: "bg-gray-500 text-white",
+  },
+  {
+    label: "Fully Funded",
+    value: "fully-funded",
+    className:
+      "bg-purple-100 text-purple-800 hover:bg-purple-200  border border-purple-300",
+    active: "bg-purple-500 text-white",
+  },
+  {
+    label: "Waitlist",
+    value: "waitlist",
+    className:
+      "bg-yellow-100 text-yellow-800 hover:text-yellow-800 hover:bg-yellow-100 border border-yellow-300",
+    active: "bg-yellow-500 text-white",
+  },
 ];
 
 const AssetListpage = () => {
   const router = useRouter();
   const { hasPermission } = useAuthStore1();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  const queryParams = queryString.parse(searchParams.toString());
+  const assetClass = (queryParams?.class as string) || "real-estate";
   const [status, setStatus] = useState<StatusTab>("approved");
   const [issuerStatus, setIssuerStatus] = useState<string>("all");
   const {
@@ -46,19 +92,40 @@ const AssetListpage = () => {
   const [limit, setLimit] = useState(10);
   const canView = hasPermission("assets", "review");
   const cols = assetTableCols(router, status, canView);
+  const cols2 = vehicleTableCols(router, status, canView);
 
   const {
     data,
-    isFetching: isLoading,
-    isError,
+    isFetching: isRealEstateLoading,
+    isError: isRealEstateError,
     error,
-  } = useGetAllAsset({
-    page,
-    limit,
-    status,
-    search: searchTerm,
-    issuerStatus,
-  });
+  } = useGetAllAsset(
+    {
+      page,
+      limit,
+      status,
+      search: searchTerm,
+      issuerStatus,
+    },
+    {
+      enabled: assetClass === "real-estate",
+    },
+  );
+  const {
+    data: vehicles,
+    isFetching: isVehiclesLoading,
+    isError: isVehiclesError,
+    error: vehiclesError,
+  } = useGetVehicleApprovalList(
+    {
+      page,
+      limit,
+      status,
+      search: searchTerm,
+      issuerStatus,
+    },
+    { enabled: assetClass === "vehicles" },
+  );
 
   const handleTabChange = (value: string) => {
     setStatus(value as StatusTab);
@@ -75,6 +142,7 @@ const AssetListpage = () => {
     setPage(1);
   };
 
+  const isLoading = isRealEstateLoading || isVehiclesLoading;
   if (isLoading && isFetchingAssetCount) {
     return (
       <div className="flex items-center justify-center mt-20">
@@ -83,11 +151,19 @@ const AssetListpage = () => {
     );
   }
 
-  if (isError && !data) {
+  if (isRealEstateError && !data) {
     return (
       <ErrorPage
         title="Error Gathering Asset List"
         errorMessage={error?.message || "Assets not found"}
+      />
+    );
+  }
+  if (isVehiclesError && !vehicles) {
+    return (
+      <ErrorPage
+        title="Error Gathering Asset List"
+        errorMessage={vehiclesError?.message || "Assets not found"}
       />
     );
   }
@@ -100,8 +176,11 @@ const AssetListpage = () => {
     );
   }
 
-  const pagination = data?.pagination;
+  const handleClassChange = (classId: string) => {
+    router.push(`${pathname}?class=${classId}`);
+  };
 
+  const pagination = data?.pagination || vehicles?.pagination;
   return (
     <div className="space-y-6">
       <div className="grid grif-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -166,6 +245,28 @@ const AssetListpage = () => {
         </div>
       </div>
 
+      <div className="flex items-center gap-4">
+        {Classes.map((item) => {
+          const Icon = item.icon;
+          return (
+            <Button
+              key={item.href}
+              onClick={() => handleClassChange(item.href)}
+              className={`px-3 py-2 h-15 w-40 gap-2 rounded-lg text-sm font-medium border  ${
+                assetClass === item.href
+                  ? "bg-primary/10 text-primary border-primary hover:bg-primary/20"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300 border-gray-300"
+              }`}
+            >
+              <span>
+                <Icon />
+              </span>
+              {item.name}
+            </Button>
+          );
+        })}
+      </div>
+
       {/* Tabs */}
       <Tabs value={status} onValueChange={handleTabChange}>
         <TabsList className="bg-transparent border-b border-gray-200 rounded-none p-0 h-auto gap-5">
@@ -189,43 +290,60 @@ const AssetListpage = () => {
           </TabsTrigger>
         </TabsList>
 
-        {status=== "approved" && 
-        <div className="flex items-center gap-2 mt-4">
-          <span className="text-sm text-gray-500">FILTER STATUS:</span>
+        {status === "approved" && (
+          <div className="flex items-center gap-2 mt-4">
+            {/* <span className="text-sm text-gray-500">FILTER STATUS:</span> */}
 
-          {FILTER_STATUS_OPTIONS.map((item) => (
-            <Button
-              key={item.value}
-              onClick={() => {
-                setIssuerStatus(item.value);
-                setPage(1);
-              }}
-              className={`px-3 rounded-full text-sm ${
-                issuerStatus === item.value
-                  ? "bg-blue-100 text-blue-800 hover:text-blue-800 hover:bg-blue-100"
-                  : "bg-gray-100 text-gray-600 hover:text-blue-800 hover:bg-blue-100"
-              }`}
-            >
-              {item.label}
-            </Button>
-          ))}
-        </div>}
+            {FILTER_STATUS_OPTIONS.map((item) => (
+              <button
+                key={item.value}
+                onClick={() => {
+                  setIssuerStatus(item.value);
+                  setPage(1);
+                }}
+                className={`px-3 rounded-full text-sm font-medium py-1 cursor-pointer ${
+                  issuerStatus === item.value ? item.active : item.className
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
+
+            {issuerStatus !== "all" && (
+              <button
+                onClick={() => {
+                  setIssuerStatus("all");
+                  setPage(1);
+                }}
+                className="px-3 rounded-full text-sm font-medium py-1 cursor-pointer "
+              >
+                Clear Filter
+              </button>
+            )}
+          </div>
+        )}
 
         <TabsContent value={status} className="mt-6 space-y-4">
           {isLoading && !data ? (
             <div className="flex items-center justify-center mt-20">
-              <Loading message="Loading..." />{" "}
+              <Loading message="Loading..." />
             </div>
-          ) : (
+          ) : assetClass === "real-estate" ? (
             <TableComponent
               data={data?.data || []}
               columns={cols}
               model="asset"
             />
-          )}
+          ) : assetClass === "vehicles" ? (
+            <TableComponent
+              data={vehicles?.data || []}
+              columns={cols2}
+              model="vehicles"
+            />
+          ) : null}
         </TabsContent>
       </Tabs>
-      {pagination && data?.data.length > 0 && (
+      {pagination &&  (
         <Pagination
           {...pagination}
           currentPage={pagination?.currentPage ?? 1}

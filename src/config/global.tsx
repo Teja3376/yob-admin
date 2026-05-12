@@ -1,4 +1,4 @@
-import { Building2, Container, File, ListOrdered, Star, Users } from "lucide-react";
+import { Building2, Car, Container, File, ListOrdered, Star, Users } from "lucide-react";
 
 export const EMPTY_TABLE_DATA = [
     {
@@ -9,6 +9,16 @@ export const EMPTY_TABLE_DATA = [
       actionButton: {
         label: "Add New Asset",
         location: "/assets/add-asset",
+      },
+    },
+    {
+      id: "vehicles",
+      title: "No vehicle available",
+      description: "There are no vehicles available at the moment.",
+      icon: <Car size={44} />,
+      actionButton: {
+        label: "Add New Vehicle",
+        location: "/assets/add-vehicle",
       },
     },
     {

@@ -28,6 +28,8 @@ export default function TenantsSection({ tenants }: Props) {
                       src={tenant.logo}
                       alt="logo"
                       className="w-full h-full object-cover rounded-xl"
+                      width={100}
+                      height={100}
                     />
                   ) : (
                     <span className="text-gray-400 text-sm">N/A</span>

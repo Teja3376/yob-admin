@@ -3,11 +3,10 @@ import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 
 type AssetApprovalStatus = "pending" | "approved" | "rejected" | string;
 
-export type AssetApprovalListItem = {
+export type VehicleApprovalListItem = {
   _id: string;
   issuerId: string;
   assetId: {
-    name: string;
     _id: string;
     blockchain?: {
       assetAddress: string;
@@ -18,7 +17,8 @@ export type AssetApprovalListItem = {
   };
 
   issuername: string;
-  assetName: string;
+  vehicleBrand: string;
+  vehicleModel: string;
   status: string;
   issuerComments?: string;
   createdAt: string;
@@ -37,13 +37,13 @@ export type Pagination = {
   totalPages: number;
 };
 
-export type AssetApprovalListResponse = {
+export type VehicleApprovalListResponse = {
   success: boolean;
-  data: AssetApprovalListItem[];
+  data: VehicleApprovalListItem[];
   pagination: Pagination;
 };
 
-export type UseGetAllAssetParams = {
+export type UseGetVehicleApprovalListParams = {
   page?: number;
   limit?: number;
   status?: AssetApprovalStatus;
@@ -52,12 +52,12 @@ export type UseGetAllAssetParams = {
 };
 
 type QueryOptions = Omit<
-  UseQueryOptions<AssetApprovalListResponse>,
+  UseQueryOptions<VehicleApprovalListResponse>,
   "queryKey" | "queryFn"
 >;
 
-export const useGetAllAsset = (
-  params: UseGetAllAssetParams = {},
+export const useGetVehicleApprovalList = (
+  params: UseGetVehicleApprovalListParams = {},
   options?: QueryOptions,
 ) => {
   const {
@@ -67,37 +67,29 @@ export const useGetAllAsset = (
     search = "",
     issuerStatus,
   } = params;
-
-  return useQuery<AssetApprovalListResponse>({
+  return useQuery({
     queryKey: [
-      "asset-approval-list",
+      "vehicle-approval-list",
       page,
       limit,
       status,
       search,
       issuerStatus,
     ],
-
     queryFn: async () => {
-      const res = await api.get<AssetApprovalListResponse>(
-        "/asset-approval/list",
-        {
-          params: {
-            page,
-            limit,
-            status,
-            ...(search ? { search } : {}),
-            ...(issuerStatus && issuerStatus !== "all" ? { issuerStatus } : {}),
-          },
+      const res = await api.get<VehicleApprovalListResponse>("/vehicles/list", {
+        params: {
+          page,
+          limit,
+          status,
+          ...(search ? { search } : {}),
+          ...(issuerStatus && issuerStatus !== "all" ? { issuerStatus } : {}),
         },
-      );
-
+      });
       return res.data;
     },
-
-    staleTime: 1 * 60 * 1000,
+    staleTime: 1 * 60 * 1000, // 1 minute
     retry: 3,
-
     ...options,
   });
 };
