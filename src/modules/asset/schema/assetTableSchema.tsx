@@ -334,7 +334,7 @@ export const vehicleTableCols = (
       <Button
         variant="ghost"
         size="icon"
-        onClick={() => router.push(`/asset-list/${row.original.assetId?._id}`)}
+        onClick={() => router.push(`/vehicle/${row.original.assetId?._id}`)}
         disabled={!canView}
       >
         <Eye size={14} />
