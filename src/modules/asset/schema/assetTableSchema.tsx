@@ -34,6 +34,11 @@ const StatusBadge = ({ status }: { status: string }) => {
 };
 
 const currentStatusConfig: Record<string, { label: string; color: string }> = {
+  approved: {
+    label: "Approved",
+    color:
+      "bg-green-100 text-green-800 hover:bg-green-200 uppercase border border-green-300",
+  },
   active: {
     label: "Active",
     color:

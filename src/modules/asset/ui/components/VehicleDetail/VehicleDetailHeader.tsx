@@ -12,52 +12,44 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-
-const mockAsset = {
-  assetId: "AST-1001",
-  name: "Luxury Beachfront Villa",
-  location: "Banjara Hills, Hyderabad",
-  status: "approved",
-  companyId: "cmp-1001",
-  images: ["/coursel.jpg", "/coursel2.jpg", "/coursel3.jpg", "/coursel4.jpg"],
-};
-export function VehicleDetailHeader() {
+export function VehicleDetailHeader({
+  vehicle,
+  onRequestUpdate,
+  onApprove,
+  onReject,
+  approveDisabled,
+  canApprove,
+  companyId,
+  isAlreadyApproved,
+  setIsMintingFeeDialogOpen,
+}: {
+  vehicle: {
+    media: {
+      imageURL: string;
+      gallery: string[];
+    };
+    brand: string;
+    model: string;
+    status: "pending" | "approved" | "active" | "rejected";
+  };
+  onRequestUpdate: () => void;
+  onApprove: () => void;
+  onReject: () => void;
+  approveDisabled: boolean;
+  canApprove: boolean;
+  companyId: string;
+  isAlreadyApproved: boolean;
+  setIsMintingFeeDialogOpen: (open: boolean) => void;
+}) {
   const router = useRouter();
   const carouselRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const lastScrollY = useRef(0);
   const imageRefs = useRef<(HTMLDivElement | null)[]>([]);
-  //   const {
-  //     assetId,
-  //     name,
-  //     location,
-  //     status,
-  //     images,
-  //     onRequestUpdate,
-  //     onApprove,
-  //     onReject,
-  //     approveDisabled,
-  //     canApprove,
-  //     companyId,
-  //     isAlreadyApproved,
-  //     setIsMintingFeeDialogOpen,
-  //   } = props;
-
-  const assetId = mockAsset.assetId;
-  const name = mockAsset.name;
-  const location = mockAsset.location;
-  const status = mockAsset.status as
-    | "pending"
-    | "approved"
-    | "active"
-    | "rejected";
-
-  const images = mockAsset.images;
-  const companyId = mockAsset.companyId;
-  const canApprove = true;
-  const approveDisabled = false;
-  const isAlreadyApproved = true;
+  const { media, brand:name, model, status } = vehicle;
+ 
+  const { imageURL:image, gallery: images } = media || {};
 
   const statusConfig = {
     pending: {
@@ -149,7 +141,7 @@ export function VehicleDetailHeader() {
           onWheel={(e) => e.preventDefault()}
         >
           {images?.length ? (
-            images.map((img, index) => (
+            images.map((img: string, index: number) => (
               <div
                 key={index}
                 ref={(el) => {
@@ -192,12 +184,13 @@ export function VehicleDetailHeader() {
 
             {/* Indicators */}
             <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
-              {images.map((_, index) => (
+              {images.map((_: any, index: number) => (
                 <Button
                   key={index}
                   onClick={() => scrollToImage(index)}
                   className={`rounded-full transition-colors w-2 h-2 min-w-0 p-0
-        ${index === currentIndex ? "bg-white" : "bg-white/50"}`}aria-label={`Go to image ${index + 1}`}
+        ${index === currentIndex ? "bg-white" : "bg-white/50"}`}
+                  aria-label={`Go to image ${index + 1}`}
                 />
               ))}
             </div>
@@ -220,7 +213,7 @@ export function VehicleDetailHeader() {
         {/* Content - Bottom Left */}
         <div className="absolute bottom-6 left-6">
           <h1 className="text-4xl font-bold text-white">{name ?? "—"}</h1>
-          <p className="mt-2 text-lg text-gray-100">{location ?? ""}</p>
+          <p className="mt-2 text-lg text-gray-100">{model ?? ""}</p>
         </div>
       </div>
       {/* Pending Notice */}
@@ -229,7 +222,7 @@ export function VehicleDetailHeader() {
           <Button
             variant="outline"
             className="text-black gap-2"
-            // onClick={onApprove}
+            onClick={onApprove}
             disabled={approveDisabled}
           >
             Approve
@@ -238,7 +231,7 @@ export function VehicleDetailHeader() {
           <Button
             variant="destructive"
             className="text-black gap-2 text-white"
-            // onClick={onReject}
+            onClick={onReject}
             disabled={approveDisabled}
           >
             Reject

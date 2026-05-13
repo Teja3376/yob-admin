@@ -48,6 +48,13 @@ const FILTER_STATUS_OPTIONS = [
     active: "bg-blue-500 text-white",
   },
   {
+    label: "Approved",
+    value: "approved",
+    className:
+      "bg-green-100 text-green-800 hover:text-green-800 hover:bg-green-200 border border-green-300",
+    active: "bg-green-500 text-white",
+  },
+  {
     label: "Listing Ended",
     value: "listing-ended",
     className:
